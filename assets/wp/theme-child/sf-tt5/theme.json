@@ -1,0 +1,87 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.9/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": { "contentSize": "1280px", "wideSize": "1600px" },
+
+    "color": {
+      "custom": false,
+      "customGradient": false,
+      "defaultDuotone": false,
+      "defaultGradients": false,
+      "defaultPalette": false,
+      "palette": [
+        { "slug": "primary", "name": "Primary", "color": "#1d4ed8" },
+        { "slug": "secondary", "name": "Secondary", "color": "#0f172a" },
+        { "slug": "accent", "name": "Accent", "color": "#f97316" },
+        { "slug": "surface", "name": "Surface", "color": "#f8fafc" },
+        { "slug": "base", "name": "Base", "color": "#ffffff" },
+        { "slug": "muted", "name": "Muted", "color": "#94a3b8" }
+      ]
+    },
+
+    "typography": {
+      "customFontSize": false,
+      "dropCap": false,
+      "fontSizes": [
+        { "slug": "sm", "name": "S", "size": "0.875rem" },
+        { "slug": "md", "name": "M", "size": "1rem" },
+        { "slug": "lg", "name": "L", "size": "1.25rem" },
+        { "slug": "xl", "name": "XL", "size": "1.5rem" },
+        { "slug": "2xl", "name": "2XL", "size": "2rem" }
+      ]
+    },
+
+    "spacing": {
+      "customSpacingSize": false,
+      "spacing": { "blockGap": "var:preset|spacing|md" },
+      "spacingSizes": [
+        { "slug": "sm", "name": "S", "size": "1rem" },
+        { "slug": "md", "name": "M", "size": "1.5rem" },
+        { "slug": "lg", "name": "L", "size": "2rem" },
+        { "slug": "xl", "name": "XL", "size": "3rem" }
+      ]
+    },
+
+    "blocks": {
+      "core/group": {
+        "layout": {
+          "inherit": false
+        }
+      }
+    }
+  },
+
+  "styles": {
+    "typography": { "lineHeight": "1.6" },
+    "elements": {
+      "link": { "color": { "text": "var:preset|color|primary" } }
+    }
+  },
+
+  "templateParts": [
+    { "name": "header-default", "title": "Header - Default (SF)", "area": "header" },
+    { "name": "header-centered", "title": "Header - Centered (SF)", "area": "header" },
+    { "name": "header-custom", "title": "Header - Custom (SF)", "area": "header" },
+    { "name": "header-split", "title": "Header - Split (SF)", "area": "header" },
+    { "name": "footer", "title": "Footer - Default (SF)", "area": "footer" },
+    { "name": "footer-compact", "title": "Footer - Compact (SF)", "area": "footer" },
+    { "name": "footer-columns", "title": "Footer - Columns (SF)", "area": "footer" },
+    { "name": "footer-newsletter", "title": "Footer - Newsletter (SF)", "area": "footer" }
+  ],
+
+  "customTemplates": [
+    { "name": "page-fullwidth", "title": "Page – Fullwidth (SF)", "postTypes": ["page"] },
+    { "name": "page-2col-left", "title": "Page – 2 Colonnes (gauche) (SF)", "postTypes": ["page"] },
+    { "name": "page-2col-right", "title": "Page – 2 Colonnes (droite) (SF)", "postTypes": ["page"] },
+    { "name": "page-centered", "title": "Page – Centrée (SF)", "postTypes": ["page"] }
+  ],
+
+  "patternCategories": [
+    { "slug": "sf-header", "label": "SF • Headers" },
+    { "slug": "sf-sections", "label": "SF • Composants" }
+  ],
+
+  "stylesVariations": ["clean", "dark"]
+}

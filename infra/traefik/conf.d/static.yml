@@ -1,0 +1,39 @@
+# ─── Traefik Static Routes ─────────────────────────────────────────────
+# Routes for infrastructure services (adminer, whoami).
+# This file is hand-maintained — project routes are in dynamic.yml.
+
+http:
+  routers:
+    traefik-dashboard:
+      rule: "Host(`traefik.localhost`)"
+      entrypoints:
+        - websecure
+      service: api@internal
+      priority: 100
+      tls: {}
+    adminer:
+      rule: "Host(`adminer.localhost`)"
+      entrypoints:
+        - websecure
+      service: adminer
+      middlewares:
+        - secure-headers
+      tls: {}
+    whoami:
+      rule: "Host(`whoami.localhost`)"
+      entrypoints:
+        - websecure
+      service: whoami
+      middlewares:
+        - secure-headers
+      tls: {}
+
+  services:
+    adminer:
+      loadBalancer:
+        servers:
+          - url: "http://adminer:8080"
+    whoami:
+      loadBalancer:
+        servers:
+          - url: "http://whoami:80"

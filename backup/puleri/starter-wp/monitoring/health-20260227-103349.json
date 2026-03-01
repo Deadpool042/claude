@@ -1,0 +1,9 @@
+{
+    "db_ok": true,
+    "cron_ok": true,
+    "fs_ok": true,
+    "uploads_ok": true,
+    "php_version": "8.3.30",
+    "wp_version": "6.9.1",
+    "site_url": "https:\/\/puleri-starter-wp-dev.localhost"
+}

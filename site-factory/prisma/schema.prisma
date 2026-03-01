@@ -1,0 +1,475 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Client {
+  id        String           @id @default(cuid())
+  name      String
+  slug      String           @unique
+  firstName String?          @map("first_name")
+  lastName  String?          @map("last_name")
+  email     String?
+  phone     String?
+  notes     String?          @db.Text
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  projects  Project[]
+  websites  ClientWebsite[]
+
+  @@map("clients")
+}
+
+model ClientWebsite {
+  id       String @id @default(cuid())
+  clientId String
+  label    String
+  url      String
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("client_websites")
+}
+
+enum DevMode {
+  DEV_COMFORT
+  DEV_PROD_LIKE
+  PROD
+}
+
+enum ProjectType {
+  STARTER
+  VITRINE
+  BLOG
+  ECOM
+  APP
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum TechStack {
+  WORDPRESS
+  NEXTJS
+  NUXT
+  ASTRO
+}
+
+enum DeployTarget {
+  DOCKER
+  VERCEL
+  SHARED_HOSTING
+}
+
+enum HostingTarget {
+  SHARED_PHP
+  MANAGED_WORDPRESS
+  CLOUD_STATIC
+  CLOUD_SSR
+  VPS_DOCKER
+  SAAS
+  SPLIT_HEADLESS
+  TO_CONFIRM
+}
+
+enum FrontendStack {
+  NEXTJS
+  NUXT
+  ASTRO
+}
+
+enum ProjectFamily {
+  STATIC_SSG
+  CMS_MONO
+  CMS_HEADLESS
+  COMMERCE_SAAS
+  COMMERCE_SELF_HOSTED
+  COMMERCE_HEADLESS
+  APP_PLATFORM
+}
+
+enum ProjectImplementation {
+  ASTRO
+  ELEVENTY
+  HUGO
+  JEKYLL
+  GATSBY
+  NEXT_SSG
+  NUXT_SSG
+  WORDPRESS
+  GHOST
+  CRAFT
+  DRUPAL
+  JOOMLA
+  WEBFLOW
+  WORDPRESS_HEADLESS
+  WOOCOMMERCE_HEADLESS
+  STRAPI
+  CONTENTFUL
+  SANITY
+  PRISMIC
+  DIRECTUS
+  STORYBLOK
+  SHOPIFY
+  BIGCOMMERCE
+  WEBFLOW_COMMERCE
+  WOOCOMMERCE
+  PRESTASHOP
+  MAGENTO
+  SHOPWARE
+  SYLIUS
+  SHOPIFY_HEADLESS
+  MEDUSA
+  COMMERCETOOLS
+  SALEOR
+  NEXTJS
+  NUXT
+  SVELTEKIT
+  REMIX
+  OTHER
+}
+
+enum ProjectFrontendImplementation {
+  NEXTJS
+  NUXT
+  ASTRO
+  SVELTEKIT
+  REMIX
+  GATSBY
+  OTHER
+}
+
+enum DbType {
+  MARIADB
+  POSTGRESQL
+}
+
+enum ProjectCategory {
+  CAT0
+  CAT1
+  CAT2
+  CAT3
+  CAT4
+}
+
+enum MaintenanceLevel {
+  MINIMAL
+  STANDARD
+  ADVANCED
+  BUSINESS
+  PREMIUM
+}
+
+enum TrafficLevel {
+  LOW
+  MEDIUM
+  HIGH
+  VERY_HIGH
+}
+
+enum ProductBucket {
+  NONE
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum DataSensitivity {
+  STANDARD
+  SENSITIVE
+  REGULATED
+}
+
+enum ScalabilityLevel {
+  FIXED
+  GROWING
+  ELASTIC
+}
+
+enum EditingFrequency {
+  RARE
+  REGULAR
+  DAILY
+}
+
+enum CommerceModel {
+  SAAS
+  SELF_HOSTED
+  HEADLESS
+}
+
+enum BackendMode {
+  FULLSTACK
+  SEPARATE
+}
+
+enum BackendFamily {
+  BAAS_STANDARD
+  BAAS_ADVANCED
+  CUSTOM_API
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  clientId     String
+  name         String
+  slug         String        @unique
+  type         ProjectType   @default(VITRINE)
+  status       ProjectStatus @default(DRAFT)
+  description  String?       @db.Text
+
+  devMode      DevMode       @default(DEV_COMFORT) @map("dev_mode")
+
+  techStack    TechStack?    @map("tech_stack")
+  deployTarget DeployTarget  @default(DOCKER) @map("deploy_target")
+  hostingProviderId String?  @map("hosting_provider_id")
+  hostingTarget HostingTarget? @map("hosting_target")
+  hostingTargetBack HostingTarget? @map("hosting_target_back")
+  hostingTargetFront HostingTarget? @map("hosting_target_front")
+
+  projectFamily ProjectFamily? @map("project_family")
+  projectImplementation ProjectImplementation? @map("project_implementation")
+  projectImplementationLabel String? @map("project_implementation_label")
+  projectFrontendImplementation ProjectFrontendImplementation? @map("project_frontend_implementation")
+  projectFrontendImplementationLabel String? @map("project_frontend_implementation_label")
+
+  // Domaine "prod/métier" (optionnel)
+  domain       String?
+
+  category     ProjectCategory? @map("category")
+  gitRepo      String?          @map("git_repo")
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  client       Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  // ── Sub-models par responsabilité ─────────────────────────────
+  runtime       ProjectRuntime?
+  services      ProjectService[]
+  database      ProjectDatabase?
+  wpConfig      WordpressConfig?
+  nextConfig    NextjsConfig?
+  qualification ProjectQualification?
+  logs          ProjectLog[]
+  docs          ProjectDoc[]
+  docFavorites  ProjectDocFavorite[]
+
+  @@index([clientId])
+  @@map("projects")
+}
+
+model ProjectRuntime {
+  id        String   @id @default(cuid())
+  projectId String   @unique @map("project_id")
+
+  // Dev/local
+  port      Int?
+  localHost String?  @map("local_host")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_runtimes")
+}
+
+model ProjectDatabase {
+  id        String @id @default(cuid())
+  projectId String @unique @map("project_id")
+
+  // BDD (infra)
+  dbType     DbType  @default(MARIADB) @map("db_type")
+  dbVersion  String  @default("11")    @map("db_version")
+  dbName     String? @map("db_name")
+  dbUser     String? @map("db_user")
+  dbPassword String? @map("db_password")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_databases")
+}
+
+model ProjectService {
+  id         String   @id @default(cuid())
+  projectId  String   @map("project_id")
+
+  // Stable identifier from SERVICE_CATALOG (string, no enum migration)
+  serviceId  String   @map("service_id")
+  enabled    Boolean  @default(true)
+
+  // Per-service config (JSON as text; switch to Json if you want)
+  optionsJson String? @map("options_json") @db.Text
+
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, serviceId])
+  @@index([projectId])
+  @@map("project_services")
+}
+
+model WordpressConfig {
+  id        String   @id @default(cuid())
+  projectId String   @unique @map("project_id")
+
+  // Versions WP only
+  phpVersion  String @default("8.3") @map("php_version")
+
+  // Hosting
+  hostingProfileId String?  @map("hosting_profile_id")
+  customCapsJson     String?  @map("custom_caps_json") @db.Text
+  excludeFreemium  Boolean  @default(false) @map("exclude_freemium")
+
+  // Features (JSON WpFeature[]) — source of truth for resolver
+  wpFeatures       String?  @map("wp_features") @db.Text
+  wpInfraStatus    String?  @map("wp_infra_status") @db.Text
+
+  // Headless
+  wpHeadless    Boolean        @default(false) @map("wp_headless")
+  frontendStack FrontendStack? @map("frontend_stack")
+
+  // Auto-install
+  wpSiteTitle     String? @map("wp_site_title")
+  wpAdminUser     String? @map("wp_admin_user")
+  wpAdminPassword String? @map("wp_admin_password")
+  wpAdminEmail    String? @map("wp_admin_email")
+
+  // Advanced
+  wpPermalinkStructure String? @default("/%postname%/") @map("wp_permalink_structure")
+  wpDefaultPages       String? @map("wp_default_pages") @db.Text
+  wpPlugins            String? @map("wp_plugins")       @db.Text
+  wpTheme              String? @map("wp_theme")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("wordpress_configs")
+}
+
+model NextjsConfig {
+  id        String   @id @default(cuid())
+  projectId String   @unique @map("project_id")
+
+  nodeVersion String @default("22") @map("node_version")
+
+  // Env app-level (Next only)
+  envVarsJson String? @map("env_vars_json") @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("nextjs_configs")
+}
+
+model ProjectQualification {
+  id        String @id @default(cuid())
+  projectId String @unique @map("project_id")
+
+  modules          String?           @db.Text
+  maintenanceLevel MaintenanceLevel? @map("maintenance_level")
+  estimatedBudget  Int?              @map("estimated_budget")
+
+  // Contraintes métier (qualification v2)
+  trafficLevel     TrafficLevel?     @map("traffic_level")
+  productCount     ProductBucket?    @map("product_count")
+  dataSensitivity  DataSensitivity?  @map("data_sensitivity")
+  scalabilityLevel ScalabilityLevel? @map("scalability_level")
+  needsEditing     Boolean?          @map("needs_editing")
+  editingFrequency EditingFrequency? @map("editing_frequency")
+  headlessRequired Boolean?          @map("headless_required")
+  commerceModel    CommerceModel?    @map("commerce_model")
+  backendMode      BackendMode?      @map("backend_mode")
+  backendFamily    BackendFamily?    @map("backend_family")
+  backendOpsHeavy  Boolean?          @map("backend_ops_heavy")
+
+  // CI (Complexity Index)
+  ciScore     Float?           @map("ci_score")
+  ciCategory  ProjectCategory? @map("ci_category")
+  ciAxesJson  String?          @map("ci_axes_json") @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_qualifications")
+}
+
+model ProjectLog {
+  id        String   @id @default(cuid())
+  projectId String   @map("project_id")
+  env       String   @db.VarChar(16)
+  type      String   @db.VarChar(32)
+  level     String   @db.VarChar(16)
+  service   String?  @db.VarChar(64)
+  source    String   @db.VarChar(128)
+  message   String   @db.Text
+  metaJson  String?  @map("meta_json") @db.Text
+  ts        DateTime @map("ts")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([projectId, env])
+  @@index([projectId, type])
+  @@index([projectId, level])
+  @@index([projectId, service])
+  @@index([projectId, ts])
+  @@map("project_logs")
+}
+
+model ProjectDoc {
+  id        String   @id @default(cuid())
+  projectId String   @map("project_id")
+  docId     String   @map("doc_id")
+  source    String   @default("AUTO")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, docId])
+  @@index([projectId])
+  @@map("project_docs")
+}
+
+model ProjectDocFavorite {
+  id        String   @id @default(cuid())
+  projectId String   @map("project_id")
+  docId     String   @map("doc_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, docId])
+  @@index([projectId])
+  @@map("project_doc_favorites")
+}
+
+model GlobalDocFavorite {
+  id        String   @id @default(cuid())
+  docId     String   @unique @map("doc_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("global_doc_favorites")
+}

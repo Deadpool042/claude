@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "title": "Dark",
+  "styles": {
+    "color": {
+      "background": "#0f172a",
+      "text": "#f8fafc"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "#38bdf8"
+        }
+      }
+    }
+  }
+}

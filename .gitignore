@@ -1,0 +1,111 @@
+
+# ----------------------------
+# Node
+# ----------------------------
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.yarn-cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ----------------------------
+# Next.js
+# ----------------------------
+.next/
+out/
+build/
+
+# Next image cache
+.next/cache/
+
+# ----------------------------
+# TypeScript
+# ----------------------------
+*.tsbuildinfo
+
+# ----------------------------
+# Environment files
+# ----------------------------
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# If you use dotenv-safe example
+!.env.example
+
+# ----------------------------
+# Prisma
+# ----------------------------
+prisma/dev.db
+prisma/dev.db-journal
+prisma/*.db
+prisma/*.db-journal
+!prisma/migrations/
+
+# ----------------------------
+# Supabase local
+# ----------------------------
+.supabase/
+supabase/.temp/
+supabase/.branches/
+
+# ----------------------------
+# Vercel
+# ----------------------------
+.vercel/
+
+# ----------------------------
+# Testing
+# ----------------------------
+coverage/
+.playwright/
+test-results/
+
+# ----------------------------
+# OS files
+# ----------------------------
+.DS_Store
+Thumbs.db
+
+# ----------------------------
+# IDE
+# ----------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+.idea/
+
+# ----------------------------
+# Misc
+# ----------------------------
+*.pem
+*.key
+*.crt
+
+# Turbo (if monorepo later)
+.turbo/
+
+# Docker (if local only)
+docker-data/
+
+# ----------------------------
+# Site-factory specific
+# ----------------------------
+site-factory/.env
+site-factory/.env.local
+site-factory/.next/
+site-factory/node_modules/

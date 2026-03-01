@@ -1,0 +1,34 @@
+{
+    "last_backup_at": "2026-02-28T09:20:15+00:00",
+    "last_backup_files": {
+        "db": "\/var\/www\/backup\/puleri\/starter-wp\/db\/db-20260228-092014.sql",
+        "uploads": "\/var\/www\/backup\/puleri\/starter-wp\/uploads\/uploads-20260228-092014.zip",
+        "type": "full"
+    },
+    "last_backup_keep": 14,
+    "last_health_at": "2026-02-28T11:49:16+00:00",
+    "last_health_ok": true,
+    "last_health_details": {
+        "db_ok": true,
+        "cron_ok": true,
+        "fs_ok": true,
+        "uploads_ok": true,
+        "php_version": "8.3.30",
+        "wp_version": "6.9.1",
+        "site_url": "https:\/\/puleri-starter-wp-dev.localhost"
+    },
+    "last_restore_at": "2026-02-27T19:25:47+00:00",
+    "last_restore_type": "full",
+    "last_restore_files": {
+        "db": "\/var\/www\/backup\/puleri\/starter-wp\/db\/db-20260227-192516.sql",
+        "uploads": "\/var\/www\/backup\/puleri\/starter-wp\/uploads\/uploads-20260227-192516.zip"
+    },
+    "last_restore_ok": true,
+    "last_restore_error": null,
+    "last_restore_warning": null,
+    "last_restore_cleanup": {
+        "checked": 1,
+        "removed": 0,
+        "truncated": false
+    }
+}

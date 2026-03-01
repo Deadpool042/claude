@@ -1,0 +1,100 @@
+services:
+  # ─── Traefik (reverse-proxy global) ────────────────────────────────
+  traefik:
+    image: traefik:v3.3
+    restart: unless-stopped
+    command:
+      # API / Dashboard
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      # Docker provider (for Traefik's own labels)
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=proxy"
+      # File provider (watches the whole directory)
+      - "--providers.file.directory=/etc/traefik/conf.d"
+      - "--providers.file.watch=true"
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      # Logging
+      - "--log.level=INFO"
+      # Access logs (HTTP requests)
+      - "--accesslog=true"
+      - "--accesslog.format=json"
+      - "--accesslog.filepath=/var/log/traefik/access.log"
+      - "--accesslog.bufferingsize=100"
+    labels:
+      - "traefik.enable=false"
+    ports:
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+      - "127.0.0.1:8080:8080" # Dashboard (dev only)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./infra/traefik/conf.d:/etc/traefik/conf.d:ro
+      - ./infra/traefik/certs:/etc/traefik/certs:ro
+      - ./infra/traefik/logs:/var/log/traefik
+    networks:
+      - proxy
+
+  # ─── MariaDB ───────────────────────────────────────────────────────
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+      MARIADB_DATABASE: ${DB_NAME:-sitefactory}
+      MARIADB_USER: ${DB_USER:-sitefactory}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-sitefactory}
+    ports:
+      - "127.0.0.1:${DB_PORT:-3307}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - internal
+
+  # ─── Adminer (DB GUI) ─────────────────────────────────────────────
+  adminer:
+    image: adminer:4
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DESIGN: dracula
+    networks:
+      - internal
+      - proxy
+
+  # ─── Whoami (test service) ─────────────────────────────────────────
+  whoami:
+    image: traefik/whoami
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18080:80"
+    networks:
+      - proxy
+
+  # ─── Error pages (custom 502 page) ────────────────────────────────
+  error-pages:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./infra/error-pages/502.html:/usr/share/nginx/html/502.html:ro
+      - ./infra/error-pages/404.html:/usr/share/nginx/html/404.html:ro
+      - ./infra/error-pages/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - proxy
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  proxy:
+    name: proxy
+    driver: bridge
+  internal:
+    name: internal
+    driver: bridge

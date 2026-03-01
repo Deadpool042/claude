@@ -1,0 +1,753 @@
+# Translation of Plugins - Cookie Notice &amp; Compliance for GDPR / CCPA - Development (trunk) in French (France)
+# This file is distributed under the same license as the Plugins - Cookie Notice &amp; Compliance for GDPR / CCPA - Development (trunk) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2022-02-27 16:15:13+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: fr\n"
+"Project-Id-Version: Plugins - Cookie Notice &amp; Compliance for GDPR / CCPA - Development (trunk)\n"
+
+#: includes/settings.php:711
+msgid "Is Cookie Compliance free?"
+msgstr "Cookie Compliance est-il gratuit ?"
+
+#: includes/settings.php:697
+msgid "F.A.Q."
+msgstr "F.A.Q."
+
+#: includes/dashboard.php:72
+msgid "Cookie Compliance"
+msgstr "Cookie Compliance"
+
+#: includes/dashboard.php:541
+msgid "Last 30 days"
+msgstr "30 derniers jours"
+
+#: includes/dashboard.php:402
+msgid "Traffic Overview"
+msgstr "Aperçu du trafic"
+
+#: includes/dashboard.php:433
+msgid "View consent activity inside WordPress Dashboard"
+msgstr "Voir l’activité de consentement dans le tableau de bord WordPress"
+
+#: includes/dashboard.php:568
+msgid "Days to go: %s"
+msgstr "Jours restants : %s"
+
+#: includes/settings.php:282
+msgid "months"
+msgstr "mois"
+
+#: includes/settings.php:269
+msgid "Save my preferences"
+msgstr "Enregistrer mes préférences"
+
+#: includes/settings.php:254
+msgid "Personalized"
+msgstr "Personnalisé"
+
+#: includes/settings.php:253
+msgid "Balanced"
+msgstr "Équilibré"
+
+#: includes/settings.php:252
+msgid "Private"
+msgstr "Privé"
+
+#: cookie-notice.php:1387
+msgid "Deactivate"
+msgstr "Désactiver"
+
+#: cookie-notice.php:1388
+msgid "Deactivate & Submit"
+msgstr "Désactiver et envoyer"
+
+#: cookie-notice.php:1386
+msgid "Cancel"
+msgstr "Annuler"
+
+#: cookie-notice.php:1372 includes/welcome.php:472
+msgid "Other"
+msgstr "Autre"
+
+#: cookie-notice.php:1369
+msgid "The Cookie Compliance default settings are too strict."
+msgstr "Les réglages par défaut de Cookie Compliance sont trop stricts."
+
+#: includes/welcome.php:480
+msgid "Reject All, Accept Some, Accept All​"
+msgstr "Tout rejeter, en accepter certains, tout accepter"
+
+#: cookie-notice.php:1371
+msgid "Support isn't timely."
+msgstr "Le support n’est pas ponctuel."
+
+#: includes/settings.php:221
+msgid "Button color"
+msgstr "Couleur du bouton"
+
+#: cookie-notice.php:1361
+msgid "We're sorry to see you go. Could you please tell us what happened?"
+msgstr "Nous sommes désolés de vous voir partir. Pourriez-vous nous dire ce qui s’est passé ?"
+
+#: includes/settings.php:259
+msgid "Platinum"
+msgstr "Platinum"
+
+#: includes/settings.php:258
+msgid "Gold"
+msgstr "Gold"
+
+#: includes/settings.php:257
+msgid "Silver"
+msgstr "Silver"
+
+#: cookie-notice.php:1368
+msgid "The Cookie Compliance consent choices (Silver, Gold, Platinum) are confusing."
+msgstr "Les choix de consentement de Cookie Compliance (Silver, Gold, Platinum) prêtent à confusion."
+
+#: cookie-notice.php:1367
+msgid "The Cookie Compliance banner is too big."
+msgstr "La bannière de Cookie Compliance est trop grande."
+
+#: cookie-notice.php:1366
+msgid "I found another plugin to use for the same task."
+msgstr "J’ai trouvé une autre extension à utiliser pour la même tâche."
+
+#: cookie-notice.php:826 cookie-notice.php:828
+msgid "Dismiss Notice"
+msgstr "Ignorer la notification"
+
+#: includes/settings.php:264
+msgid "Accept All"
+msgstr "Tout accepter"
+
+#: includes/settings.php:262
+msgid "Reject All"
+msgstr "Tout rejeter"
+
+#: cookie-notice.php:1370
+msgid "The web application user interface is not clear to me."
+msgstr "L’interface utilisateur de l’application web n’est pas claire pour moi."
+
+#: includes/welcome.php:375
+msgid "Congratulations"
+msgstr "Félicitations"
+
+#: includes/welcome.php:357
+msgid "I don’t want to create an account now"
+msgstr "Je ne veux pas créer de compte maintenant"
+
+#: includes/settings.php:281
+msgid "month"
+msgstr "mois"
+
+#: includes/welcome.php:305
+msgid "Free"
+msgstr "Gratuit"
+
+#: includes/settings.php:655 includes/welcome.php:304 includes/welcome.php:596
+#: includes/welcome.php:694
+msgid "Basic"
+msgstr "De base"
+
+#: includes/welcome.php:413
+msgid "Checking..."
+msgstr "Vérification…"
+
+#: includes/welcome.php:545
+msgid "Create a Cookie Compliance&trade; account and select your preferred plan."
+msgstr "Créez un compte Cookie Compliance&trade; et sélectionnez votre offre préférée."
+
+#: includes/welcome.php:627 includes/welcome.php:728
+msgid "Submit"
+msgstr "Soumettre"
+
+#: includes/welcome.php:601 includes/welcome.php:702 includes/welcome.php:741
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: includes/welcome.php:590 includes/welcome.php:688
+msgid "Select Plan"
+msgstr "Sélectionner un plan"
+
+#: cookie-notice.php:1335
+msgid "Free Upgrade"
+msgstr "Mise à niveau gratuite"
+
+#: includes/privacy-consent-logs-list-table.php:279 includes/settings.php:272
+msgid "Preferences"
+msgstr "Préférences"
+
+#: includes/welcome.php:129
+msgid "Passed"
+msgstr "Succès"
+
+#: includes/welcome.php:130
+msgid "Failed"
+msgstr "Échec"
+
+#: includes/settings.php:271
+msgid "Do Not Sell"
+msgstr "Ne pas vendre"
+
+#: includes/privacy-consent.php:662 includes/settings.php:2218
+msgid "Settings saved."
+msgstr "Réglages enregistrés."
+
+#: includes/welcome.php:549
+msgid "Create Account"
+msgstr "Créer un compte"
+
+#: includes/welcome.php:583
+msgid "Already have an account?"
+msgstr "Vous avez déjà un compte ?"
+
+#: includes/privacy-consent.php:302 includes/privacy-consent.php:315
+#: includes/privacy-consent.php:328 includes/welcome.php:421
+msgid "Proof-of-Consent"
+msgstr "Preuve de consentement"
+
+#: includes/settings.php:808 includes/settings.php:948
+#: includes/settings.php:962 includes/settings.php:981 includes/welcome.php:417
+msgid "Autoblocking"
+msgstr "Blocage automatique"
+
+#: includes/welcome.php:683
+msgid "Sign up"
+msgstr "Créer un compte"
+
+#: includes/welcome.php:658
+msgid "Account Login"
+msgstr "Connexion au compte"
+
+#: includes/settings.php:949 includes/settings.php:963
+#: includes/settings.php:982 includes/welcome.php:418
+msgid "Cookie Categories"
+msgstr "Catégories de cookie"
+
+#: includes/welcome.php:683
+msgid "Don't have an account yet?"
+msgstr "Vous n’avez pas encore de compte ?"
+
+#: includes/settings.php:812 includes/settings.php:1137
+msgid "Purge Cache"
+msgstr "Vider le cache"
+
+#: includes/settings.php:1070
+msgid "Enter your Cookie Compliance&trade; application secret key."
+msgstr "Saisir la clé secrète de votre application Cookie Compliance&trade;"
+
+#: includes/privacy-consent.php:313 includes/privacy-consent.php:314
+#: includes/privacy-consent.php:315 includes/settings.php:962
+#: includes/settings.php:963 includes/settings.php:964
+#: includes/settings.php:1026 includes/settings.php:1027
+msgid "Pending"
+msgstr "En attente"
+
+#: includes/privacy-consent.php:305 includes/privacy-consent.php:318
+#: includes/settings.php:953 includes/settings.php:967
+#: includes/settings.php:1018 includes/settings.php:1030
+msgid "Log in & Configure"
+msgstr "Connectez-vous & configurer"
+
+#: includes/settings.php:822
+msgid "Compliance status"
+msgstr "État de la mise en conformité"
+
+#: includes/privacy-consent.php:300 includes/privacy-consent.php:301
+#: includes/privacy-consent.php:302 includes/settings.php:947
+#: includes/settings.php:948 includes/settings.php:949
+#: includes/settings.php:950 includes/settings.php:961
+#: includes/settings.php:980 includes/settings.php:1014
+#: includes/settings.php:1015
+msgid "Active"
+msgstr "Actif"
+
+#: includes/privacy-consent.php:326 includes/privacy-consent.php:327
+#: includes/privacy-consent.php:328 includes/settings.php:981
+#: includes/settings.php:982 includes/settings.php:983
+#: includes/settings.php:1038 includes/settings.php:1039
+msgid "Inactive"
+msgstr "Inactif"
+
+#: includes/settings.php:804 includes/settings.php:824
+msgid "App Key"
+msgstr "Clé de l’application"
+
+#: includes/settings.php:803 includes/settings.php:823
+msgid "App ID"
+msgstr "ID de l’application"
+
+#: includes/settings.php:1139
+msgid "Click the Purge Cache button to refresh the app configuration."
+msgstr "Cliquer sur le bouton Supprimer Cache pour actualiser la configuration de l’extension."
+
+#: includes/settings.php:1057
+msgid "Enter your Cookie Compliance&trade; application ID."
+msgstr "Saisir l’ID de votre application Cookie Compliance&trade;"
+
+#: includes/welcome.php:265
+msgid "Skip for now"
+msgstr "Ignorer pour le moment"
+
+#: includes/welcome.php:761
+msgid "Success!"
+msgstr "Terminé !"
+
+#: includes/welcome.php:583 includes/welcome.php:669
+msgid "Sign in"
+msgstr "Se connecter"
+
+#: includes/welcome.php:623 includes/welcome.php:724
+msgid "CVC/CVV"
+msgstr "CVC/CVV"
+
+#: includes/welcome.php:619 includes/welcome.php:720
+msgid "Expiration Date"
+msgstr "Date d’expiration"
+
+#: includes/welcome.php:615 includes/welcome.php:716
+msgid "Card Number"
+msgstr "Numéro de carte"
+
+#: includes/welcome.php:608 includes/welcome.php:709
+msgid "Credit Card"
+msgstr "Carte de crédit"
+
+#: includes/welcome.php:606 includes/welcome.php:707
+msgid "Payment Method"
+msgstr "Moyen de paiement"
+
+#: includes/welcome.php:561
+msgid "Confirm Password"
+msgstr "Confirmer le mot de passe"
+
+#: includes/welcome.php:554 includes/welcome.php:663
+msgid "Email address"
+msgstr "Adresse e-mail"
+
+#: includes/welcome.php:517
+msgid "Color of the button text."
+msgstr "Couleur du texte du bouton."
+
+#: includes/welcome.php:516
+msgid "Color of the heading text."
+msgstr "Couleur du texte du titre."
+
+#: includes/welcome.php:410
+msgid "Site Name"
+msgstr "Nom du site"
+
+#: includes/welcome.php:409
+msgid "Site URL"
+msgstr "URL du site"
+
+#: includes/welcome.php:513
+msgid "Color of the banner background."
+msgstr "Couleur de l’arrière-plan de la bannière."
+
+#: includes/welcome.php:512
+msgid "Color of the buttons and interactive elements."
+msgstr "Couleur des boutons et des éléments interactifs."
+
+#: includes/welcome.php:506
+msgid "Center"
+msgstr "Centré"
+
+#: includes/welcome.php:496
+msgid "Banner Design"
+msgstr "Design de la bannière"
+
+#: includes/welcome.php:466
+msgid "CCPA"
+msgstr "CCPA"
+
+#: includes/welcome-api.php:307 includes/welcome-api.php:540
+msgid "Password is not allowed to be empty."
+msgstr "Mot de passe vide non autorisé."
+
+#: includes/welcome-api.php:297 includes/welcome-api.php:531
+msgid "Email is not allowed to be empty."
+msgstr "E-mail vide non autorisé."
+
+#. Author of the plugin
+#: cookie-notice.php
+msgid "Hu-manity.co"
+msgstr "Hu-manity.co"
+
+#. Author URI of the plugin
+#: cookie-notice.php
+msgid "https://hu-manity.co/"
+msgstr "https://hu-manity.co/"
+
+#: includes/welcome.php:609 includes/welcome.php:710
+msgid "PayPal"
+msgstr "PayPal"
+
+#: includes/welcome.php:557 includes/welcome.php:666
+msgid "Password"
+msgstr "﻿Mot de passe"
+
+#: includes/welcome.php:569
+msgid "Sign Up"
+msgstr "S’inscrire"
+
+#: includes/welcome.php:505
+msgid "Right"
+msgstr "Droite "
+
+#: includes/welcome.php:504
+msgid "Left"
+msgstr "A gauche"
+
+#: includes/welcome.php:465
+msgid "GDPR"
+msgstr "RGPD"
+
+#. Plugin Name of the plugin
+#: cookie-notice.php
+msgid "Cookie Notice & Compliance for GDPR / CCPA"
+msgstr "Cookie Notice & Compliance for GDPR / CCPA"
+
+#: includes/welcome-api.php:35 includes/welcome-api.php:39
+#: includes/welcome-api.php:46 includes/welcome-api.php:59
+#: includes/welcome.php:207 includes/welcome.php:235 includes/welcome.php:238
+msgid "You do not have permission to access this page."
+msgstr "Vous n’avez pas la permission d’accéder à cette page."
+
+#: includes/settings.php:1654
+msgid "Bar opacity"
+msgstr "Opacité de la barre"
+
+#: includes/settings.php:1495
+msgid "The amount of time that the cookie should be stored for when user accepts the notice."
+msgstr "La durée de conservation du cookie lorsque l’utilisateur ou l’utilisatrice accepte la notification."
+
+#: includes/settings.php:1516
+msgid "The amount of time that the cookie should be stored for when the user doesn't accept the notice."
+msgstr "La durée de conservation du cookie lorsque l’utilisateur ou l’utilisatrice n’accepte pas la notification."
+
+#: includes/settings.php:837
+msgid "Accepted expiry"
+msgstr "Expiration acceptée"
+
+#: includes/settings.php:838
+msgid "Rejected expiry"
+msgstr "Expiration refusée"
+
+#: includes/settings.php:1604
+msgid "Enable to accept the notice on any click on the page."
+msgstr "Permettre d’accepter la notification au clic sur la page."
+
+#: includes/settings.php:1588
+msgid "Enable to accept the notice when user scrolls."
+msgstr "Activer l’acceptation de la notification lorsque l’utilisateur fait défiler."
+
+#: includes/settings.php:1573
+msgid "Select the animation style."
+msgstr "Sélectionnez le style d’animation."
+
+#: includes/settings.php:1554
+msgid "Select location for the notice."
+msgstr "Sélectionnez l’emplacement de la notification."
+
+#: includes/settings.php:1358
+msgid "Enter the revoke message."
+msgstr "Saisissez le message de révocation."
+
+#: includes/settings.php:1307
+msgid "The text of the button to refuse the consent."
+msgstr "Le texte du bouton pour refuser le consentement."
+
+#: includes/settings.php:1288
+msgid "The text of the option to accept the notice and make it disappear."
+msgstr "Le texte de l’option permettant d’accepter la notification et de la faire disparaître."
+
+#: includes/settings.php:836
+msgid "On click"
+msgstr "Au clic"
+
+#: includes/settings.php:831
+msgid "Refuse consent"
+msgstr "Refuser le consentement"
+
+#: includes/settings.php:293 includes/settings.php:832
+msgid "Revoke consent"
+msgstr "Révoquer le consentement"
+
+#: includes/settings.php:292
+msgid "You can revoke your consent any time using the Revoke consent button."
+msgstr "Vous pouvez révoquer votre consentement à tout moment en utilisant le bouton « Révoquer le consentement »."
+
+#: includes/settings.php:199
+msgid "Dark"
+msgstr "Sombre"
+
+#: includes/settings.php:198
+msgid "Light"
+msgstr "Clair"
+
+#: includes/settings.php:1425
+msgid "Select where to redirect user for more information."
+msgstr "Sélectionnez où rediriger l’utilisateur ou l’utilisatrice pour plus d’informations."
+
+#: includes/settings.php:1591
+msgid "Number of pixels user has to scroll to accept the notice and make it disappear."
+msgstr "Nombre de pixels que l’utilisateur ou l’utilisatrice doit faire défiler pour accepter la notification et la faire disparaître."
+
+#: includes/settings.php:1472
+msgid "Select the privacy policy link position."
+msgstr "Sélectionnez la position du lien de politique de vie privée."
+
+#: includes/settings.php:215
+msgid "Banner"
+msgstr "Bannière"
+
+#: includes/settings.php:1415
+msgid "The text of the privacy policy button."
+msgstr "Le texte du bouton de politique de confidentialité."
+
+#: includes/settings.php:1329
+msgid "Body"
+msgstr "Body"
+
+#: includes/settings.php:1328
+msgid "Head"
+msgstr "Head"
+
+#: includes/settings.php:848
+msgid "Button class"
+msgstr "Classe du bouton"
+
+#: includes/settings.php:270 includes/settings.php:294
+#: includes/settings.php:830
+msgid "Privacy policy"
+msgstr "Politique de confidentialité"
+
+#: includes/settings.php:228
+msgid "An hour"
+msgstr "Une heure"
+
+#: includes/settings.php:204
+msgid "Manual"
+msgstr "Manuel"
+
+#: includes/settings.php:203
+msgid "Automatic"
+msgstr "Automatique"
+
+#: includes/settings.php:1629
+msgid "Enter additional button CSS classes separated by spaces."
+msgstr "Saisissez les classes CSS additionnelles du bouton, séparées par des espaces."
+
+#: includes/settings.php:1462
+msgid "Select the privacy policy link target."
+msgstr "Sélectionnez la cible du lien de la politique de confidentialité."
+
+#: includes/settings.php:1445
+msgid "Synchronize with WordPress Privacy Policy page."
+msgstr "Synchroniser avec la page WordPress de politique de confidentialité."
+
+#: includes/settings.php:1412
+msgid "Enable privacy policy link."
+msgstr "Activer le lien de politique de confidentialité."
+
+#: includes/settings.php:1336
+msgid "The code to be used in your site footer, before the closing body tag."
+msgstr "Le code à utiliser dans le pied de page de votre site, avant la balise de fermeture body."
+
+#: includes/settings.php:1332
+msgid "The code to be used in your site header, before the closing head tag."
+msgstr "Le code à utiliser dans l’en-tête de votre site, avant la balise de fermeture head."
+
+#: includes/settings.php:1360
+msgid "The text of the button to revoke the consent."
+msgstr "Le texte du bouton pour révoquer le consentement."
+
+#: includes/settings.php:834
+msgid "Reloading"
+msgstr "Rechargement"
+
+#: includes/settings.php:1381
+msgid "Enable to reload the page after the notice is accepted."
+msgstr "Permettre de recharger la page après l’acceptation de la notification."
+
+#: includes/settings.php:833
+msgid "Script blocking"
+msgstr "Blocage des scripts"
+
+#: includes/settings.php:192 includes/welcome.php:503
+msgid "Top"
+msgstr "Haut"
+
+#: includes/settings.php:193 includes/welcome.php:502
+msgid "Bottom"
+msgstr "Bas"
+
+#: includes/settings.php:197 includes/settings.php:240
+msgid "None"
+msgstr "Aucun"
+
+#: includes/modules/wordpress/privacy-consent.php:38
+msgid "WordPress"
+msgstr "WordPress"
+
+#: includes/settings.php:209
+msgid "Custom link"
+msgstr "Lien personnalisé"
+
+#: includes/settings.php:208
+msgid "Page link"
+msgstr "Lien de page"
+
+#: includes/settings.php:220
+msgid "Text color"
+msgstr "Couleur du texte"
+
+#: includes/settings.php:222
+msgid "Bar color"
+msgstr "Couleur de la barre"
+
+#: includes/settings.php:229
+msgid "1 day"
+msgstr "1 jour"
+
+#: includes/settings.php:230
+msgid "1 week"
+msgstr "1 semaine"
+
+#: includes/consent-logs-list-table.php:60 includes/settings.php:231
+msgid "1 month"
+msgstr "1 mois"
+
+#: includes/consent-logs-list-table.php:62 includes/settings.php:232
+msgid "3 months"
+msgstr "3 mois"
+
+#: includes/consent-logs-list-table.php:64 includes/settings.php:233
+msgid "6 months"
+msgstr "6 mois"
+
+#: includes/consent-logs-list-table.php:66 includes/settings.php:234
+msgid "1 year"
+msgstr "1 année"
+
+#: includes/settings.php:235
+msgid "infinity"
+msgstr "illimitée"
+
+#: includes/settings.php:241
+msgid "Fade"
+msgstr "Fondu"
+
+#: includes/settings.php:242
+msgid "Slide"
+msgstr "Glissement"
+
+#: includes/dashboard.php:641 includes/settings.php:337
+#: includes/settings.php:947 includes/settings.php:961
+#: includes/settings.php:980 includes/welcome.php:416
+msgid "Cookie Notice"
+msgstr "Cookie Notice"
+
+#: includes/settings.php:216 includes/settings.php:828
+msgid "Message"
+msgstr "Message"
+
+#: includes/settings.php:829
+msgid "Button text"
+msgstr "Texte du bouton"
+
+#: includes/settings.php:845
+msgid "Position"
+msgstr "Position"
+
+#: includes/settings.php:847
+msgid "Colors"
+msgstr "Couleurs"
+
+#: includes/settings.php:1428
+msgid "-- select page --"
+msgstr "-- sélectionner page --"
+
+#: includes/settings.php:291
+msgid "No"
+msgstr "Non"
+
+#: includes/settings.php:246
+msgid "Header"
+msgstr "En-tête"
+
+#: includes/settings.php:247
+msgid "Footer"
+msgstr "Pied de page"
+
+#: includes/settings.php:817 includes/settings.php:841
+msgid "Deactivation"
+msgstr "Désactivation"
+
+#: includes/settings.php:846
+msgid "Animation"
+msgstr "Animation"
+
+#: includes/settings.php:835
+msgid "On scroll"
+msgstr "Au défilement"
+
+#: includes/settings.php:840
+msgid "Script placement"
+msgstr "Emplacement des scripts"
+
+#: includes/settings.php:622
+msgid "Reset to defaults"
+msgstr "Réinitialiser les réglages"
+
+#: includes/settings.php:1616
+msgid "Enable if you want all plugin data to be deleted on deactivation."
+msgstr "Cochez si vous voulez que toutes les données de l’extension soient supprimées à sa désactivation."
+
+#: includes/privacy-consent.php:666 includes/settings.php:2222
+msgid "Settings restored to defaults."
+msgstr "Les réglages par défaut ont été restaurés."
+
+#: includes/settings.php:1535
+msgid "Select where all the plugin scripts should be placed."
+msgstr "Sélectionner où placer les scripts de l’extension."
+
+#: includes/settings.php:1439
+msgid "Select from one of your site's pages."
+msgstr "Sélectionnez une des pages de votre site."
+
+#: includes/settings.php:1452
+msgid "Enter the full URL starting with http(s)://"
+msgstr "Saisissez l’URL complète commençant par http(s)://"
+
+#: includes/settings.php:1303
+msgid "Enable to give to the user the possibility to refuse third party non functional cookies."
+msgstr "Activez pour donner la possibilité à l’utilisateur de refuser les cookies non fonctionnels de tierces parties."
+
+#: includes/settings.php:1275
+msgid "Enter the cookie notice message."
+msgstr "Saisissez le message de notification des cookies."
+
+#: includes/settings.php:289
+msgid "We use cookies to ensure that we give you the best experience on our website. If you continue to use this site we will assume that you are happy with it."
+msgstr "Nous utilisons des cookies pour vous garantir la meilleure expérience sur notre site web. Si vous continuez à utiliser ce site, nous supposerons que vous en êtes satisfait."
+
+#: cookie-notice.php:1320
+msgid "Settings"
+msgstr "Réglages"
+
+#: includes/settings.php:2326
+msgid "Are you sure you want to reset these settings to defaults?"
+msgstr "Confirmez-vous vouloir réinitialiser tous les réglages aux valeurs par défaut ?"
+
+#: includes/settings.php:290
+msgid "Ok"
+msgstr "OK"

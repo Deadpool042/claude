@@ -1,0 +1,8 @@
+{
+  
+  "intelephense.stubs": [
+    "wordpress",
+  
+  ],
+  "chatgpt.commentCodeLensEnabled": true
+}

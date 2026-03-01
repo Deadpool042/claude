@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "title": "Clean",
+  "styles": {
+    "color": {
+      "background": "#ffffff",
+      "text": "#0f172a"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "#1d4ed8"
+        }
+      }
+    }
+  }
+}
