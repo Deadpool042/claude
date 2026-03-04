@@ -1,8 +1,8 @@
 // src/lib/projects/builders/buildProjectCreateArgs.ts
 
-import type { HostingProfileId } from "@/lib/hosting-profiles";
-import type { DeployTargetLiteral } from "@/lib/service-catalog";
-import { resolveHostingProviderForDeployTarget } from "@/lib/hosting-providers";
+import type { HostingProfileId } from "@/lib/hosting";
+import type { DeployTargetLiteral } from "@/lib/services";
+import { resolveHostingProviderForDeployTarget } from "@/lib/hosting";
 import {
   DeployTarget,
   FrontendStack,
@@ -11,13 +11,13 @@ import {
   type Prisma,
 } from "@/generated/prisma/client";
 
-import { getPresetForType, serializePresetPages } from "@/lib/wp-presets";
-import { resolveWpPlugins, serializeResolvedPlugins } from "@/lib/wp-plugin-resolver";
-import { buildDefaultInfraStatus } from "@/lib/wp-infra";
-import { isImplementationSupported } from "@/lib/project-choices";
+import { getPresetForType, serializePresetPages } from "@/lib/wp";
+import { resolveWpPlugins, serializeResolvedPlugins } from "@/lib/wp";
+import { buildDefaultInfraStatus } from "@/lib/wp";
+import { isImplementationSupported, resolveCmsIdFromImplementation } from "@/lib/project-choices";
 
 import type { CreateProjectData, DeployTargetInput, TechStackInput } from "../validators/project";
-import { buildDefaultOptionalServiceRows } from "../service-defaults";
+import { buildDefaultOptionalServiceRows } from "../services";
 
 // ── Prisma include ────────────────────────────────────────────────────
 
@@ -101,6 +101,9 @@ export type BuildProjectInput = {
 
 export function buildProjectCreateArgs(input: BuildProjectInput): BuiltProject {
   const { formData, slug, port, data } = input;
+  const resolvedImplementationId =
+    data.projectImplementationId ??
+    resolveCmsIdFromImplementation(data.projectImplementation ?? null, data.projectImplementationLabel ?? "");
 
   const implementationSupported = data.projectImplementation
     ? isImplementationSupported(data.projectImplementation)
@@ -183,7 +186,6 @@ export function buildProjectCreateArgs(input: BuildProjectInput): BuiltProject {
       editingFrequency: data.qualification?.editingFrequency ?? null,
       headlessRequired: data.qualification?.headlessRequired ?? null,
       commerceModel: data.qualification?.commerceModel ?? null,
-      backendMode: data.qualification?.backendMode ?? null,
       backendFamily: data.qualification?.backendFamily ?? null,
       backendOpsHeavy: data.qualification?.backendOpsHeavy ?? null,
       ciScore: data.qualification?.ciScore ?? null,
@@ -218,6 +220,7 @@ export function buildProjectCreateArgs(input: BuildProjectInput): BuiltProject {
       hostingTargetFront: data.hostingTargetFront ?? null,
       projectFamily: data.projectFamily ?? null,
       projectImplementation: data.projectImplementation ?? null,
+      projectImplementationId: resolvedImplementationId ?? null,
       projectImplementationLabel: data.projectImplementationLabel ?? null,
       projectFrontendImplementation: data.projectFrontendImplementation ?? null,
       projectFrontendImplementationLabel: data.projectFrontendImplementationLabel ?? null,

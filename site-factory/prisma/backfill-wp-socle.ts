@@ -1,19 +1,19 @@
 import "dotenv/config";
 import { PrismaClient, type DeployTarget } from "../src/generated/prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-import { getPresetForType } from "../src/lib/wp-presets";
+import { getPresetForType } from "../src/lib/wp";
 import {
   resolveWpPlugins,
   serializeResolvedPlugins,
-} from "../src/lib/wp-plugin-resolver";
+} from "../src/lib/wp";
 import {
   NON_PLUGIN_FEATURES,
   WP_FEATURE_LABELS,
   type WpFeature,
-} from "../src/lib/wp-features";
-import { normalizeInfraStatus, parseInfraStatus } from "../src/lib/wp-infra";
-import { resolveDefaultHostingProfile } from "../src/lib/projects/buildProjectCreateArgs";
-import type { HostingProfileId } from "../src/lib/hosting-profiles";
+} from "../src/lib/wp";
+import { normalizeInfraStatus, parseInfraStatus } from "../src/lib/wp";
+import { resolveDefaultHostingProfile } from "../src/lib/projects";
+import type { HostingProfileId } from "../src/lib/hosting";
 
 const adapter = new PrismaMariaDb(process.env.DATABASE_URL ?? "");
 const prisma = new PrismaClient({ adapter });

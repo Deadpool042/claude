@@ -3,15 +3,14 @@
 import { useMemo } from "react";
 import {
   qualifyProject,
-  type ProjectType,
   type TechStack,
   type BillingMode,
   type DeployTarget,
-  type ModuleTierSelection,
+  type ModuleCatSelection,
   type QualificationResult,
-} from "@/lib/qualification";
-import type { ProjectConstraints, CIAxes } from "@/lib/referential";
-import type { ModuleId } from "@/lib/offers/offers";
+} from "@/lib/qualification-runtime";
+import type { ProjectConstraints, CIAxes, ProjectType } from "@/lib/referential";
+import type { ModuleId } from "@/lib/offers";
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -22,7 +21,7 @@ export interface UseQualificationParams {
   billingMode: BillingMode;
   deployTarget: DeployTarget;
   wpHeadless: boolean;
-  tierSelections: Record<string, ModuleTierSelection>;
+  catSelections: Record<string, ModuleCatSelection>;
   constraints?: Partial<ProjectConstraints>;
   ciAxes?: CIAxes;
 }
@@ -39,7 +38,7 @@ export function useQualification(
     billingMode,
     deployTarget,
     wpHeadless,
-    tierSelections,
+    catSelections,
     constraints,
     ciAxes,
   } = params;
@@ -53,7 +52,7 @@ export function useQualification(
       billingMode,
       deployTarget,
       wpHeadless,
-      tierSelections,
+      catSelections,
     } as const;
 
     const withExtras: {
@@ -78,7 +77,7 @@ export function useQualification(
     billingMode,
     deployTarget,
     wpHeadless,
-    tierSelections,
+    catSelections,
     constraints,
     ciAxes,
   ]);

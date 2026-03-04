@@ -5,13 +5,13 @@ import { prisma } from "@/lib/db";
 import { PageLayout } from "@/components/shell/page-layout";
 import { BreadcrumbOverride } from "@/components/shell/breadcrumb-context";
 import { Button } from "@/components/ui/button";
-import { WpToolbox } from "./_components/wp-toolbox";
-import { resolveDefaultHostingProfile } from "@/lib/projects/buildProjectCreateArgs";
-import type { HostingProfileId } from "@/lib/hosting-profiles";
-import { resolveWpPlugins } from "@/lib/wp-plugin-resolver";
-import type { WpFeature } from "@/lib/wp-features";
-import { normalizeInfraStatus, parseInfraStatus } from "@/lib/wp-infra";
-import type { SocleSnapshot } from "./_components/types";
+import { WpToolbox } from "@/features/dashboard/projects/detail";
+import { resolveDefaultHostingProfile } from "@/lib/projects";
+import type { HostingProfileId } from "@/lib/hosting";
+import { resolveWpPlugins } from "@/lib/wp";
+import type { WpFeature } from "@/lib/wp";
+import { normalizeInfraStatus, parseInfraStatus } from "@/lib/wp";
+import type { SocleSnapshot } from "@/features/dashboard/projects/detail";
 
 interface WordPressPageProps {
   params: Promise<{ projectId: string }>;

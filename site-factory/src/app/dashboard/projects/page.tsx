@@ -17,9 +17,9 @@ import {
   PROJECT_TYPE_LABELS,
   PROJECT_STATUS_LABELS,
   TECH_STACK_LABELS,
-} from "@/lib/validators/project";
-import { CATEGORY_SHORT, CATEGORY_COLORS } from "@/lib/qualification";
-import { localHostForMode } from "@/lib/docker/names";
+} from "@/lib/validators";
+import { CATEGORY_SHORT, CATEGORY_COLORS } from "@/lib/referential";
+import { localHostForMode } from "@/lib/docker";
 
 interface ProjectsPageProps {
   searchParams: Promise<{ q?: string }>;

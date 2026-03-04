@@ -4,7 +4,7 @@ import {
   isModuleCompatible,
   type ProjectType,
   type Stack,
-} from "@/lib/offers/offers";
+} from "@/lib/offers";
 
 const commerceModule = MODULES.find((mod) => mod.categories.includes("commerce"));
 if (!commerceModule) {
@@ -26,10 +26,7 @@ describe("Combinaisons commerce / type de projet", () => {
     ).toBe(true);
   });
 
-  it("bloque toujours les modules commerce pour les projets non commerce", () => {
-    const blockedTypes: ProjectType[] = ["STARTER", "APP_CUSTOM"];
-    for (const type of blockedTypes) {
-      expect(isModuleCompatible(commerceModule.id, ECOM_STACK, type)).toBe(false);
-    }
+  it("bloque les modules commerce pour les projets app custom", () => {
+    expect(isModuleCompatible(commerceModule.id, ECOM_STACK, "APP_CUSTOM")).toBe(false);
   });
 });

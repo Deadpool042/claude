@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { PageLayout } from "@/components/shell/page-layout";
-import { DocsClient } from "./_components/docs-client";
+import { DocsClient } from "@/features/dashboard/docs";
 
 function parseModules(value: string | null): string[] {
   if (!value) return [];

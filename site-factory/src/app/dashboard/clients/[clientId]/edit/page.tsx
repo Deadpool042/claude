@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { PageLayout } from "@/components/shell/page-layout";
 import { BreadcrumbOverride } from "@/components/shell/breadcrumb-context";
-import { ClientEditForm } from "./_components/client-edit-form";
+import { ClientEditForm } from "@/features/dashboard/clients";
 
 interface EditClientPageProps {
   params: Promise<{ clientId: string }>;

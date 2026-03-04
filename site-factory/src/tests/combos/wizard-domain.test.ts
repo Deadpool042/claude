@@ -1,15 +1,16 @@
+//src/tests/combos/wizard-domain.test.ts
 import { describe, expect, it } from "vitest";
 import {
   allowedHostingTargetsForType,
   allowedFamiliesForTypeAndHosting,
   normalizeTypeStackState,
   deriveOfferProjectType,
-  deriveQualificationProjectType,
+  isStarterEligible,
 } from "@/lib/wizard-domain";
 import type { WizardTypeStackState } from "@/lib/wizard-domain";
 
 const baseState: WizardTypeStackState = {
-  projectType: "STARTER",
+  projectType: "VITRINE",
   hostingTarget: "SHARED_PHP",
   hostingTargetBack: null,
   hostingTargetFront: null,
@@ -35,8 +36,8 @@ const baseState: WizardTypeStackState = {
 
 describe("wizard-domain rules", () => {
   it("filters hosting targets by project type", () => {
-    const starterHosting = allowedHostingTargetsForType("STARTER");
-    expect(starterHosting).not.toContain("SPLIT_HEADLESS");
+    const vitrineHosting = allowedHostingTargetsForType("VITRINE");
+    expect(vitrineHosting).not.toContain("SPLIT_HEADLESS");
 
     const appHosting = allowedHostingTargetsForType("APP");
     expect(appHosting).toContain("CLOUD_SSR");
@@ -44,7 +45,7 @@ describe("wizard-domain rules", () => {
   });
 
   it("filters families by type and hosting", () => {
-    const families = allowedFamiliesForTypeAndHosting("STARTER", "SHARED_PHP");
+    const families = allowedFamiliesForTypeAndHosting("VITRINE", "SHARED_PHP");
     expect(families).toEqual(expect.arrayContaining(["STATIC_SSG", "CMS_MONO"]));
     expect(families).not.toContain("COMMERCE_HEADLESS");
   });
@@ -101,7 +102,7 @@ describe("wizard-domain normalization", () => {
 });
 
 describe("wizard-domain offers", () => {
-  it("derives Starter when constraints are minimal", () => {
+  it("identifies starter-eligible projects (CAT0 candidates)", () => {
     const input = {
       projectType: "VITRINE",
       projectFamily: "STATIC_SSG",
@@ -113,11 +114,11 @@ describe("wizard-domain offers", () => {
       scalabilityLevel: "FIXED",
       selectedModulesCount: 0,
     } as const;
-    expect(deriveQualificationProjectType(input)).toBe("STARTER");
-    expect(deriveOfferProjectType(input)).toBe("STARTER");
+    expect(isStarterEligible(input)).toBe(true);
+    expect(deriveOfferProjectType(input)).toBe("VITRINE_BLOG");
   });
 
-  it("keeps classic offer when modules are selected", () => {
+  it("keeps VITRINE_BLOG when modules are selected", () => {
     const input = {
       projectType: "VITRINE",
       projectFamily: "STATIC_SSG",
@@ -129,6 +130,55 @@ describe("wizard-domain offers", () => {
       scalabilityLevel: "FIXED",
       selectedModulesCount: 1,
     } as const;
+    expect(isStarterEligible(input)).toBe(false);
+    expect(deriveOfferProjectType(input)).toBe("VITRINE_BLOG");
+  });
+
+  it("identifies starter-eligible WordPress CMS_MONO vitrine", () => {
+    const input = {
+      projectType: "VITRINE",
+      projectFamily: "CMS_MONO",
+      needsEditing: true,
+      editingFrequency: "RARE",
+      trafficLevel: "LOW",
+      productCount: "NONE",
+      dataSensitivity: "STANDARD",
+      scalabilityLevel: "FIXED",
+      selectedModulesCount: 0,
+    } as const;
+    expect(isStarterEligible(input)).toBe(true);
+    expect(deriveOfferProjectType(input)).toBe("VITRINE_BLOG");
+  });
+
+  it("keeps VITRINE_BLOG for CMS_MONO with regular editing", () => {
+    const input = {
+      projectType: "VITRINE",
+      projectFamily: "CMS_MONO",
+      needsEditing: true,
+      editingFrequency: "REGULAR",
+      trafficLevel: "LOW",
+      productCount: "NONE",
+      dataSensitivity: "STANDARD",
+      scalabilityLevel: "FIXED",
+      selectedModulesCount: 0,
+    } as const;
+    expect(isStarterEligible(input)).toBe(false);
+    expect(deriveOfferProjectType(input)).toBe("VITRINE_BLOG");
+  });
+
+  it("identifies starter-eligible simple Blog CMS_MONO", () => {
+    const input = {
+      projectType: "BLOG",
+      projectFamily: "CMS_MONO",
+      needsEditing: false,
+      editingFrequency: "RARE",
+      trafficLevel: "LOW",
+      productCount: "NONE",
+      dataSensitivity: "STANDARD",
+      scalabilityLevel: "FIXED",
+      selectedModulesCount: 0,
+    } as const;
+    expect(isStarterEligible(input)).toBe(true);
     expect(deriveOfferProjectType(input)).toBe("VITRINE_BLOG");
   });
 });

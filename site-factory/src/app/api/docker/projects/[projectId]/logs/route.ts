@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { prisma } from "@/lib/db";
-import { stackSlugForMode } from "@/lib/docker/names";
+import { stackSlugForMode } from "@/lib/docker";
 
 const CONFIGS_ROOT = resolve(process.cwd(), "..", "configs");
 

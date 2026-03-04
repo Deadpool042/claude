@@ -1,5 +1,5 @@
 import type { TechStack } from "@/generated/prisma/client";
-import { normalizeModuleIds } from "@/lib/qualification";
+import { normalizeModuleIds } from "@/lib/referential";
 import { listDocs, type DocMeta } from "./index";
 
 const PROJECT_ALLOWED_CATEGORIES = new Set([

@@ -1,0 +1,129 @@
+{
+  "_meta": {
+    "purpose": "Paramètres commerciaux canoniques: fourchettes pricing, frais one-shot, coûts récurrents et garde-fous.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/engine/estimate-quote.ts",
+      "site-factory/src/features/dashboard/projects/new/ui/QualificationSidebar.tsx"
+    ],
+    "shape": {
+      "requiredTopLevel": [
+        "version",
+        "region",
+        "basePackageBandsByCategory",
+        "maintenanceByCategory",
+        "annexCosts",
+        "rules"
+      ],
+      "commercialCoverage": [
+        "pricingRanges",
+        "oneTimeFees",
+        "recurringCosts",
+        "ownershipHostingFees"
+      ]
+    }
+  },
+  "version": "1.0.0",
+  "region": {
+    "label": "Saint-Étienne / Loire",
+    "currency": "EUR"
+  },
+  "basePackageBandsByCategory": {
+    "CAT0": {
+      "from": 1290,
+      "to": 1800
+    },
+    "CAT1": {
+      "from": 1800,
+      "to": 3500
+    },
+    "CAT2": {
+      "from": 3500,
+      "to": 5200
+    },
+    "CAT3": {
+      "from": 4500,
+      "to": 8000
+    },
+    "CAT4": {
+      "from": 7000,
+      "to": 15000
+    }
+  },
+  "maintenanceByCategory": {
+    "CAT0": {
+      "label": "Minimal",
+      "monthly": 29
+    },
+    "CAT1": {
+      "label": "Standard",
+      "monthly": 59
+    },
+    "CAT2": {
+      "label": "Avancée",
+      "monthly": 129
+    },
+    "CAT3": {
+      "label": "Métier renforcée",
+      "monthly": 249
+    },
+    "CAT4": {
+      "label": "Premium",
+      "monthly": 490
+    }
+  },
+  "annexCosts": {
+    "deploySetupFee": {
+      "DOCKER": 390,
+      "VERCEL": 390,
+      "SHARED_HOSTING": 390
+    },
+    "domainYearlyRange": {
+      "min": 12,
+      "max": 60
+    },
+    "hostingMonthlyRangeByStack": {
+      "WORDPRESS_SHARED": {
+        "min": 3,
+        "max": 10
+      },
+      "WORDPRESS_VPS": {
+        "min": 20,
+        "max": 120
+      },
+      "NEXT_SSR": {
+        "min": 18,
+        "max": 220
+      },
+      "ASTRO_STATIC": {
+        "min": 0,
+        "max": 30
+      }
+    },
+    "emailMonthlyRange": {
+      "min": 0,
+      "max": 90
+    },
+    "storageMonthlyRange": {
+      "min": 0,
+      "max": 120
+    },
+    "deploySetupFeeRange": {
+      "min": 390,
+      "max": 390
+    }
+  },
+  "rules": {
+    "modulePriceMustStayProportionateToBase": true,
+    "preferPluginWhenCheaperStableLowRisk": true,
+    "pluginPreferenceThresholds": {
+      "maxMonthlyPluginCost": 120,
+      "maxDependencyRisk": "LOW"
+    }
+  },
+  "pluginRecurringCosts": {
+    "monthlyMin": 0,
+    "monthlyMax": 350,
+    "source": "Derived from plugins pricingMode/priceMonthlyMin/priceMonthlyMax"
+  }
+}

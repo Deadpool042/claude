@@ -18,11 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RegenerateButton } from "./_components/regenerate-button";
-import { ToggleServiceButton } from "./_components/toggle-service-button";
-import { TestServiceButton } from "./_components/test-service-button";
+import {
+  RegenerateButton,
+  ToggleServiceButton,
+  TestServiceButton,
+} from "@/features/dashboard/infra";
 import Link from "next/link";
-import { localHostForMode } from "@/lib/docker/names";
+import { localHostForMode } from "@/lib/docker";
 
 export default async function InfraPage() {
   const traefikUrl =

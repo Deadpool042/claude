@@ -68,7 +68,7 @@ export function Sidebar() {
     >
       <div className={cn("flex h-14 items-center border-b", collapsed ? "px-3" : "px-6")}>
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-indigo-500 text-primary-foreground shadow">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-primary to-indigo-500 text-primary-foreground shadow">
             <span className="text-sm font-bold">SF</span>
           </div>
           {!collapsed && <span className="text-lg font-semibold">Site Factory</span>}
@@ -95,7 +95,7 @@ export function Sidebar() {
               "flex items-center rounded-lg text-sm font-medium transition-colors",
               collapsed ? "justify-center px-2 py-2" : "gap-3 px-3 py-2",
               item.isActive
-                ? "bg-gradient-to-r from-primary/20 to-transparent text-foreground shadow-sm"
+                ? "bg-linear-to-r from-primary/20 to-transparent text-foreground shadow-sm"
                 : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
             )}
           >

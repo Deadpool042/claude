@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { prisma } from "@/lib/db";
 import type { DeployTarget, DevMode } from "@/generated/prisma/client";
-import type { HostingProfileId } from "@/lib/hosting-profiles";
+import type { HostingProfileId } from "@/lib/hosting";
 
 const CONFIGS_ROOT = resolve(process.cwd(), "..", "configs");
 

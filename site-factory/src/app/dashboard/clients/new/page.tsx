@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { createClientAction } from "../_actions/create-client";
+import { createClientAction } from "@/features/dashboard/clients";
 import { PageLayout } from "@/components/shell/page-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

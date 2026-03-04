@@ -1,7 +1,7 @@
 import type { Command } from "./command";
-import { WP_PRESETS, type ProjectPresetType } from "@/lib/wp-presets";
-import { resolveWpPlugins } from "@/lib/wp-plugin-resolver";
-import { resolveDefaultHostingProfile } from "@/lib/projects/buildProjectCreateArgs";
+import { WP_PRESETS, type ProjectPresetType } from "@/lib/wp";
+import { resolveWpPlugins } from "@/lib/wp";
+import { resolveDefaultHostingProfile } from "@/lib/projects";
 import { DeployTarget } from "@/generated/prisma/client";
 
 export type ApplyPresetInput = { preset: string };

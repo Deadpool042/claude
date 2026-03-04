@@ -6,10 +6,10 @@ import {
   readLogs,
   readTraefikAccessEntries,
 } from "@/lib/logs";
-import { resolveMonitoringProfile } from "@/lib/monitoring/config";
-import { resolveDefaultHostingProfile } from "@/lib/projects/buildProjectCreateArgs";
-import type { HostingProfileId } from "@/lib/hosting-profiles";
-import type { MonitoringSnapshot } from "@/app/dashboard/projects/[projectId]/wordpress/_components/types";
+import { resolveMonitoringProfile } from "@/lib/monitoring";
+import { resolveDefaultHostingProfile } from "@/lib/projects";
+import type { HostingProfileId } from "@/lib/hosting";
+import type { MonitoringSnapshot } from "@/features/dashboard/projects/detail/ui/wordpress/_components/types";
 import type { LogEnv } from "@/lib/logs";
 
 type LogEntry = Awaited<ReturnType<typeof readLogs>>[number];

@@ -15,8 +15,8 @@ import {
 import {
   PROJECT_TYPE_LABELS,
   PROJECT_STATUS_LABELS,
-} from "@/lib/validators/project";
-import { RunningProjects } from "./_components/running-projects";
+} from "@/lib/validators";
+import { RunningProjects } from "@/features/dashboard/home";
 
 export default async function DashboardPage() {
   const [clientCount, projectCount, recentProjects] = await Promise.all([

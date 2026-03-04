@@ -5,8 +5,8 @@ import { promisify } from "node:util";
 import { resolve } from "node:path";
 import { access } from "node:fs/promises";
 import { prisma } from "@/lib/db";
-import { stackSlugForMode } from "@/lib/docker/names";
-import { generateProjectWpThemeAssets } from "@/lib/projects/generateProjectWpThemeAssets";
+import { stackSlugForMode } from "@/lib/docker";
+import { generateProjectWpThemeAssets } from "@/lib/projects";
 
 import {
   buildExpectedServices,
@@ -21,7 +21,7 @@ import {
   type OptionalServiceId,
   type PersistedProjectServiceRow,
   type ExpectedService,
-} from "@/lib/service-catalog";
+} from "@/lib/services";
 
 import { DeployTarget, type FrontendStack } from "@/generated/prisma/client";
 import { generateComposeFragment } from "@/lib/generators/compose";

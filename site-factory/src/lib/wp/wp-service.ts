@@ -3,8 +3,8 @@ import type { WpProjectRef } from "./infra/wp-project-repo";
 import { runWpCli, type ComposeFile, type WpCliRunnerOpts } from "./infra/wp-cli-runner";
 import type { WpInfoDto } from "./wp-types";
 import type { ValidWpAction } from "./wp-validators";
-import { stackSlugForMode } from "@/lib/docker/names";
-import { syncProjectWpMuPlugins } from "@/lib/projects/generateProjectWpDevAssets";
+import { stackSlugForMode } from "@/lib/docker";
+import { syncProjectWpMuPlugins } from "@/lib/projects";
 
 import { SetPermalinkCommand } from "./commands/set-permalink";
 import { CreatePageCommand } from "./commands/create-page";

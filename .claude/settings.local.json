@@ -45,7 +45,16 @@
       "Bash(make:*)",
       "Bash(find:*)",
       "Bash(wc:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(git -C /Users/laurent/Desktop/claude log --oneline)",
+      "Bash(git stash)",
+      "mcp__fileSystem__list_directory_with_sizes",
+      "Bash(du -sh /Users/laurent/Desktop/claude/Docs/*)",
+      "Bash(done)",
+      "Bash(git mv src/lib/referential/deploy-fees.ts src/lib/referential/deploy.ts)",
+      "Bash(cat -n /Users/laurent/Desktop/claude/site-factory/src/app/dashboard/projects/[projectId]/edit/_components/project-edit-form.tsx)",
+      "Bash(npx vitest run src/tests/combos/qualification.test.ts)",
+      "Bash(git add -A)"
     ]
   }
 }

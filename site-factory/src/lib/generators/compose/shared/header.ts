@@ -1,5 +1,5 @@
 import type { ComposeMode, ComposeProjectInput } from "../types";
-import { stackSlugForMode } from "@/lib/docker/names";
+import { stackSlugForMode } from "@/lib/docker";
 
 export function composeHeader(input: ComposeProjectInput, mode: ComposeMode): string {
   const stackSlug = stackSlugForMode(input.projectSlug, mode);

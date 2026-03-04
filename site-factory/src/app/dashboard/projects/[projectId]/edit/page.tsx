@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { PageLayout } from "@/components/shell/page-layout";
 import { BreadcrumbOverride } from "@/components/shell/breadcrumb-context";
-import { ProjectEditForm } from "./_components/project-edit-form";
-import type { HostingProviderId } from "@/lib/hosting-providers";
+import { ProjectEditForm } from "@/features/dashboard/projects/edit";
+import type { HostingProviderId } from "@/lib/hosting";
 
 interface EditProjectPageProps {
   params: Promise<{ projectId: string }>;

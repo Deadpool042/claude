@@ -1,5 +1,5 @@
 import { PageLayout } from "@/components/shell/page-layout";
-import { OffersClient } from "./_components/offers-client";
+import { OffersClient } from "@/features/dashboard/offres";
 
 export default function OffresPage() {
   return (

@@ -10,22 +10,24 @@ import {
   PROJECT_TYPE_LABELS,
   PROJECT_STATUS_LABELS,
   TECH_STACK_LABELS,
-} from "@/lib/validators/project";
+} from "@/lib/validators";
 import {
   CATEGORY_LABELS,
   CATEGORY_COLORS,
   type Category,
-} from "@/lib/qualification";
-import type { HostingProfileId } from "@/lib/hosting-profiles";
-import type { HostingProviderId } from "@/lib/hosting-providers";
-import { ProjectTabs } from "./_components/project-tabs";
-import { TabOverview } from "./_components/tab-overview";
-import { TabCommercial } from "./_components/tab-commercial";
-import { TabTechnique } from "./_components/tab-technique";
-import { TabDeployment } from "./_components/tab-deployment";
-import { TabInfrastructure } from "./_components/tab-infrastructure";
-import { TabServices } from "./_components/tab-services";
-import { TabWordpress } from "./_components/tab-wordpress";
+} from "@/lib/referential";
+import type { HostingProfileId } from "@/lib/hosting";
+import type { HostingProviderId } from "@/lib/hosting";
+import {
+  ProjectTabs,
+  TabOverview,
+  TabCommercial,
+  TabTechnique,
+  TabDeployment,
+  TabInfrastructure,
+  TabServices,
+  TabWordpress,
+} from "@/features/dashboard/projects/detail";
 
 interface ProjectDetailPageProps {
   params: Promise<{ projectId: string }>;

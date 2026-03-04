@@ -4,16 +4,16 @@ import { useCallback, useState, type Dispatch, type SetStateAction } from "react
 import {
   MODULE_CATALOG,
   normalizeModuleIds,
-  type ModuleTierSelection,
-} from "@/lib/qualification";
-import type { ModuleId } from "@/lib/offers/offers";
+} from "@/lib/referential";
+import type { ModuleCatSelection } from "@/lib/qualification-runtime";
+import type { ModuleId } from "@/lib/offers";
 
 // ── Types ──────────────────────────────────────────────────────────
 
 export interface UseModulesReturn {
   selectedModules: Set<ModuleId>;
-  tierSelections: Record<string, ModuleTierSelection>;
-  setTierSelections: Dispatch<SetStateAction<Record<string, ModuleTierSelection>>>;
+  catSelections: Record<string, ModuleCatSelection>;
+  setCatSelections: Dispatch<SetStateAction<Record<string, ModuleCatSelection>>>;
   toggleModule: (id: ModuleId) => void;
   syncModules: (options: {
     allowedIds?: ModuleId[];
@@ -31,16 +31,16 @@ export function useModules(initialModuleIds: string[] = []): UseModulesReturn {
     () => new Set(normalizedInitialIds),
   );
 
-  const [tierSelections, setTierSelections] = useState<
-    Record<string, ModuleTierSelection>
+  const [catSelections, setCatSelections] = useState<
+    Record<string, ModuleCatSelection>
   >(() => {
-    const initial: Record<string, ModuleTierSelection> = {};
+    const initial: Record<string, ModuleCatSelection> = {};
     for (const id of normalizedInitialIds) {
       const mod = MODULE_CATALOG.find((m) => m.id === id);
-      if (mod?.setupTiers || mod?.subscriptionTiers) {
-        const sel: ModuleTierSelection = {};
-        if (mod.setupTiers?.[0]) sel.setupTierId = mod.setupTiers[0].id;
-        if (mod.subscriptionTiers?.[0]) sel.subTierId = mod.subscriptionTiers[0].id;
+      if (mod?.setupCats || mod?.subscriptionCats) {
+        const sel: ModuleCatSelection = {};
+        if (mod.setupCats?.[0]) sel.setupCatId = mod.setupCats[0].id;
+        if (mod.subscriptionCats?.[0]) sel.subCatId = mod.subscriptionCats[0].id;
         initial[id] = sel;
       }
     }
@@ -53,17 +53,17 @@ export function useModules(initialModuleIds: string[] = []): UseModulesReturn {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
-        setTierSelections((ts) => {
+        setCatSelections((ts) => {
           const { [id]: _, ...rest } = ts;
           return rest;
         });
       } else {
         next.add(id);
-        if (mod?.setupTiers || mod?.subscriptionTiers) {
-          setTierSelections((ts) => {
-            const sel: ModuleTierSelection = {};
-            if (mod.setupTiers?.[0]) sel.setupTierId = mod.setupTiers[0].id;
-            if (mod.subscriptionTiers?.[0]) sel.subTierId = mod.subscriptionTiers[0].id;
+        if (mod?.setupCats || mod?.subscriptionCats) {
+          setCatSelections((ts) => {
+            const sel: ModuleCatSelection = {};
+            if (mod.setupCats?.[0]) sel.setupCatId = mod.setupCats[0].id;
+            if (mod.subscriptionCats?.[0]) sel.subCatId = mod.subscriptionCats[0].id;
             return { ...ts, [id]: sel };
           });
         }
@@ -103,8 +103,8 @@ export function useModules(initialModuleIds: string[] = []): UseModulesReturn {
           }
         }
 
-        setTierSelections((ts) => {
-          const updated: Record<string, ModuleTierSelection> = { ...ts };
+        setCatSelections((ts) => {
+          const updated: Record<string, ModuleCatSelection> = { ...ts };
           for (const key of Object.keys(updated)) {
             if (!next.has(key as ModuleId)) {
               delete updated[key];
@@ -114,10 +114,10 @@ export function useModules(initialModuleIds: string[] = []): UseModulesReturn {
           for (const id of next) {
             if (!updated[id]) {
               const mod = MODULE_CATALOG.find((m) => m.id === id);
-              if (mod?.setupTiers || mod?.subscriptionTiers) {
-                const sel: ModuleTierSelection = {};
-                if (mod.setupTiers?.[0]) sel.setupTierId = mod.setupTiers[0].id;
-                if (mod.subscriptionTiers?.[0]) sel.subTierId = mod.subscriptionTiers[0].id;
+              if (mod?.setupCats || mod?.subscriptionCats) {
+                const sel: ModuleCatSelection = {};
+                if (mod.setupCats?.[0]) sel.setupCatId = mod.setupCats[0].id;
+                if (mod.subscriptionCats?.[0]) sel.subCatId = mod.subscriptionCats[0].id;
                 updated[id] = sel;
               }
             }
@@ -134,13 +134,13 @@ export function useModules(initialModuleIds: string[] = []): UseModulesReturn {
 
   const clearModules = useCallback(() => {
     setSelectedModules(new Set());
-    setTierSelections({});
+    setCatSelections({});
   }, []);
 
   return {
     selectedModules,
-    tierSelections,
-    setTierSelections,
+    catSelections,
+    setCatSelections,
     toggleModule,
     syncModules,
     clearModules,

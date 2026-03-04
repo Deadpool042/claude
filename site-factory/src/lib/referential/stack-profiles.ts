@@ -12,7 +12,7 @@
  */
 
 import type { StackFamily } from "./stack-families";
-import type { DeployTarget } from "./deploy-fees";
+import type { DeployTarget } from "./deploy";
 
 // ── Types ────────────────────────────────────────────────────────────
 
@@ -50,10 +50,10 @@ export interface StackProfile {
    */
   complexityFactor: number;
   /**
-   * Tier minimum de maintenance imposé par ce stack.
+   * Index minimum de maintenance imposé par ce stack.
    * 0 = pas de plancher (maintenance déterminée par la catégorie).
    */
-  maintenanceFloorTier: number;
+  maintenanceFloorIndex: number;
   /** Mapping vers l'ancien TechStack Prisma (null si pas d'équivalent direct) */
   legacyTechStack: LegacyTechStack | null;
   /** Le stack dispose-t-il d'un écosystème de plugins/extensions ? */
@@ -75,7 +75,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["PHP", "PLUGIN_ECOSYSTEM"],
     hostingCompat: ["DOCKER", "SHARED_HOSTING"],
     complexityFactor: 1.0,
-    maintenanceFloorTier: 0,
+    maintenanceFloorIndex: 0,
     legacyTechStack: "WORDPRESS",
     hasPluginEcosystem: true,
     summary: "WordPress léger pour starter / pages simples.",
@@ -92,7 +92,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["PHP", "PLUGIN_ECOSYSTEM"],
     hostingCompat: ["DOCKER", "SHARED_HOSTING"],
     complexityFactor: 1.0,
-    maintenanceFloorTier: 1,
+    maintenanceFloorIndex: 1,
     legacyTechStack: "WORDPRESS",
     hasPluginEcosystem: true,
     summary: "CMS complet avec plugins, thèmes FSE, configuration.",
@@ -109,7 +109,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["PHP", "PLUGIN_ECOSYSTEM", "HEADLESS_CMS", "API_ROUTES"],
     hostingCompat: ["DOCKER", "SHARED_HOSTING"],
     complexityFactor: 1.6,
-    maintenanceFloorTier: 4,
+    maintenanceFloorIndex: 4,
     legacyTechStack: "WORDPRESS",
     hasPluginEcosystem: true,
     summary: "WordPress en API + frontend JS séparé.",
@@ -126,7 +126,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["PHP", "PLUGIN_ECOSYSTEM", "ECOMMERCE"],
     hostingCompat: ["DOCKER", "SHARED_HOSTING"],
     complexityFactor: 1.0,
-    maintenanceFloorTier: 2,
+    maintenanceFloorIndex: 2,
     legacyTechStack: "WORDPRESS",
     hasPluginEcosystem: true,
     summary: "E-commerce WordPress complet.",
@@ -143,7 +143,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["PHP", "PLUGIN_ECOSYSTEM", "ECOMMERCE", "HEADLESS_CMS", "API_ROUTES"],
     hostingCompat: ["DOCKER", "SHARED_HOSTING"],
     complexityFactor: 1.8,
-    maintenanceFloorTier: 4,
+    maintenanceFloorIndex: 4,
     legacyTechStack: "WORDPRESS",
     hasPluginEcosystem: true,
     summary: "E-commerce headless WooCommerce.",
@@ -162,7 +162,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["SSG", "SSR", "ISR", "EDGE", "API_ROUTES", "NODE", "FULLSTACK"],
     hostingCompat: ["DOCKER", "VERCEL"],
     complexityFactor: 1.3,
-    maintenanceFloorTier: 1,
+    maintenanceFloorIndex: 1,
     legacyTechStack: "NEXTJS",
     hasPluginEcosystem: false,
     summary: "Framework React full-stack (SSR/SSG/ISR).",
@@ -179,7 +179,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["SSG", "SSR", "ISR", "EDGE", "API_ROUTES", "NODE", "FULLSTACK"],
     hostingCompat: ["DOCKER", "VERCEL"],
     complexityFactor: 1.3,
-    maintenanceFloorTier: 1,
+    maintenanceFloorIndex: 1,
     legacyTechStack: "NUXT",
     hasPluginEcosystem: false,
     summary: "Framework Vue full-stack (SSR/SSG).",
@@ -196,7 +196,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["SSG", "SSR", "NODE", "STATIC_ONLY"],
     hostingCompat: ["DOCKER", "VERCEL"],
     complexityFactor: 1.2,
-    maintenanceFloorTier: 0,
+    maintenanceFloorIndex: 0,
     legacyTechStack: "ASTRO",
     hasPluginEcosystem: false,
     summary: "Framework SSG-first avec islands architecture.",
@@ -213,7 +213,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["SSG", "SSR", "API_ROUTES", "NODE", "FULLSTACK"],
     hostingCompat: ["DOCKER", "VERCEL"],
     complexityFactor: 1.3,
-    maintenanceFloorTier: 1,
+    maintenanceFloorIndex: 1,
     legacyTechStack: null,
     hasPluginEcosystem: false,
     summary: "Framework Svelte full-stack.",
@@ -230,7 +230,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["SSR", "API_ROUTES", "NODE", "FULLSTACK"],
     hostingCompat: ["DOCKER", "VERCEL"],
     complexityFactor: 1.3,
-    maintenanceFloorTier: 1,
+    maintenanceFloorIndex: 1,
     legacyTechStack: "NEXTJS",
     hasPluginEcosystem: false,
     summary: "Framework React SSR orienté web standards.",
@@ -249,7 +249,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["API_ROUTES", "NODE", "HEADLESS_CMS"],
     hostingCompat: ["DOCKER"],
     complexityFactor: 1.4,
-    maintenanceFloorTier: 4,
+    maintenanceFloorIndex: 4,
     legacyTechStack: "NEXTJS",
     hasPluginEcosystem: true,
     summary: "CMS headless Node.js auto-hébergé.",
@@ -268,7 +268,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["PHP", "PLUGIN_ECOSYSTEM", "ECOMMERCE"],
     hostingCompat: ["DOCKER", "SHARED_HOSTING"],
     complexityFactor: 1.0,
-    maintenanceFloorTier: 2,
+    maintenanceFloorIndex: 2,
     legacyTechStack: "WORDPRESS",
     hasPluginEcosystem: true,
     summary: "E-commerce PHP open source.",
@@ -285,7 +285,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["ECOMMERCE"],
     hostingCompat: [],
     complexityFactor: 0.8,
-    maintenanceFloorTier: 1,
+    maintenanceFloorIndex: 1,
     legacyTechStack: null,
     hasPluginEcosystem: true,
     summary: "E-commerce SaaS clé en main.",
@@ -302,7 +302,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["ECOMMERCE", "SSR", "NODE", "HEADLESS_CMS"],
     hostingCompat: ["DOCKER", "VERCEL"],
     complexityFactor: 1.6,
-    maintenanceFloorTier: 4,
+    maintenanceFloorIndex: 4,
     legacyTechStack: "NEXTJS",
     hasPluginEcosystem: false,
     summary: "Storefront custom Shopify (Hydrogen/Remix).",
@@ -319,7 +319,7 @@ export const STACK_PROFILES: StackProfile[] = [
     capabilities: ["ECOMMERCE", "API_ROUTES", "NODE", "HEADLESS_CMS"],
     hostingCompat: ["DOCKER"],
     complexityFactor: 1.8,
-    maintenanceFloorTier: 4,
+    maintenanceFloorIndex: 4,
     legacyTechStack: "NEXTJS",
     hasPluginEcosystem: false,
     summary: "E-commerce headless open source Node.js.",
@@ -344,11 +344,11 @@ export const STACK_PROFILE_BY_ID: Record<string, StackProfile> = Object.fromEntr
 export const IMPLEMENTATION_TO_PROFILE: Record<string, string> = {
   // CMS monolithique
   WORDPRESS: "wordpress",
-  GHOST: "wordpress",
-  CRAFT: "wordpress",
-  DRUPAL: "wordpress",
-  JOOMLA: "wordpress",
-  WEBFLOW: "wordpress",
+  GHOST: "ghost",
+  CRAFT: "craft",
+  DRUPAL: "drupal",
+  JOOMLA: "joomla",
+  WEBFLOW: "webflow",
 
   // Headless CMS
   WORDPRESS_HEADLESS: "wordpress-headless",
@@ -362,12 +362,12 @@ export const IMPLEMENTATION_TO_PROFILE: Record<string, string> = {
 
   // SSG
   ASTRO: "astro",
-  ELEVENTY: "astro",
-  HUGO: "astro",
-  JEKYLL: "astro",
-  GATSBY: "astro",
-  NEXT_SSG: "astro",
-  NUXT_SSG: "astro",
+  ELEVENTY: "eleventy",
+  HUGO: "hugo",
+  JEKYLL: "jekyll",
+  GATSBY: "gatsby",
+  NEXT_SSG: "nextjs",
+  NUXT_SSG: "nuxt",
 
   // Frameworks SSR
   NEXTJS: "nextjs",
@@ -377,15 +377,15 @@ export const IMPLEMENTATION_TO_PROFILE: Record<string, string> = {
 
   // Commerce SaaS
   SHOPIFY: "shopify",
-  BIGCOMMERCE: "shopify",
-  WEBFLOW_COMMERCE: "shopify",
+  BIGCOMMERCE: "bigcommerce",
+  WEBFLOW_COMMERCE: "webflow-commerce",
 
   // Commerce self-hosted
   WOOCOMMERCE: "woocommerce",
   PRESTASHOP: "prestashop",
-  MAGENTO: "prestashop",
-  SHOPWARE: "prestashop",
-  SYLIUS: "prestashop",
+  MAGENTO: "magento",
+  SHOPWARE: "shopware",
+  SYLIUS: "sylius",
 
   // Commerce headless
   SHOPIFY_HEADLESS: "shopify-headless",
@@ -423,10 +423,8 @@ export function getStackProfileFromLegacy(
     if (projectType === "ECOM") {
       return STACK_PROFILE_BY_ID["woocommerce"];
     }
-    if (projectType === "STARTER") {
-      return STACK_PROFILE_BY_ID["wordpress-minimal"];
-    }
-    return STACK_PROFILE_BY_ID["wordpress"];
+    // VITRINE/BLOG non-headless → profil minimal (pas de floor) pour permettre CAT0
+    return STACK_PROFILE_BY_ID["wordpress-minimal"];
   }
 
   const profileId = techStack.toLowerCase();

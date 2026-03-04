@@ -2,3 +2,8 @@ export * from "./wp-service";
 export * from "./wp-types";
 export * from "./wp-validators";
 export * from "./infra/wp-project-repo";
+export * from "./features";
+export * from "./infra-status";
+export * from "./plugin-catalog";
+export * from "./plugin-resolver";
+export * from "./presets";

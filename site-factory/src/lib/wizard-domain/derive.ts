@@ -53,6 +53,8 @@ export function normalizeTypeStackState(
     });
     if (allowedFamilies.includes(suggested)) {
       next.projectFamily = suggested;
+    } else {
+      next.projectFamily = allowedFamilies[0] ?? null;
     }
   }
 

@@ -1,4 +1,4 @@
-import { WizardContent } from "./_components/wizard-content";
+import { WizardContent } from "@/features/dashboard/projects/new";
 
 /**
  * Page serveur pour la création de projet.
@@ -6,5 +6,6 @@ import { WizardContent } from "./_components/wizard-content";
  * qui consomme le WizardContext fourni par layout.tsx.
  */
 export default function NewProjectPage() {
+  // return <p>Coming soon</p>
   return <WizardContent />;
 }

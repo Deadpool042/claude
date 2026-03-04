@@ -1,34 +1,35 @@
 import { describe, it, expect } from "vitest";
 import {
-  computeStackMultiplier,
-  getAllowedDeployTargets,
-  getMultiplierLabel,
   MODULE_CATALOG,
   normalizeModuleId,
+  normalizeCanonicalModuleIds,
   normalizeModuleIds,
-  qualifyProject,
+  getAllowedDeployTargets,
+} from "../../lib/referential";
+import { computeStackMultiplier, getMultiplierLabel } from "../../lib/stack-pricing";
+import {
   resolveModuleMonthly,
   resolveModulePrice,
   resolveModuleRequalification,
-  type QualificationInput,
-} from "../../lib/qualification";
+} from "../../lib/module-pricing";
+import { qualifyProject, type QualificationInput } from "../../lib/qualification-runtime";
 
 const assistantModule = MODULE_CATALOG.find(
-  (module) => module.id === "module-assistant-ia",
+  (module) => module.id === "module.MARKETING_AUTOMATION",
 );
 
 if (!assistantModule) {
-  throw new Error("module-assistant-ia missing from catalog");
+  throw new Error("module.MARKETING_AUTOMATION missing from catalog");
 }
 
 describe("normalizeModuleId", () => {
   it("keeps a valid module id", () => {
-    expect(normalizeModuleId("module-paiement")).toBe("module-paiement");
+    expect(normalizeModuleId("module.B2B_COMMERCE")).toBe("module.B2B_COMMERCE");
   });
 
-  it("maps legacy module ids", () => {
-    expect(normalizeModuleId("assistant-ia")).toBe("module-assistant-ia");
-    expect(normalizeModuleId("tunnel-vente")).toBe("module-tunnel-de-vente");
+  it("rejects legacy module ids", () => {
+    expect(normalizeModuleId("assistant-ia")).toBeNull();
+    expect(normalizeModuleId("tunnel-vente")).toBeNull();
   });
 
   it("returns null for unknown ids", () => {
@@ -40,12 +41,25 @@ describe("normalizeModuleIds", () => {
   it("deduplicates and ignores unknown ids", () => {
     expect(
       normalizeModuleIds([
-        "assistant-ia",
-        "module-paiement",
-        "assistant-ia",
+        "module.MARKETING_AUTOMATION",
+        "module.B2B_COMMERCE",
+        "module.MARKETING_AUTOMATION",
         "unknown",
       ]),
-    ).toEqual(["module-assistant-ia", "module-paiement"]);
+    ).toEqual(["module.MARKETING_AUTOMATION", "module.B2B_COMMERCE"]);
+  });
+});
+
+describe("normalizeCanonicalModuleIds", () => {
+  it("normalizes from mixed ids and deduplicates", () => {
+    expect(
+      normalizeCanonicalModuleIds([
+        "module.ERP_INTEGRATIONS",
+        "module.ERP_INTEGRATIONS",
+        "module.LOGISTICS_ORCHESTRATION",
+        "unknown",
+      ]),
+    ).toEqual(["module.ERP_INTEGRATIONS", "module.LOGISTICS_ORCHESTRATION"]);
   });
 });
 
@@ -66,11 +80,11 @@ describe("resolveModulePrice", () => {
       "VITRINE",
       "WORDPRESS",
       false,
-      { setupTierId: "ia-standard" },
+      { setupCatId: "automation-standard" },
     );
 
     expect(resolved).toEqual({
-      setup: 1500,
+      setup: 1300,
       setupMax: null,
       isCustom: false,
     });
@@ -94,20 +108,20 @@ describe("resolveModulePrice", () => {
 
 describe("resolveModuleMonthly", () => {
   it("uses the selected subscription tier", () => {
-    expect(resolveModuleMonthly(assistantModule, { subTierId: "ia-business" })).toBe(
-      99,
+    expect(resolveModuleMonthly(assistantModule, { subCatId: "automation-business" })).toBe(
+      79,
     );
   });
 
   it("falls back to the module default", () => {
-    expect(resolveModuleMonthly(assistantModule)).toBe(0);
+    expect(resolveModuleMonthly(assistantModule)).toBe(29);
   });
 });
 
 describe("resolveModuleRequalification", () => {
   it("respects the selected setup tier", () => {
     expect(
-      resolveModuleRequalification(assistantModule, { setupTierId: "ia-avance" }),
+      resolveModuleRequalification(assistantModule, { setupCatId: "automation-avance" }),
     ).toBe("CAT3");
   });
 
@@ -149,16 +163,15 @@ describe("qualifyProject", () => {
     wpHeadless: false,
   } satisfies QualificationInput;
 
-  it("ignores modules for STARTER projects", () => {
+  it("VITRINE with structuring module escalates from CAT0", () => {
     const result = qualifyProject({
       ...baseInput,
-      projectType: "STARTER",
-      selectedModuleIds: ["module-assistant-ia"],
+      selectedModuleIds: ["module.MARKETING_AUTOMATION"],
     });
 
     expect(result.initialCategory).toBe("CAT0");
-    expect(result.finalCategory).toBe("CAT0");
-    expect(result.modules).toHaveLength(0);
+    expect(result.finalCategory).toBe("CAT2");
+    expect(result.modules).toHaveLength(1);
   });
 
   it("keeps the base tier for non-WP e-commerce", () => {
@@ -181,7 +194,7 @@ describe("qualifyProject", () => {
       wpHeadless: true,
     });
 
-    expect(result.initialCategory).toBe("CAT1");
+    expect(result.initialCategory).toBe("CAT0");
     expect(result.finalCategory).toBe("CAT4");
     expect(result.wasRequalified).toBe(true);
     expect(result.requalifyingModules).toHaveLength(0);
@@ -208,16 +221,16 @@ describe("qualifyProject", () => {
   it("requalifies based on module tiers", () => {
     const result = qualifyProject({
       ...baseInput,
-      selectedModuleIds: ["module-assistant-ia"],
-      tierSelections: {
-        "module-assistant-ia": { setupTierId: "ia-avance" },
+      selectedModuleIds: ["module.MARKETING_AUTOMATION"],
+      catSelections: {
+        "module.MARKETING_AUTOMATION": { setupCatId: "automation-avance" },
       },
     });
 
     expect(result.finalCategory).toBe("CAT3");
     expect(result.wasRequalified).toBe(true);
     expect(result.requalifyingModules.map((mod) => mod.id)).toEqual([
-      "module-assistant-ia",
+      "module.MARKETING_AUTOMATION",
     ]);
   });
 
@@ -225,9 +238,9 @@ describe("qualifyProject", () => {
     const result = qualifyProject({
       ...baseInput,
       billingMode: "SOUS_TRAITANT",
-      selectedModuleIds: ["module-assistant-ia"],
-      tierSelections: {
-        "module-assistant-ia": { setupTierId: "ia-standard" },
+      selectedModuleIds: ["module.MARKETING_AUTOMATION"],
+      catSelections: {
+        "module.MARKETING_AUTOMATION": { setupCatId: "automation-standard" },
       },
     });
 
@@ -235,7 +248,7 @@ describe("qualifyProject", () => {
     expect(result.splits).not.toBeNull();
     expect(result.splits?.baseSplitPrestataire).toBe(70);
     expect(result.splits?.baseSplitAgence).toBe(30);
-    expect(result.splits?.modulesSplitPrestataire).toBe(900);
-    expect(result.splits?.modulesSplitAgence).toBe(600);
+    expect(result.splits?.modulesSplitPrestataire).toBe(780);
+    expect(result.splits?.modulesSplitAgence).toBe(520);
   });
 });

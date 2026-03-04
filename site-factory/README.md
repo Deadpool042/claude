@@ -35,10 +35,10 @@ pnpm start            # Start production
 
 - **Aucun `any`** : ESLint `@typescript-eslint/no-explicit-any: error`
 - **Imports types** : `import type { X } from ...` (enforced par ESLint)
-- **Server Actions** : dans des fichiers `_actions/*.ts` avec `"use server"`
+- **Server Actions** : dans des fichiers `server-actions/*.ts` (principalement sous `src/features/**`) avec `"use server"`
 - **Validation** : schemas Zod dans `src/lib/validators/`
 - **DB** : singleton Prisma dans `src/lib/db/`
-- **Slugs** : generes via `src/lib/slug.ts`
+- **Slugs** : generes via `src/lib/slug/`
 
 ## Structure des routes
 
@@ -60,6 +60,25 @@ src/app/
 ├── api/clients/route.ts        # API clients (pour select)
 └── page.tsx                    # Redirect -> /dashboard
 ```
+
+## Wizard de création projet
+
+Le parcours de création projet dans le dashboard suit l’ordre suivant :
+
+1. Questionnaire
+2. Cadrage technique
+3. Modules
+4. Projet
+5. Résumé
+
+Règles UX/produit en place :
+
+- Démarrage progressif : la qualification live démarre après la première réponse utile.
+- VITRINE/BLOG basiques peuvent être qualifiés en CAT0 ; CAT1+ dépend du CI et des contraintes/modules.
+- Pré-remplissage : cadrage technique et modules sont proposés automatiquement depuis le questionnaire.
+- Ajustabilité : les pré-remplissages peuvent être modifiés avant validation finale.
+- Le questionnaire inclut le mode éditorial MDX/Git : qui publie (client ou agence), limites d’accès si push client, et options de coûts en sus.
+- La qualification live et le résumé affichent ces informations d’exploitation sans modifier le CI à périmètre fonctionnel constant.
 
 ## shadcn/ui
 

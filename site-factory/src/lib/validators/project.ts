@@ -203,6 +203,11 @@ export const createProjectSchema = z.object({
   hostingTargetFront: hostingTargetEnum.optional(),
   projectFamily: projectFamilyEnum.optional(),
   projectImplementation: projectImplementationEnum.optional(),
+  projectImplementationId: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => (v?.trim() ? v.trim() : undefined)),
   projectImplementationLabel: z
     .string()
     .optional()
@@ -301,6 +306,11 @@ export const updateProjectSchema = z.object({
   hostingTargetFront: hostingTargetEnum.optional(),
   projectFamily: projectFamilyEnum.optional(),
   projectImplementation: projectImplementationEnum.optional(),
+  projectImplementationId: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => (v?.trim() ? v.trim() : undefined)),
   projectImplementationLabel: z
     .string()
     .optional()

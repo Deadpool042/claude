@@ -16,14 +16,33 @@ import {
   getImplementationOptions,
   getFrontImplementationOptions,
 } from "@/lib/project-choices";
-import { PROJECT_TYPE_OPTIONS } from "@/lib/qualification-ui";
-import type { HostingTargetInput, ProjectFamilyInput } from "@/lib/validators/project";
+import { PROJECT_TYPE_OPTIONS } from "@/lib/referential";
+import type { HostingTargetInput, ProjectFamilyInput } from "@/lib/validators";
 import type {
   TypeStackOption,
   WizardTypeStackState,
   TypeStackViewModel,
 } from "./types";
 import { deriveHostingSelectionMode, isHeadlessArchitecture } from "./hosting";
+
+const PROJECT_TYPE_META: Record<string, { description: string; icon: string }> = {
+  BLOG: {
+    description: "Blog ou magazine, contenus éditoriaux",
+    icon: "📝",
+  },
+  VITRINE: {
+    description: "Présentation, landing pages",
+    icon: "🏢",
+  },
+  ECOM: {
+    description: "Boutique en ligne, catalogue produits",
+    icon: "🛒",
+  },
+  APP: {
+    description: "Application web avancée",
+    icon: "⚡",
+  },
+};
 
 export function allowedHostingTargetsForType(
   projectType: WizardTypeStackState["projectType"],
@@ -94,7 +113,7 @@ export function buildTypeStackViewModel(
   state: WizardTypeStackState,
   showAllImplementations: boolean,
 ): TypeStackViewModel {
-  const wizardTypeOptions = PROJECT_TYPE_OPTIONS.filter((opt) => opt.value !== "STARTER");
+  const wizardTypeOptions = PROJECT_TYPE_OPTIONS;
   const hostingSelectionMode = deriveHostingSelectionMode(state);
   const allowedHosting = allowedHostingTargetsForType(state.projectType);
   const hostingOptions = HOSTING_TARGET_OPTIONS.filter((opt) => allowedHosting.includes(opt.value));
@@ -119,7 +138,14 @@ export function buildTypeStackViewModel(
   const frontOptions = getFrontImplementationOptions(supportFilter);
 
   const activeImplementation =
-    IMPLEMENTATION_OPTIONS.find((item) => item.value === state.projectImplementation) ?? null;
+    state.projectImplementation === "OTHER" && state.projectImplementationLabel.trim().length > 0
+      ? {
+          value: "OTHER" as const,
+          label: state.projectImplementationLabel.trim(),
+          family: state.projectFamily ?? "APP_PLATFORM",
+          support: "EXTERNAL" as const,
+        }
+      : IMPLEMENTATION_OPTIONS.find((item) => item.value === state.projectImplementation) ?? null;
   const activeFront =
     FRONTEND_IMPLEMENTATIONS.find((item) => item.value === state.projectFrontendImplementation) ??
     null;
@@ -131,8 +157,8 @@ export function buildTypeStackViewModel(
       wizardTypeOptions.map((opt) => ({
         value: opt.value,
         label: opt.label,
-        description: opt.desc,
-        icon: opt.icon,
+        description: PROJECT_TYPE_META[opt.value]?.description,
+        icon: PROJECT_TYPE_META[opt.value]?.icon,
       })),
     ),
     hostingOptions: mapOption(hostingOptions),

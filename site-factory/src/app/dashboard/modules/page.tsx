@@ -1,5 +1,5 @@
 import { PageLayout } from "@/components/shell/page-layout";
-import { ModulesClient } from "./_components/modules-client";
+import { ModulesClient } from "@/features/dashboard/modules";
 
 export default function ModulesPage() {
   return (

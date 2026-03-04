@@ -1,3 +1,4 @@
+//src/lib/referential/index.ts
 /**
  * Référentiel métier v2 — Barrel export
  *
@@ -21,7 +22,7 @@ export {
   DATA_SENSITIVITY_LABELS,
   SCALABILITY_LEVEL_LABELS,
   COMMERCE_MODEL_LABELS,
-  CONSTRAINT_TIER_IMPACTS,
+  CONSTRAINT_MIN_CATEGORY_INDEX
 } from "./constraints";
 
 // ── Backend (App Custom) ─────────────────────────────────────────────
@@ -31,7 +32,7 @@ export {
   BACKEND_FAMILY_DESCRIPTIONS,
   BACKEND_FAMILY_COEFFICIENTS,
   BACKEND_OPS_HEAVY_COEFFICIENT,
-  getBackendMultiplier,
+  getBackendMultiplier
 } from "./backend";
 
 // ── Familles techniques ──────────────────────────────────────────────
@@ -41,18 +42,18 @@ export {
   STACK_FAMILY_LABELS,
   FAMILY_MAINTENANCE_FLOOR,
   PROJECT_FAMILY_TO_STACK_FAMILY,
-  resolveStackFamily,
+  resolveStackFamily
 } from "./stack-families";
 
 // ── Maintenance & Catégories ─────────────────────────────────────────
 export {
-  type MaintenanceTier,
+  type MaintenanceCat,
   type Category,
-  type MaintenanceTierDef,
-  MAINTENANCE_TIERS,
-  MAINTENANCE_TIER_BY_ID,
-  MAINTENANCE_TIER_BY_CATEGORY,
-  MAINTENANCE_TIER_ORDER,
+  type MaintenanceCatDef,
+  MAINTENANCE_CATS,
+  MAINTENANCE_CAT_BY_ID,
+  MAINTENANCE_CAT_BY_CATEGORY,
+  MAINTENANCE_CAT_ORDER,
   CATEGORY_ORDER,
   MAINTENANCE_LABELS,
   MAINTENANCE_PRICES,
@@ -62,10 +63,10 @@ export {
   CATEGORY_MAINTENANCE,
   categoryIndex,
   maxCategory,
-  tierIndexToCategory,
+  indexToCategory,
   getMaintenanceForCategory,
-  getMaintenancePrice,
-} from "./maintenance-tiers";
+  getMaintenancePrice
+} from "./maintenance-cat";
 
 // ── Complexity Index ─────────────────────────────────────────────────
 export {
@@ -81,7 +82,7 @@ export {
   CI_AXIS_DESCRIPTIONS,
   MODULE_CI_IMPACTS,
   computeCI,
-  estimateCIAxes,
+  estimateCIAxes
 } from "./complexity-index";
 
 // ── Frais de déploiement ─────────────────────────────────────────────
@@ -96,8 +97,8 @@ export {
   DEPLOY_TARGET_LABELS,
   getDeployCost,
   STACK_DEPLOY_COMPAT,
-  getAllowedDeployTargets,
-} from "./deploy-fees";
+  getAllowedDeployTargets
+} from "./deploy";
 
 // ── Profils de stack ─────────────────────────────────────────────────
 export {
@@ -110,14 +111,14 @@ export {
   getStackProfile,
   getStackProfileFromLegacy,
   getComplexityFactor,
-  getProfilesByFamily,
+  getProfilesByFamily
 } from "./stack-profiles";
 
 // ── Modules ──────────────────────────────────────────────────────────
 export {
   type ModuleGroup,
-  type ModuleSetupTier,
-  type ModuleSubscriptionTier,
+  type ModuleSetupLevel,
+  type ModuleSubscriptionLevel,
   type ModuleDef,
   MODULE_CATALOG,
   MODULE_IDS,
@@ -128,4 +129,56 @@ export {
   getStructurantModules,
   normalizeModuleId,
   normalizeModuleIds,
+  normalizeCanonicalModuleIds
 } from "./modules";
+
+export { type ProjectType, PROJECT_TYPE_LABELS, PROJECT_TYPE_OPTIONS } from "./project";
+
+// ── Spec-first (Docs/_spec) ─────────────────────────────────────────
+export {
+  SPEC_VERSION,
+  SPEC_CMS,
+  SPEC_FEATURES,
+  SPEC_PLUGINS,
+  SPEC_MODULES,
+  SPEC_DECISION_RULES,
+  getSpec,
+  loadReferentialSpec,
+} from "./spec";
+
+export type {
+  Classification,
+  MatrixClassification,
+  CmsSpecItem,
+  FeatureSpecItem,
+  PluginSpecItem,
+  ModuleSpecItem,
+  DecisionMatrixEntry,
+  DecisionMatrixRow,
+  ProjectFlags,
+  ResolveFeatureInput,
+  ResolveFeatureOutput,
+  FullSpec,
+} from "./spec";
+
+export { resolveFeature } from "./engine/resolve-feature";
+export {
+  estimateQuoteFromSpec,
+  type QuoteEstimate,
+  type QuoteEstimateInput,
+} from "./engine/estimate-quote";
+export {
+  estimatePluginSubscriptions,
+  type PluginSubscriptionEstimate,
+  type PluginSubscriptionEstimateInput,
+} from "./engine/estimate-plugin-subscriptions";
+
+/**
+ * Ce référentiel métier est conçu pour être découplé de toute logique d'implémentation spécifique (ex: CMS, e-commerce, etc.).
+ * Il doit rester un ensemble de définitions, constantes et fonctions pures.
+ * Toute logique métier plus complexe (ex: règles de catégorisation, calculs composites, etc.) doit idéalement être placée dans des services dédiés (ex: src/lib/services/) qui consomment ce référentiel.
+ * Cela garantit une meilleure maintenabilité, testabilité et réutilisabilité du code.
+ *
+ * Par exemple, la logique de détermination de la catégorie d'un projet en fonction de ses contraintes pourrait être implémentée dans un service src/lib/services/categorization.ts qui utilise les types et constantes définis dans src/lib/referential/constraints.ts et src/lib/referential/maintenance-cat.ts
+ * De même, les règles de recommandation de stack ou de modules pourraient être implémentées dans des services src/lib/services/recommendation.ts qui consomment les données de src/lib/referential/stack-families.ts et src/lib/referential/modules.ts
+ */

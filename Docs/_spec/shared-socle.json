@@ -1,0 +1,166 @@
+{
+  "_meta": {
+    "purpose": "Socle technique canonique partagé pour tous les projets + deltas d'implémentation par stack.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "Docs/10-Socle-Technique/10-socle-technique-canonique.md",
+      "Docs/10-Socle-Technique/socle-wordpress.md",
+      "Docs/10-Socle-Technique/socle-woocommerce.md",
+      "Docs/10-Socle-Technique/socle-prestashop.md",
+      "Docs/10-Socle-Technique/socle-shopify.md",
+      "Docs/10-Socle-Technique/socle-drupal.md",
+      "Docs/10-Socle-Technique/socle-headless-custom.md"
+    ],
+    "shape": {
+      "requiredTopLevel": [
+        "version",
+        "baselineRequirements",
+        "stackDeltas",
+        "commercialReferences"
+      ],
+      "domainItemRequired": [
+        "id",
+        "label",
+        "description"
+      ],
+      "idConvention": "SOCLE.*"
+    }
+  },
+  "version": "1.0.0",
+  "baselineRequirements": [
+    {
+      "id": "SOCLE.SECURITY.HTTPS",
+      "domain": "SECURITY",
+      "label": "HTTPS obligatoire",
+      "description": "Tous les points d'entrée public/admin doivent forcer HTTPS."
+    },
+    {
+      "id": "SOCLE.SECURITY.MFA",
+      "domain": "SECURITY",
+      "label": "MFA comptes sensibles",
+      "description": "MFA obligatoire pour comptes admin/ops."
+    },
+    {
+      "id": "SOCLE.SECURITY.ROLES",
+      "domain": "SECURITY",
+      "label": "RBAC et moindre privilège",
+      "description": "Rôles minimaux et séparation des accès."
+    },
+    {
+      "id": "SOCLE.SECURITY.PATCH_POLICY",
+      "domain": "SECURITY",
+      "label": "Politique de patch",
+      "description": "Core, dépendances, plugins/apps mis à jour selon criticité."
+    },
+    {
+      "id": "SOCLE.BACKUP.SCOPE",
+      "domain": "BACKUP",
+      "label": "Périmètre de sauvegarde",
+      "description": "Inclut données, médias, configurations critiques."
+    },
+    {
+      "id": "SOCLE.BACKUP.FREQUENCY_BY_CAT",
+      "domain": "BACKUP",
+      "label": "Fréquence par CAT",
+      "description": "Fréquence de backup alignée CAT0..CAT4."
+    },
+    {
+      "id": "SOCLE.BACKUP.RESTORE_TEST",
+      "domain": "BACKUP",
+      "label": "Test de restauration",
+      "description": "Restauration testée périodiquement et tracée."
+    },
+    {
+      "id": "SOCLE.DEPLOY.PROCEDURE",
+      "domain": "DEPLOY",
+      "label": "Procédure de déploiement",
+      "description": "Procédure versionnée et répétable."
+    },
+    {
+      "id": "SOCLE.DEPLOY.ROLLBACK",
+      "domain": "DEPLOY",
+      "label": "Rollback",
+      "description": "Mécanisme de retour arrière documenté et testable."
+    },
+    {
+      "id": "SOCLE.DEPLOY.POST_CHECK",
+      "domain": "DEPLOY",
+      "label": "Vérification post-déploiement",
+      "description": "Checklist post-release obligatoire."
+    },
+    {
+      "id": "SOCLE.OBS.UPTIME",
+      "domain": "OBSERVABILITY",
+      "label": "Surveillance disponibilité",
+      "description": "Uptime monitor actif en production."
+    },
+    {
+      "id": "SOCLE.OBS.ERROR_LOGS",
+      "domain": "OBSERVABILITY",
+      "label": "Journal erreurs",
+      "description": "Centralisation des erreurs exploitables."
+    },
+    {
+      "id": "SOCLE.OBS.INCIDENT_LOG",
+      "domain": "OBSERVABILITY",
+      "label": "Registre incidents",
+      "description": "Traçabilité incident/cause/action corrective."
+    },
+    {
+      "id": "SOCLE.PERF.IMAGES",
+      "domain": "PERFORMANCE",
+      "label": "Optimisation images",
+      "description": "Formats, compression et lazy-loading adaptés."
+    },
+    {
+      "id": "SOCLE.PERF.CACHING",
+      "domain": "PERFORMANCE",
+      "label": "Stratégie de cache",
+      "description": "Cache applicatif/edge documenté par stack."
+    },
+    {
+      "id": "SOCLE.PERF.SCRIPT_HYGIENE",
+      "domain": "PERFORMANCE",
+      "label": "Hygiène scripts tiers",
+      "description": "Inventaire et gouvernance scripts externes/apps."
+    },
+    {
+      "id": "SOCLE.PERF.KPI",
+      "domain": "PERFORMANCE",
+      "label": "KPI performance",
+      "description": "KPI clés suivis sur pages/parcours critiques."
+    }
+  ],
+  "stackDeltas": {
+    "cms.WORDPRESS": {
+      "appliesTo": ["SOCLE.DEPLOY.PROCEDURE", "SOCLE.BACKUP.SCOPE", "SOCLE.SECURITY.PATCH_POLICY", "SOCLE.PERF.CACHING"],
+      "delta": "Déploiement thème/plugins custom; backup DB+uploads; patch core/plugins/thème; cache page/objet."
+    },
+    "cms.WOOCOMMERCE": {
+      "appliesTo": ["SOCLE.DEPLOY.POST_CHECK", "SOCLE.BACKUP.SCOPE", "SOCLE.SECURITY.PATCH_POLICY", "SOCLE.PERF.CACHING"],
+      "delta": "Smoke tests checkout; sauvegarde données commandes; patch prioritaire plugins paiement; exclusions cache panier/checkout."
+    },
+    "cms.PRESTASHOP": {
+      "appliesTo": ["SOCLE.DEPLOY.PROCEDURE", "SOCLE.BACKUP.SCOPE", "SOCLE.SECURITY.PATCH_POLICY", "SOCLE.OBS.INCIDENT_LOG"],
+      "delta": "Déploiement modules/thème; backup DB+médias+modules; patch modules; suivi incidents tunnel d'achat."
+    },
+    "cms.SHOPIFY": {
+      "appliesTo": ["SOCLE.DEPLOY.PROCEDURE", "SOCLE.BACKUP.SCOPE", "SOCLE.SECURITY.ROLES", "SOCLE.PERF.SCRIPT_HYGIENE"],
+      "delta": "Publication thème contrôlée; pas d'accès DB direct; gouvernance rôles staff/apps; contrôle strict scripts externes."
+    },
+    "cms.DRUPAL": {
+      "appliesTo": ["SOCLE.DEPLOY.PROCEDURE", "SOCLE.BACKUP.SCOPE", "SOCLE.SECURITY.PATCH_POLICY", "SOCLE.PERF.CACHING"],
+      "delta": "Pipeline avec import config; backup DB+fichiers+config; patch core/modules; cache Drupal+CDN."
+    },
+    "cms.HEADLESS": {
+      "appliesTo": ["SOCLE.DEPLOY.PROCEDURE", "SOCLE.BACKUP.SCOPE", "SOCLE.OBS.ERROR_LOGS", "SOCLE.PERF.KPI"],
+      "delta": "CI/CD multi-composants front/API/data; backup DB/BaaS+config; observabilité centralisée; KPI web+API."
+    }
+  },
+  "commercialReferences": {
+    "deployFeesRef": "commercial.annexCosts.deploySetupFee + commercial.annexCosts.deploySetupFeeRange",
+    "hostingDomainRecurringRef": "commercial.annexCosts.domainYearlyRange + commercial.annexCosts.hostingMonthlyRangeByStack",
+    "maintenanceByCatRef": "commercial.maintenanceByCategory",
+    "pluginRecurringRef": "commercial.pluginRecurringCosts + plugins.[].priceMonthlyMin/priceMonthlyMax"
+  }
+}

@@ -1,4 +1,5 @@
-export type BackendFamily = "BAAS_STANDARD" | "BAAS_ADVANCED" | "CUSTOM_API";
+//script:src/lib/referential/backend.ts
+export type BackendFamily = "BAAS_STANDARD" | "BAAS_ADVANCED" | "CUSTOM_API" ;
 
 export const BACKEND_FAMILY_LABELS: Record<BackendFamily, string> = {
   BAAS_STANDARD: "BaaS standard",

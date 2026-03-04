@@ -55,6 +55,9 @@ L'application sera disponible sur `http://localhost:3100`.
 | `pnpm down`           | Arrete tous les containers           |
 | `pnpm lint`           | ESLint strict (no-any)               |
 | `pnpm typecheck`      | TypeScript strict                    |
+| `pnpm validate`       | Check spec drift + typecheck + tests |
+| `pnpm spec:sync`      | Sync `Docs/_spec` vers l'app         |
+| `pnpm spec:check`     | Echec si `Docs/_spec` et app divergent |
 | `pnpm db:migrate`     | Prisma migrate dev                   |
 | `pnpm db:studio`      | Prisma Studio (UI)                   |
 | `pnpm compose:validate` | Valide le docker-compose           |

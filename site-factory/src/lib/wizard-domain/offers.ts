@@ -1,6 +1,7 @@
-import type { ProjectType } from "@/lib/qualification";
-import type { ProjectType as OfferProjectType } from "@/lib/offers/offers";
-import type { ProjectFamilyInput } from "@/lib/validators/project";
+//src/lib/wizard-domain/offers.ts
+import type { ProjectType } from "@/lib/referential";
+import type { OfferCategory } from "@/lib/offers";
+import type { ProjectFamilyInput } from "@/lib/validators";
 import type {
   DataSensitivity,
   EditingFrequency,
@@ -25,7 +26,7 @@ export function isStarterEligible(input: OfferResolutionInput): boolean {
   if (!input.projectType) return false;
   if (input.projectType !== "BLOG" && input.projectType !== "VITRINE") return false;
   if (input.selectedModulesCount > 0) return false;
-  if (input.projectFamily !== "STATIC_SSG") return false;
+  if (input.projectFamily !== "STATIC_SSG" && input.projectFamily !== "CMS_MONO") return false;
   if (input.trafficLevel !== "LOW") return false;
   if (input.productCount !== "NONE") return false;
   if (input.dataSensitivity !== "STANDARD") return false;
@@ -34,21 +35,18 @@ export function isStarterEligible(input: OfferResolutionInput): boolean {
   return true;
 }
 
+export function deriveOfferProjectType(
+  input: OfferResolutionInput,
+): OfferCategory | null {
+  if (!input.projectType) return null;
+  if (input.projectType === "BLOG" || input.projectType === "VITRINE") return "VITRINE_BLOG";
+  if (input.projectType === "ECOM") return "ECOMMERCE";
+  return "APP_CUSTOM";
+}
+
 export function deriveQualificationProjectType(
   input: OfferResolutionInput,
 ): ProjectType | null {
-  if (!input.projectType) return null;
-  if (isStarterEligible(input)) return "STARTER";
+  // Placeholder until the new qualification flow lands: keep the original project type.
   return input.projectType;
-}
-
-export function deriveOfferProjectType(
-  input: OfferResolutionInput,
-): OfferProjectType | null {
-  const effectiveType = deriveQualificationProjectType(input);
-  if (!effectiveType) return null;
-  if (effectiveType === "STARTER") return "STARTER";
-  if (effectiveType === "BLOG" || effectiveType === "VITRINE") return "VITRINE_BLOG";
-  if (effectiveType === "ECOM") return "ECOMMERCE";
-  return "APP_CUSTOM";
 }

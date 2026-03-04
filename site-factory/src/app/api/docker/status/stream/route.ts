@@ -3,7 +3,7 @@ import { promisify } from "node:util";
 import { resolve } from "node:path";
 import { access } from "node:fs/promises";
 import { prisma } from "@/lib/db";
-import { localHostForMode } from "@/lib/docker/names";
+import { localHostForMode } from "@/lib/docker";
 
 import {
   buildExpectedServices,
@@ -17,7 +17,7 @@ import {
   type StackLiteral,
   type OptionalServiceId,
   type PersistedProjectServiceRow,
-} from "@/lib/service-catalog";
+} from "@/lib/services";
 
 const execAsync = promisify(exec);
 const CONFIGS_ROOT = resolve(process.cwd(), "..", "configs");

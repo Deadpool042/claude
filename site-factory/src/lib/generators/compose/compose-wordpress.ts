@@ -1,7 +1,7 @@
 import type { ComposeMode, ComposeProjectInput, DatabaseConfig } from "./types";
 import { parseEnvVars } from "./shared/env";
 import { composeHeader } from "./shared/header";
-import { localHostForMode, stackSlugForMode } from "@/lib/docker/names";
+import { localHostForMode, stackSlugForMode } from "@/lib/docker";
 import { isServiceEnabledForMode } from "./services/enabled";
 import { dbServiceBlock } from "./services/db";
 import {

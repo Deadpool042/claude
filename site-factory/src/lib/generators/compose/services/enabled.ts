@@ -1,4 +1,4 @@
-import { SERVICE_CATALOG } from "@/lib/service-catalog";
+import { SERVICE_CATALOG } from "@/lib/services";
 import type { DeployTarget } from "@/generated/prisma/client";
 import type { ComposeMode } from "../types";
 

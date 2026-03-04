@@ -1,0 +1,11 @@
+{
+  "errors": [],
+  "warnings": [],
+  "proposedFixes": [],
+  "summary": {
+    "cms": 6,
+    "features": 31,
+    "plugins": 18,
+    "modules": 12
+  }
+}

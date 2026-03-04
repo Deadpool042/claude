@@ -4,7 +4,8 @@ services:
     image: traefik:v3.3
     restart: unless-stopped
     command:
-      # API / Dashboard
+      # API / Dashboard (dev only — insecure on localhost:8080)
+      # ⚠️ En production : désactiver api.insecure et configurer basicAuth
       - "--api.dashboard=true"
       - "--api.insecure=true"
       # Docker provider (for Traefik's own labels)
@@ -45,10 +46,10 @@ services:
     image: mariadb:11
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Définir DB_ROOT_PASSWORD dans .env}
       MARIADB_DATABASE: ${DB_NAME:-sitefactory}
       MARIADB_USER: ${DB_USER:-sitefactory}
-      MARIADB_PASSWORD: ${DB_PASSWORD:-sitefactory}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Définir DB_PASSWORD dans .env}
     ports:
       - "127.0.0.1:${DB_PORT:-3307}:3306"
     volumes:

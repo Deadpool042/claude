@@ -1,155 +1,54 @@
-# Documentation Agence -- Cadre projets & offres
+# Documentation Framework — Spec-first
 
-Ce dossier contient **l'ensemble du cadre operationnel de l'agence** :
-qualification des projets, structuration des offres, socle technique,
-maintenance, modules et regles financieres internes.
+## Spec Canonique
 
-**Objectif** : vendre, produire et maintenir des sites de facon rentable, claire et industrialisable.
+`Docs/_spec` est la source de vérité unique du référentiel.
 
----
+### Fichiers canoniques
 
-## Vision globale
+- [cms.json](./_spec/cms.json)
+- [features.json](./_spec/features.json)
+- [plugins.json](./_spec/plugins.json)
+- [modules.json](./_spec/modules.json)
+- [capability-matrix.json](./_spec/capability-matrix.json)
+- [decision-rules.json](./_spec/decision-rules.json)
+- [commercial.json](./_spec/commercial.json)
+- [custom-stacks.json](./_spec/custom-stacks.json)
+- [shared-socle.json](./_spec/shared-socle.json)
 
-Le modele repose sur quatre piliers independants de toute technologie :
+### Règles d’édition
 
-1. **Socle technique** -- Objectifs mesurables obligatoires pour tout projet livre
-2. **Complexity Index (CI)** -- Mesure factuelle de la complexite d'un projet
-3. **Maintenance** -- Paliers determines par le CI, applicables a toute stack
-4. **Modules a valeur business** -- Fonctionnalites optionnelles facturees en sus
+1. Modifier d’abord `Docs/_spec/*.json`.
+2. Exécuter `pnpm spec:sync`.
+3. Vérifier `pnpm spec:check`.
+4. Exécuter `pnpm validate`.
 
-La technologie (WordPress, Next.js, Nuxt, Astro, ou toute future stack) est un **choix d'implementation**, jamais un critere de categorisation.
+### Conventions d’ID
 
----
+- `cms.*` (ex: `cms.WOOCOMMERCE`)
+- `feature.*` (ex: `feature.SHIPPING_BASIC`)
+- `plugin.*` (ex: `plugin.WOOCOMMERCE_DYNAMIC_PRICING`)
+- `module.*` (ex: `module.ADVANCED_PRICING`)
 
-## Organisation des dossiers
+### Versioning
 
-### 01 -- Socle Technique
+- Chaque fichier canonique expose `version` et `_meta.version`.
+- Les changements de structure se versionnent explicitement (minor/major selon impact de compatibilité).
 
-Objectifs mesurables obligatoires pour tout projet, independamment de la stack.
-Securite, performance, conformite RGPD, deploiement, audit de livraison.
+### Consommation code (Step 3)
 
-- **socle-technique.md** -- Reference unique du socle
+- L’application consomme un miroir généré dans `site-factory/src/lib/referential/spec/data/*`.
+- Ce miroir est généré depuis `Docs/_spec` (jamais édité manuellement).
+- Référence opérationnelle: [GENERATION.md](./_spec/GENERATION.md).
 
----
+## Documentation lisible (alignée spec)
 
-### 02 -- Complexity Index
-
-Outil de mesure objectif de la complexite d'un projet.
-Formule, axes d'evaluation, seuils et correspondance avec les paliers de maintenance.
-
-- **complexity-index.md** -- Definition, formule et seuils
-
----
-
-### 03 -- Maintenance
-
-Paliers de maintenance determines par le Complexity Index.
-Perimetre, exclusions, modalites, grille tarifaire.
-
-- **maintenance.md** -- Grille officielle de maintenance
-- **maintenance-checklist.md** -- Checklist operationnelle mensuelle
-
----
-
-### 04 -- Modules
-
-Catalogue des modules a valeur business activables selon la complexite du projet.
-
-- **modules.md** -- Index du catalogue, regles d'activation
-- **module-\*.md** -- Un fichier par module (perimetre, prix, exclusions)
-
----
-
-### 05 -- Bonnes Pratiques
-
-Pratiques recommandees independantes de la stack : architecture, tests,
-observabilite, deploiement, gestion des dependances.
-
-- **bonnes-pratiques.md** -- Reference des pratiques stack-agnostiques
-
----
-
-### 06 -- Integration Technologie
-
-Guide pour integrer une nouvelle stack dans le cadre (Strapi, Django, Rails, etc.).
-Processus de validation, criteres d'eligibilite, mise a jour du CI.
-
-- **guide-integration.md** -- Processus d'ajout d'une nouvelle technologie
-
----
-
-### 07 -- Exemples
-
-Exemples concrets d'application du cadre pour les stacks actuellement supportees.
-Ces exemples illustrent le cadre sans le restreindre.
-
-- **exemples-par-stack.md** -- Illustrations par technologie
-
----
-
-### 08 -- Commercial
-
-Outils d'aide a la vente et a la pedagogie client.
-Aucune information interne dans ces documents.
-
-- **tableau-comparatif-offres.md** -- Comparatif client
-- **guide-tier-0-1.md** -- Guide simplifié Tier 0 & Tier 1 pour la vente
-
-> **Audience** : client / prospect.
-> Ne contient ni formules internes, ni marges, ni splits financiers.
-
----
-
-### 09 -- Interne
-
-Documents strictement internes. Non transmissibles au client.
-
-- **definition-standard-grille.md** -- Vision macro des offres
-- **grille-qualification-client.md** -- Outil de decision (projet, CI, modules)
-- **flux-decisionnel.md** -- Referentiel decisionnel unique
-- **repartition-financiere.md** -- Regles de split agence / partenaire
-- **process-livraison.md** -- Process de livraison des projets
-- **cas-typiques-tier-0.md** -- Cas d'usage et business case Tier 0
-
-> **Audience** : equipe interne uniquement.
-
----
-
-## Distinction interne / commercial
-
-| Aspect | Documents commerciaux (08) | Documents internes (09) |
-| --- | --- | --- |
-| **Audience** | Client, prospect | Equipe technique, direction |
-| **Contenu** | Perimetre, prix publics, avantages | Marges, splits, flux decisionnels |
-| **Ton** | Pedagogique, orientee valeur | Operationnel, directif |
-| **Exemples** | Comparatif offres, grille tarifaire | Qualification, repartition financiere |
-
-**Regle** : tout document transmis au client doit etre issu du dossier `08-Commercial/`.
-Les documents `09-Interne/` ne quittent jamais l'organisation.
-
----
-
-## Regles cles
-
-- Le **socle technique est le prerequis obligatoire** pour tous les projets
-- La **categorisation** est fonctionnelle (complexite), jamais technologique
-- Le **Complexity Index** determine objectivement le palier de maintenance
-- Les **modules** ajoutent de la valeur business et peuvent augmenter le CI
-- La **maintenance** est globale, non cumulative, et obligatoire
-- Toute sortie de cadre = **requalification**
-- La stack est un choix d'implementation, pas une contrainte structurelle
-
-### Compatibilite type ↔ hebergement ↔ famille
-
-- STARTER : hebergements `Mutualise`, `Managed WP`, `Cloud statique`, `VPS`, `A confirmer` ; familles `Statique/SSG` ou `CMS mono` uniquement (jamais de headless).
-- BLOG / VITRINE : familles `Statique/SSG`, `CMS mono`, `CMS headless` ; hebergements larges (mutualise, managed WP, cloud statique/SSR, VPS, SaaS, split headless, a confirmer).
-- ECOM : familles `Commerce SaaS`, `Commerce auto-heberge`, `Commerce headless` ; hebergements e-commerce (mutualise WP, cloud SSR, VPS, SaaS, split headless, a confirmer).
-- APP : famille `App/Plateforme` ; hebergements `Cloud SSR`, `VPS/Docker`, `Split headless` (pas de mutualise).
-- Filtrage croise applique dans l'outil : l'UI n'affiche que les couples hebergement/famille compatibles avec le type selectionne.
-
----
-
-## Principe fondamental
-
-> **Ce cadre existe pour eviter l'improvisation.**
-> Moins d'improvisation = plus de qualite, plus de marge, moins de stress.
+1. [01-framework-overview.md](./01-framework-overview.md)
+2. [02-supported-cms.md](./02-supported-cms.md)
+3. [03-feature-classification.md](./03-feature-classification.md)
+4. [04-cms-capability-matrix.md](./04-cms-capability-matrix.md)
+5. [05-framework-modules.md](./05-framework-modules.md)
+6. [06-plugin-integrations.md](./06-plugin-integrations.md)
+7. [07-custom-apps.md](./07-custom-apps.md)
+8. [08-decision-engine.md](./08-decision-engine.md)
+9. [10-Socle-Technique/README.md](./10-Socle-Technique/README.md)

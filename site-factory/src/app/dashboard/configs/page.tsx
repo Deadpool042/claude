@@ -4,7 +4,7 @@ import { Settings, FileCode } from "lucide-react";
 import { PageLayout } from "@/components/shell/page-layout";
 import { EmptyState } from "@/components/shell/empty-state";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ComposePreview } from "./_components/compose-preview";
+import { ComposePreview } from "@/features/dashboard/configs";
 
 type ComposeMode = "dev" | "prod-like";
 

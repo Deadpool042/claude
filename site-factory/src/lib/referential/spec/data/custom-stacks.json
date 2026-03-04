@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "purpose": "Profils canoniques de custom stacks et conditions d’éligibilité.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/engine/resolve-feature.ts",
+      "site-factory/src/lib/referential/spec/load.ts"
+    ],
+    "shape": {
+      "requiredTopLevel": [
+        "version",
+        "profiles"
+      ],
+      "profileItemRequired": [
+        "id",
+        "label",
+        "allowedIf",
+        "implies"
+      ],
+      "idConvention": "CUSTOM_STACK_*"
+    }
+  },
+  "version": "1.0.0",
+  "profiles": [
+    {
+      "id": "CUSTOM_STACK_LIGHT",
+      "label": "Custom Stack Light",
+      "allowedIf": {
+        "hasInHouseDev": true,
+        "complexityAtLeast": "CAT2"
+      },
+      "implies": {
+        "maintenanceCategory": "CAT3",
+        "projectCategory": "CUSTOM_STACK"
+      },
+      "budgetHint": {
+        "min": 5000,
+        "max": 12000
+      },
+      "notes": [
+        "Nécessite des compétences de maintenance internes ou un contrat renforcé.",
+        "Réduit la vitesse de livraison initiale par rapport à une stack standardisée."
+      ]
+    },
+    {
+      "id": "CUSTOM_STACK_ENTERPRISE",
+      "label": "Custom Stack Enterprise",
+      "allowedIf": {
+        "hasInHouseDev": true,
+        "complexityAtLeast": "CAT3"
+      },
+      "implies": {
+        "maintenanceCategory": "CAT4",
+        "projectCategory": "CUSTOM_STACK"
+      },
+      "budgetHint": {
+        "min": 12000,
+        "max": 30000
+      },
+      "notes": [
+        "Réservé aux cas métier complexes avec forte intégration SI.",
+        "Le coût de possession dépend fortement de la gouvernance technique interne."
+      ]
+    }
+  ]
+}

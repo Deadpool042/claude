@@ -1,0 +1,85 @@
+{
+  "_meta": {
+    "purpose": "Catalogue canonique des CMS/supports et de leurs capacités structurelles.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/spec/load.ts",
+      "site-factory/src/lib/referential/spec/schema.ts"
+    ],
+    "shape": {
+      "requiredTopLevel": ["version", "cms"],
+      "cmsItemRequired": ["id", "label", "kind"],
+      "idConvention": "cms.*"
+    }
+  },
+  "version": "1.0.0",
+  "cms": [
+    {
+      "id": "cms.WORDPRESS",
+      "cmsId": "cms.WORDPRESS",
+      "label": "WordPress",
+      "kind": "CONTENT_CMS",
+      "type": "CMS",
+      "editorialModel": "NATIVE",
+      "extensionModel": "PLUGIN"
+    },
+    {
+      "id": "cms.WOOCOMMERCE",
+      "cmsId": "cms.WOOCOMMERCE",
+      "label": "WooCommerce",
+      "kind": "ECOMMERCE_CMS",
+      "type": "COMMERCE_CMS",
+      "editorialModel": "NATIVE",
+      "extensionModel": "PLUGIN"
+    },
+    {
+      "id": "cms.PRESTASHOP",
+      "cmsId": "cms.PRESTASHOP",
+      "label": "PrestaShop",
+      "kind": "ECOMMERCE_CMS",
+      "type": "COMMERCE_CMS",
+      "editorialModel": "NATIVE",
+      "extensionModel": "PLUGIN"
+    },
+    {
+      "id": "cms.SHOPIFY",
+      "cmsId": "cms.SHOPIFY",
+      "label": "Shopify",
+      "kind": "ECOMMERCE_SAAS",
+      "type": "COMMERCE_CMS",
+      "editorialModel": "NATIVE",
+      "extensionModel": "APP"
+    },
+    {
+      "id": "cms.DRUPAL",
+      "cmsId": "cms.DRUPAL",
+      "label": "Drupal",
+      "kind": "CONTENT_CMS",
+      "type": "CMS",
+      "editorialModel": "NATIVE",
+      "extensionModel": "MODULE"
+    },
+    {
+      "id": "cms.HEADLESS",
+      "cmsId": "cms.HEADLESS",
+      "label": "Headless stack (framework agnostic)",
+      "kind": "HEADLESS_STACK",
+      "type": "HEADLESS",
+      "editorialModel": "CONFIGURABLE",
+      "extensionModel": "MODULE_OR_CUSTOM",
+      "supportedFrontends": [
+        "Next.js",
+        "Nuxt",
+        "Astro",
+        "SvelteKit",
+        "Remix",
+        "Symfony+Twig"
+      ],
+      "supportedContentModes": [
+        "GIT_MDX",
+        "HEADLESS_CMS",
+        "CUSTOM_ADMIN"
+      ]
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 // _components/field-select.tsx
 "use client";
 
+import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Select,
   SelectContent,
@@ -9,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Info } from "lucide-react";
 
 type Option = { value: string; label: string; disabled?: boolean };
 
@@ -20,6 +23,7 @@ type FieldSelectProps = {
   options: Option[];
   className?: string;
   helpText?: string;
+  tooltip?: string;
 };
 
 export function FieldSelect({
@@ -30,13 +34,26 @@ export function FieldSelect({
   options,
   className,
   helpText,
+  tooltip,
 }: FieldSelectProps) {
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
+      <div className="flex items-center gap-1">
+        <Label>{label}</Label>
+        {tooltip ? (
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info className="size-3.5 text-muted-foreground" aria-label="Informations" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs text-xs">{tooltip}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : null}
+      </div>
 
       <Select value={value ?? ""} onValueChange={onChange}>
-        <SelectTrigger className={className}>
+        <SelectTrigger className={cn("w-full", className)}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
 

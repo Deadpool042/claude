@@ -1,6 +1,6 @@
 import { generateTraefikConfig } from "@/lib/generators/traefik";
 import { generateComposeFragment } from "@/lib/generators/compose";
-import type { CreatedProject } from "@/lib/projects/buildProjectCreateArgs";
+import type { CreatedProject } from "@/lib/projects";
 import type { DeployTarget, TechStack, DevMode } from "@/generated/prisma/client"; // ✅ DevMode
 
 export async function generateProjectInfra(args: {

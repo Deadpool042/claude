@@ -4,7 +4,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import type { DevMode, Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
-import { localHostForMode, localHostBase } from "@/lib/docker/names";
+import { localHostForMode, localHostBase } from "@/lib/docker";
 
 const execFileAsync = promisify(execFile);
 

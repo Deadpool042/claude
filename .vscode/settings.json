@@ -2,7 +2,17 @@
   
   "intelephense.stubs": [
     "wordpress",
-  
   ],
-  "chatgpt.commentCodeLensEnabled": true
+  "chatgpt.commentCodeLensEnabled": true,
+  "markdown.validate.enabled": false,
+  "markdownlint.run": "onSave",
+  "markdownlint.severityForError": "Ignore",
+  "markdownlint.severityForWarning": "Ignore",
+  "[markdown]": {
+    "cSpell.enabled": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "never",
+      "source.fixAll.markdownlint": "never"
+    }
+  }
 }

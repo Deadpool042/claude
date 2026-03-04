@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { PageLayout } from "@/components/shell/page-layout";
-import { WizardProvider } from "./_providers/wizard-provider";
+import { WizardProvider } from "@/features/dashboard/projects/new";
 
 /**
  * Layout serveur pour le wizard de création de projet.

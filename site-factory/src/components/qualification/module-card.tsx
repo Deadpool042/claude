@@ -3,15 +3,15 @@
 import {
   CATEGORY_COLORS,
   CATEGORY_SHORT,
-  resolveModulePrice,
-  resolveModuleMonthly,
   type ModuleDef,
-  type TechStack,
+  type LegacyTechStack as TechStack,
   type Category,
   type ProjectType,
-  type ModuleTierSelection,
-} from "@/lib/qualification";
-import { MODULE_ICONS, formatEur } from "@/lib/qualification-ui";
+} from "@/lib/referential";
+import type { ModuleCatSelection } from "@/lib/qualification-runtime";
+import { resolveModulePrice, resolveModuleMonthly } from "@/lib/module-pricing";
+import { MODULE_ICONS } from "@/lib/ui/module-icons";
+import { formatEur } from "@/lib/currency";
 import { TierSelector } from "./tier-selector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,8 +24,8 @@ interface ModuleCardProps {
   mod: ModuleDef;
   isSelected: boolean;
   onToggle: () => void;
-  tierSel?: ModuleTierSelection;
-  onTierChange: (modId: string, tierSel: ModuleTierSelection) => void;
+  tierSel?: ModuleCatSelection;
+  onTierChange: (modId: string, tierSel: ModuleCatSelection) => void;
   techStack: TechStack;
   projectType: ProjectType;
   wpHeadless: boolean;
@@ -53,13 +53,13 @@ export function ModuleCard({
   backendMultiplier = 1,
 }: ModuleCardProps) {
   const ModIcon = MODULE_ICONS[mod.icon] ?? Wrench;
-  const hasTiers = !!(mod.setupTiers || mod.subscriptionTiers);
+  const hasTiers = !!(mod.setupCats || mod.subscriptionCats);
   const isLocked = isMandatory || isIncluded;
 
   // Résoudre le requalifiesTo en tenant compte du tier sélectionné
   const effectiveRequalTo =
-    hasTiers && tierSel?.setupTierId
-      ? (mod.setupTiers?.find((t) => t.id === tierSel.setupTierId)
+    hasTiers && tierSel?.setupCatId
+      ? (mod.setupCats?.find((t) => t.id === tierSel.setupCatId)
           ?.requalifiesTo ?? mod.requalifiesTo)
       : mod.requalifiesTo;
 

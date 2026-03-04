@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { resolve } from "node:path";
 import { prisma } from "@/lib/db";
-import { localHostBase, localHostForMode, localServiceHost, stackSlugForMode } from "@/lib/docker/names";
+import { localHostBase, localHostForMode, localServiceHost, stackSlugForMode } from "@/lib/docker";
 import { isServiceEnabledForMode } from "@/lib/generators/compose/services/enabled";
 
 /** Path to the Traefik dynamic config, relative to the monorepo root */

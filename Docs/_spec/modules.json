@@ -1,0 +1,261 @@
+{
+  "_meta": {
+    "purpose": "Catalogue canonique des modules framework réutilisables (hors CMS_NATIVE et hors wrappers plugin simples).",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/spec/load.ts",
+      "site-factory/src/lib/referential/engine/estimate-quote.ts"
+    ],
+    "shape": {
+      "requiredTopLevel": [
+        "version",
+        "modules"
+      ],
+      "moduleItemRequired": [
+        "id",
+        "label",
+        "featureIds",
+        "pricingMode",
+        "priceSetupMin",
+        "priceSetupMax",
+        "economicGuardrails"
+      ],
+      "idConvention": "module.*"
+    }
+  },
+  "version": "1.0.0",
+  "modules": [
+    {
+      "id": "module.B2B_COMMERCE",
+      "label": "B2B commerce",
+      "featureIds": [
+        "feature.B2B_COMMERCE"
+      ],
+      "targetCategory": "CAT2",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1900,
+      "priceSetupMax": 2900,
+      "priceMonthlyMin": 39,
+      "priceMonthlyMax": 149,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.7,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.MARKETPLACE",
+      "label": "Marketplace",
+      "featureIds": [
+        "feature.MARKETPLACE"
+      ],
+      "targetCategory": "CAT3",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 2900,
+      "priceSetupMax": 4900,
+      "priceMonthlyMin": 79,
+      "priceMonthlyMax": 220,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.75,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.LOGISTICS_ORCHESTRATION",
+      "label": "Logistics orchestration",
+      "featureIds": [
+        "feature.LOGISTICS_ORCHESTRATION"
+      ],
+      "targetCategory": "CAT3",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 2600,
+      "priceSetupMax": 4300,
+      "priceMonthlyMin": 59,
+      "priceMonthlyMax": 180,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.72,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.ADVANCED_PRICING",
+      "label": "Advanced pricing",
+      "featureIds": [
+        "feature.ADVANCED_PRICING"
+      ],
+      "targetCategory": "CAT2",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1500,
+      "priceSetupMax": 2600,
+      "priceMonthlyMin": 29,
+      "priceMonthlyMax": 120,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.62,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.MARKETING_AUTOMATION",
+      "label": "Marketing automation",
+      "featureIds": [
+        "feature.MARKETING_AUTOMATION"
+      ],
+      "targetCategory": "CAT2",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1300,
+      "priceSetupMax": 2400,
+      "priceMonthlyMin": 29,
+      "priceMonthlyMax": 160,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.58,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.PRODUCT_RECOMMENDATION",
+      "label": "Product recommendation",
+      "featureIds": [
+        "feature.PRODUCT_RECOMMENDATION"
+      ],
+      "targetCategory": "CAT2",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1700,
+      "priceSetupMax": 2900,
+      "priceMonthlyMin": 35,
+      "priceMonthlyMax": 140,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.66,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.BUSINESS_ANALYTICS",
+      "label": "Business analytics",
+      "featureIds": [
+        "feature.BUSINESS_ANALYTICS"
+      ],
+      "targetCategory": "CAT2",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1600,
+      "priceSetupMax": 2800,
+      "priceMonthlyMin": 39,
+      "priceMonthlyMax": 150,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.64,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.ERP_INTEGRATIONS",
+      "label": "ERP integrations",
+      "featureIds": [
+        "feature.ERP_INTEGRATIONS"
+      ],
+      "targetCategory": "CAT3",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 2800,
+      "priceSetupMax": 5200,
+      "priceMonthlyMin": 89,
+      "priceMonthlyMax": 260,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.78,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.MULTI_CATALOG",
+      "label": "Multi catalog",
+      "featureIds": [
+        "feature.MULTI_CATALOG"
+      ],
+      "targetCategory": "CAT3",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 2300,
+      "priceSetupMax": 4100,
+      "priceMonthlyMin": 49,
+      "priceMonthlyMax": 190,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.7,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.MULTI_STORE_ORCHESTRATION",
+      "label": "Multi-store orchestration",
+      "featureIds": [
+        "feature.MULTI_STORE_ORCHESTRATION"
+      ],
+      "targetCategory": "CAT3",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 2400,
+      "priceSetupMax": 4300,
+      "priceMonthlyMin": 59,
+      "priceMonthlyMax": 210,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.72,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.CMS_AUGMENTATION",
+      "label": "CMS augmentation",
+      "featureIds": [
+        "feature.CMS_AUGMENTATION"
+      ],
+      "targetCategory": "CAT2",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1100,
+      "priceSetupMax": 2100,
+      "priceMonthlyMin": 19,
+      "priceMonthlyMax": 90,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.52,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale."
+    },
+    {
+      "id": "module.IDENTITY_SSO",
+      "label": "Identity and SSO",
+      "featureIds": [
+        "feature.IDENTITY_SSO"
+      ],
+      "targetCategory": "CAT3",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1900,
+      "priceSetupMax": 3600,
+      "priceMonthlyMin": 29,
+      "priceMonthlyMax": 120,
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.68,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    }
+  ]
+}

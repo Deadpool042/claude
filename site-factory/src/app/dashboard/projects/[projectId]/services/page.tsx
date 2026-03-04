@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { PageLayout } from "@/components/shell/page-layout";
 import { BreadcrumbOverride } from "@/components/shell/breadcrumb-context";
-import { ServicesOrchestrator } from "./_components/services-orchestrator";
+import { ServicesOrchestrator } from "@/features/dashboard/projects/detail";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";

@@ -1,3 +1,4 @@
+//src/lib/offers/offers.ts
 /**
  * Module Offres / Pricing — Refactoré v2
  *
@@ -13,7 +14,9 @@
  */
 
 import {
-  type MaintenanceTier,
+  type MaintenanceCat,
+  type ProjectType as ReferentialProjectType,
+  type LegacyTechStack as ReferentialTechStack,
   type ModuleDef as RefModuleDef,
   CATEGORY_LABELS as REF_CATEGORY_LABELS,
   CATEGORY_MAINTENANCE,
@@ -25,26 +28,24 @@ import {
   DEPLOY_FEES_HEADLESS,
   categoryIndex,
 } from "@/lib/referential";
-import {
-  qualifyProject,
-  type ProjectType as QualificationProjectType,
-  type TechStack as QualificationTechStack,
-} from "@/lib/qualification";
+import { qualifyProject } from "@/lib/qualification-runtime";
 
 // ══════════════════════════════════════════════════════════════════════
 // TYPES (rétro-compatibles)
 // ══════════════════════════════════════════════════════════════════════
 
-export type ProjectType =
-  | "STARTER"
+export type OfferCategory =
   | "VITRINE_BLOG"
   | "ECOMMERCE"
   | "APP_CUSTOM";
 
+/** Alias de compatibilité: Use OfferCategory */
+export type ProjectType = OfferCategory;
+
 export type ProjectCategory = 0 | 1 | 2 | 3 | 4;
 
-export type MaintenanceTier2 = MaintenanceTier;
-export { type MaintenanceTier };
+export type MaintenanceCat2 = MaintenanceCat;
+export { type MaintenanceCat };
 
 export type Stack =
   | "WORDPRESS"
@@ -98,7 +99,7 @@ export type ModuleDef = {
   complexity: {
     byStack: Record<Stack, number>;
   };
-  mandatoryFor?: Partial<Record<ProjectType, Stack[]>>;
+  mandatoryFor?: Partial<Record<OfferCategory, Stack[]>>;
   includedByDefault?: boolean;
   subscriptions?: ModuleSubscription[];
 };
@@ -107,8 +108,7 @@ export type ModuleDef = {
 // CATEGORY (v2 — 5 niveaux)
 // ══════════════════════════════════════════════════════════════════════
 
-export const PROJECT_CATEGORY_BY_TYPE: Record<ProjectType, ProjectCategory> = {
-  STARTER: 0,
+export const CATEGORY_BY_OFFER: Record<OfferCategory, ProjectCategory> = {
   VITRINE_BLOG: 1,
   ECOMMERCE: 2,
   APP_CUSTOM: 4,
@@ -122,7 +122,7 @@ export const CATEGORY_LABELS: Record<ProjectCategory, string> = {
   4: REF_CATEGORY_LABELS.CAT4,
 };
 
-export const MAINTENANCE_BY_CATEGORY: Record<ProjectCategory, MaintenanceTier> = {
+export const MAINTENANCE_BY_CATEGORY: Record<ProjectCategory, MaintenanceCat> = {
   0: CATEGORY_MAINTENANCE.CAT0,
   1: CATEGORY_MAINTENANCE.CAT1,
   2: CATEGORY_MAINTENANCE.CAT2,
@@ -130,10 +130,10 @@ export const MAINTENANCE_BY_CATEGORY: Record<ProjectCategory, MaintenanceTier> =
   4: CATEGORY_MAINTENANCE.CAT4,
 };
 
-export const MAINTENANCE_LABELS: Record<MaintenanceTier, string> =
+export const MAINTENANCE_LABELS: Record<MaintenanceCat, string> =
   REF_MAINTENANCE_LABELS;
 
-export const MAINTENANCE_PRICES: Record<MaintenanceTier, string> =
+export const MAINTENANCE_PRICES: Record<MaintenanceCat, string> =
   REF_MAINTENANCE_PRICES;
 
 // ══════════════════════════════════════════════════════════════════════
@@ -146,11 +146,7 @@ function computeBasePrice(family: string, complexityFactor: number): PriceRange 
   return { priceFrom: Math.round(base.from * complexityFactor) };
 }
 
-export const BASE_PRICES: Record<ProjectType, Partial<Record<Stack, PriceRange>>> = {
-  STARTER: {
-    WORDPRESS: computeBasePrice("CMS_SIMPLE", 1.0),
-    ASTRO: computeBasePrice("CMS_SIMPLE", 1.0),
-  },
+export const BASE_PRICES: Record<OfferCategory, Partial<Record<Stack, PriceRange>>> = {
   VITRINE_BLOG: {
     WORDPRESS: computeBasePrice("CMS_ADVANCED", 1.0),
     ASTRO: computeBasePrice("SSG_JAMSTACK", 1.2),
@@ -176,15 +172,13 @@ export const BASE_PRICES: Record<ProjectType, Partial<Record<Stack, PriceRange>>
 // LABELS & STACKS
 // ══════════════════════════════════════════════════════════════════════
 
-export const PROJECT_TYPE_ORDER: ProjectType[] = [
-  "STARTER",
+export const OFFER_CATEGORY_ORDER: OfferCategory[] = [
   "VITRINE_BLOG",
   "ECOMMERCE",
   "APP_CUSTOM",
 ];
 
-export const PROJECT_TYPE_LABELS: Record<ProjectType, string> = {
-  STARTER: "Starter",
+export const OFFER_CATEGORY_LABELS: Record<OfferCategory, string> = {
   VITRINE_BLOG: "Vitrine / Blog",
   ECOMMERCE: "E-commerce",
   APP_CUSTOM: "App custom",
@@ -282,8 +276,7 @@ export const STACK_PRICING_NOTES: Record<
   },
 };
 
-export const PROJECT_TYPE_STACKS: Record<ProjectType, Stack[]> = {
-  STARTER: ["WORDPRESS", "ASTRO"],
+export const OFFER_CATEGORY_STACKS: Record<OfferCategory, Stack[]> = {
   VITRINE_BLOG: [
     "WORDPRESS",
     "ASTRO",
@@ -301,8 +294,7 @@ export const PROJECT_TYPE_STACKS: Record<ProjectType, Stack[]> = {
   APP_CUSTOM: ["NEXTJS", "NUXT", "ASTRO"],
 };
 
-export const DEFAULT_STACK_BY_PROJECT_TYPE: Record<ProjectType, Stack> = {
-  STARTER: "WORDPRESS",
+export const DEFAULT_STACK_BY_OFFER: Record<OfferCategory, Stack> = {
   VITRINE_BLOG: "WORDPRESS",
   ECOMMERCE: "WOOCOMMERCE",
   APP_CUSTOM: "NEXTJS",
@@ -455,7 +447,7 @@ function refModuleToOfferModule(mod: RefModuleDef): ModuleDef {
       ? ["WOOCOMMERCE", "WOOCOMMERCE_HEADLESS", "ASTRO", "NEXTJS", "NUXT"]
       : "ALL";
 
-  const subscriptions = mod.subscriptionTiers?.map((t) => ({
+  const subscriptions = mod.subscriptionCats?.map((t) => ({
     id: t.id,
     label: t.name,
     priceMonthly: t.priceMonthly,
@@ -496,7 +488,7 @@ export const MODULES: ModuleDef[] = MODULE_CATALOG.map(refModuleToOfferModule);
 // ══════════════════════════════════════════════════════════════════════
 
 export function getBasePrice(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
 ): PriceRange | null {
   return BASE_PRICES[projectType]?.[stack] ?? null;
@@ -508,8 +500,7 @@ export function getModuleById(id: ModuleId): ModuleDef {
   return mod;
 }
 
-const OFFER_PROJECT_TO_QUALIFICATION: Record<ProjectType, QualificationProjectType> = {
-  STARTER: "STARTER",
+const OFFER_TO_QUALIFICATION_TYPE: Record<OfferCategory, ReferentialProjectType> = {
   VITRINE_BLOG: "VITRINE",
   ECOMMERCE: "ECOM",
   APP_CUSTOM: "APP",
@@ -517,7 +508,7 @@ const OFFER_PROJECT_TO_QUALIFICATION: Record<ProjectType, QualificationProjectTy
 
 function resolveQualificationStack(
   stack: Stack,
-): { techStack: QualificationTechStack; wpHeadless: boolean } {
+): { techStack: ReferentialTechStack; wpHeadless: boolean } {
   if (stack === "WORDPRESS_HEADLESS") {
     return { techStack: "WORDPRESS", wpHeadless: true };
   }
@@ -527,15 +518,15 @@ function resolveQualificationStack(
   if (stack === "WOOCOMMERCE") {
     return { techStack: "WORDPRESS", wpHeadless: false };
   }
-  return { techStack: stack as QualificationTechStack, wpHeadless: false };
+  return { techStack: stack as ReferentialTechStack, wpHeadless: false };
 }
 
 function computeCategoryWithQualification(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
   moduleIds: ModuleId[],
 ): ProjectCategory {
-  const mappedType = OFFER_PROJECT_TO_QUALIFICATION[projectType];
+  const mappedType = OFFER_TO_QUALIFICATION_TYPE[projectType];
   const { techStack, wpHeadless } = resolveQualificationStack(stack);
   const result = qualifyProject({
     projectType: mappedType,
@@ -544,18 +535,18 @@ function computeCategoryWithQualification(
     deployTarget: "DOCKER",
     billingMode: "SOLO",
     selectedModuleIds: moduleIds,
-    tierSelections: {},
+    catSelections: {},
   });
   return categoryIndex(result.finalCategory) as ProjectCategory;
 }
 
-export function computeCategoryBase(projectType: ProjectType): ProjectCategory {
-  const defaultStack = DEFAULT_STACK_BY_PROJECT_TYPE[projectType];
+export function computeCategoryBase(projectType: OfferCategory): ProjectCategory {
+  const defaultStack = DEFAULT_STACK_BY_OFFER[projectType];
   return computeCategoryWithQualification(projectType, defaultStack, []);
 }
 
 export function computeCategoryEstimated(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
   moduleIds: ModuleId[],
 ): ProjectCategory {
@@ -567,7 +558,7 @@ export function computeCategoryEstimated(
 }
 
 export function getOfferCategory(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
   moduleIds: ModuleId[],
 ): ProjectCategory {
@@ -589,7 +580,7 @@ function sumPriceRanges(ranges: PriceRange[]): {
 }
 
 export function computeEstimate(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
   moduleIds: ModuleId[],
   deploymentFeeId: string,
@@ -659,7 +650,7 @@ export function computeEstimate(
 }
 
 export function getTotalEstimate(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
   moduleIds: ModuleId[],
   deploymentFeeId: string,
@@ -668,7 +659,7 @@ export function getTotalEstimate(
 }
 
 export function getIncludedModules(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
 ): ModuleId[] {
   return MODULES.filter((mod) =>
@@ -679,7 +670,7 @@ export function getIncludedModules(
 }
 
 export function getMandatoryModules(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
 ): ModuleId[] {
   return MODULES.filter((mod) => {
@@ -691,7 +682,7 @@ export function getMandatoryModules(
 export function isModuleCompatible(
   moduleId: ModuleId,
   stack: Stack,
-  projectType?: ProjectType,
+  projectType?: OfferCategory,
 ): boolean {
   const mod = MODULES.find((m) => m.id === moduleId);
   if (!mod) return false;
@@ -710,7 +701,7 @@ export function isModuleCompatible(
 }
 
 export function getCompatibleModules(
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
 ): ModuleDef[] {
   return MODULES.filter((module) =>
@@ -720,7 +711,7 @@ export function getCompatibleModules(
 
 export function isModuleMandatory(
   module: ModuleDef,
-  projectType: ProjectType,
+  projectType: OfferCategory,
   stack: Stack,
 ): boolean {
   if (!module.mandatoryFor) return false;
@@ -735,12 +726,12 @@ export function getModulePriceForStack(
 ): PriceRange;
 export function getModulePriceForStack(
   moduleId: ModuleId,
-  _projectType: ProjectType,
+  _projectType: OfferCategory,
   stack: Stack,
 ): PriceRange;
 export function getModulePriceForStack(
   moduleId: ModuleId,
-  stackOrProjectType: ProjectType | Stack,
+  stackOrProjectType: OfferCategory | Stack,
   maybeStack?: Stack,
 ): PriceRange {
   const stack = maybeStack ?? (stackOrProjectType as Stack);

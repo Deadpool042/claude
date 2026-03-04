@@ -1,7 +1,7 @@
 import type { ComposeMode, ComposeProjectInput } from "./types";
 import { parseEnvVars } from "./shared/env";
 import { composeHeader } from "./shared/header";
-import { stackSlugForMode } from "@/lib/docker/names";
+import { stackSlugForMode } from "@/lib/docker";
 
 export function genericCompose(input: ComposeProjectInput, mode: ComposeMode): string {
   const customEnv = parseEnvVars(input.nextConfig?.envVarsJson ?? null);

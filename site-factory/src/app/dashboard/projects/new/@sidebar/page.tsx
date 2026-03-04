@@ -1,4 +1,4 @@
-import { QualificationSidebar } from "../_components/qualification-sidebar";
+import { QualificationSidebar } from "@/features/dashboard/projects/new";
 
 /**
  * Slot parallèle @sidebar.

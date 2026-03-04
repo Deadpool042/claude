@@ -1,12 +1,11 @@
 "use client";
 
 import {
-  computeStackMultiplier,
-  getMultiplierLabel,
-  type TechStack,
+  type LegacyTechStack as TechStack,
   type ProjectType,
-} from "@/lib/qualification";
-import { formatEur } from "@/lib/qualification-ui";
+} from "@/lib/referential";
+import { formatEur } from "@/lib/currency";
+import { computeStackMultiplier, getMultiplierLabel } from "@/lib/stack-pricing";
 
 // ── Props ──────────────────────────────────────────────────────────
 

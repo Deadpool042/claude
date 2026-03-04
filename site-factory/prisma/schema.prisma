@@ -238,6 +238,7 @@ model Project {
 
   projectFamily ProjectFamily? @map("project_family")
   projectImplementation ProjectImplementation? @map("project_implementation")
+  projectImplementationId String? @map("project_implementation_id")
   projectImplementationLabel String? @map("project_implementation_label")
   projectFrontendImplementation ProjectFrontendImplementation? @map("project_frontend_implementation")
   projectFrontendImplementationLabel String? @map("project_frontend_implementation_label")

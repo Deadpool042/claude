@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Plus, Pencil, Mail, Phone } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { ClientWebsites } from "./_components/client-websites";
+import { ClientWebsites } from "@/features/dashboard/clients";
 import { PageLayout } from "@/components/shell/page-layout";
 import { BreadcrumbOverride } from "@/components/shell/breadcrumb-context";
 import { EmptyState } from "@/components/shell/empty-state";
@@ -26,8 +26,8 @@ import {
 import {
   PROJECT_TYPE_LABELS,
   PROJECT_STATUS_LABELS,
-} from "@/lib/validators/project";
-import { localHostForMode } from "@/lib/docker/names";
+} from "@/lib/validators";
+import { localHostForMode } from "@/lib/docker";
 
 interface ClientDetailPageProps {
   params: Promise<{ clientId: string }>;

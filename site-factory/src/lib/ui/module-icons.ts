@@ -1,0 +1,66 @@
+import {
+  ShoppingBag,
+  BookOpen,
+  Wrench,
+  Briefcase,
+  Crown,
+  Languages,
+  Coins,
+  CreditCard,
+  Truck,
+  ShoppingCart,
+  BarChart3,
+  UserCircle,
+  Mail,
+  Target,
+  Search,
+  Shield,
+  Filter,
+  Moon,
+  Accessibility,
+  Plug,
+  Bot,
+  Receipt,
+  Calculator,
+  LayoutDashboard,
+  Gauge,
+  Layers,
+} from "lucide-react";
+
+export const MODULE_ICONS: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
+  Languages,
+  Coins,
+  CreditCard,
+  Truck,
+  ShoppingCart,
+  BarChart3,
+  UserCircle,
+  Mail,
+  Target,
+  Search,
+  Shield,
+  Filter,
+  Moon,
+  Accessibility,
+  Plug,
+  Bot,
+  Receipt,
+  Calculator,
+  LayoutDashboard,
+  Gauge,
+  Layers,
+};
+
+export const GROUP_ICONS: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
+  ecommerce: ShoppingBag,
+  contenu: BookOpen,
+  technique: Wrench,
+  metier: Briefcase,
+  premium: Crown,
+};

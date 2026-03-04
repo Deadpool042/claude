@@ -2,6 +2,10 @@ adminer.localhost
 localhost
 mail-puleri-starter-wp-dev.localhost
 pma-puleri-starter-wp-dev.localhost
+puleri-mon-blog-dev.localhost
+puleri-mon-blog-prod-like.localhost
+puleri-site-vitrine-dev.localhost
+puleri-site-vitrine-prod-like.localhost
 puleri-starter-wp-dev.localhost
 puleri-starter-wp-prod-like.localhost
 traefik.localhost

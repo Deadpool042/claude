@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-import { normalizeModuleIds } from "@/lib/qualification";
+import { normalizeModuleIds } from "@/lib/referential";
 import { generateQuotePdf } from "@/lib/quote-pdf";
 
 const modulesJsonSchema = z.array(z.string()).catch([]); // modules stockés en JSON string

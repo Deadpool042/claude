@@ -4,7 +4,7 @@ import { promisify } from "node:util";
 import { resolve } from "node:path";
 import { access } from "node:fs/promises";
 import { prisma } from "@/lib/db";
-import { localHostForMode, stackSlugForMode } from "@/lib/docker/names";
+import { localHostForMode, stackSlugForMode } from "@/lib/docker";
 
 import {
   buildExpectedServices,
@@ -18,8 +18,8 @@ import {
   type StackLiteral,
   type OptionalServiceId,
   type PersistedProjectServiceRow,
-} from "@/lib/service-catalog";
-import type { ServiceInfo } from "@/app/dashboard/projects/[projectId]/services/_components/services-orchestrator";
+} from "@/lib/services";
+import type { ServiceInfo } from "@/features/dashboard/projects/detail/ui/services/_components/services-orchestrator";
 
 const execAsync = promisify(exec);
 const CONFIGS_ROOT = resolve(process.cwd(), "..", "configs");

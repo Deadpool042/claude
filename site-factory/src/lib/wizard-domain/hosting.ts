@@ -6,7 +6,7 @@ import type {
   ProjectFrontendImplementationInput,
   ProjectImplementationInput,
   HostingTargetInput,
-} from "@/lib/validators/project";
+} from "@/lib/validators";
 import type { WizardTypeStackState, HostingSelectionMode } from "./types";
 
 const PHP_BACKEND_IMPLEMENTATIONS = new Set<ProjectImplementationInput>([

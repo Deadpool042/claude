@@ -12,7 +12,7 @@ import {
   getModulePriceForStack,
   type Stack,
   type ModuleCategory,
-} from "@/lib/offers/offers";
+} from "@/lib/offers";
 
 interface ModuleDetailPageProps {
   params: Promise<{ moduleId: string }>;
@@ -73,7 +73,7 @@ export default async function ModuleDetailPage({ params }: ModuleDetailPageProps
     >
       <div className="grid gap-6 lg:grid-cols-[1.1fr_1.9fr]">
         <div className="space-y-6">
-          <Card className="border-border/60 bg-gradient-to-br from-primary/10 via-transparent to-transparent transition hover:shadow-lg">
+          <Card className="border-border/60 bg-linear-to-br from-primary/10 via-transparent to-transparent transition hover:shadow-lg">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Presentation</CardTitle>
             </CardHeader>

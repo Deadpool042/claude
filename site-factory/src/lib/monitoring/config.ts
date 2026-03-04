@@ -1,4 +1,4 @@
-import type { HostingProfileId } from "@/lib/hosting-profiles";
+import type { HostingProfileId } from "@/lib/hosting";
 
 export type ThresholdDirection = "gt" | "lt";
 

@@ -1,0 +1,243 @@
+{
+  "_meta": {
+    "purpose": "Catalogue canonique des features atomiques avec domaines et indicateur UI-only.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/spec/load.ts",
+      "site-factory/src/lib/referential/engine/resolve-feature.ts"
+    ],
+    "shape": {
+      "requiredTopLevel": [
+        "version",
+        "features"
+      ],
+      "featureItemRequired": [
+        "id",
+        "label",
+        "domain",
+        "uiOnly"
+      ],
+      "idConvention": "feature.*"
+    }
+  },
+  "version": "1.0.0",
+  "features": [
+    {
+      "id": "feature.CMS_PAGES",
+      "label": "Pages CMS",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS"
+    },
+    {
+      "id": "feature.BLOG",
+      "label": "Blog",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS"
+    },
+    {
+      "id": "feature.PRODUCT_CATALOG",
+      "label": "Catalogue produits",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.CHECKOUT",
+      "label": "Checkout",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.TAX_MANAGEMENT",
+      "label": "Gestion des taxes",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.SHIPPING_BASIC",
+      "label": "Livraison basique",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.CUSTOMER_ACCOUNTS",
+      "label": "Comptes clients",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.COUPONS",
+      "label": "Coupons",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.ANALYTICS_BASIC",
+      "label": "Analytics basique",
+      "domain": "ANALYTICS",
+      "uiOnly": false,
+      "type": "ANALYTICS"
+    },
+    {
+      "id": "feature.NEWSLETTER_INTEGRATION",
+      "label": "Newsletter",
+      "domain": "MARKETING",
+      "uiOnly": false,
+      "type": "MARKETING"
+    },
+    {
+      "id": "feature.SEO_BASIC",
+      "label": "SEO basique",
+      "domain": "MARKETING",
+      "uiOnly": false,
+      "type": "MARKETING"
+    },
+    {
+      "id": "feature.REVIEWS",
+      "label": "Avis clients",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.WISHLIST",
+      "label": "Wishlist",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.MULTI_CURRENCY",
+      "label": "Multi-devise",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.SHIPPING_RULES_BASIC",
+      "label": "Règles de livraison basiques",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.ADVANCED_PRICING",
+      "label": "Tarification avancée",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.B2B_COMMERCE",
+      "label": "Commerce B2B",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.MARKETPLACE",
+      "label": "Marketplace",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.LOGISTICS_ORCHESTRATION",
+      "label": "Orchestration logistique",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.MARKETING_AUTOMATION",
+      "label": "Marketing automation",
+      "domain": "MARKETING",
+      "uiOnly": false,
+      "type": "MARKETING"
+    },
+    {
+      "id": "feature.PRODUCT_RECOMMENDATION",
+      "label": "Recommandation produit",
+      "domain": "ANALYTICS",
+      "uiOnly": false,
+      "type": "ANALYTICS"
+    },
+    {
+      "id": "feature.BUSINESS_ANALYTICS",
+      "label": "Analytics métier",
+      "domain": "ANALYTICS",
+      "uiOnly": false,
+      "type": "ANALYTICS"
+    },
+    {
+      "id": "feature.ERP_INTEGRATIONS",
+      "label": "Intégrations ERP",
+      "domain": "INTEGRATION",
+      "uiOnly": false,
+      "type": "CMS"
+    },
+    {
+      "id": "feature.MULTI_CATALOG",
+      "label": "Multi-catalogue",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.MULTI_STORE_ORCHESTRATION",
+      "label": "Orchestration multi-store",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE"
+    },
+    {
+      "id": "feature.CMS_AUGMENTATION",
+      "label": "Augmentation CMS",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS"
+    },
+    {
+      "id": "feature.IDENTITY_SSO",
+      "label": "Identity & SSO",
+      "domain": "SECURITY",
+      "uiOnly": false,
+      "type": "CMS"
+    },
+    {
+      "id": "feature.DARK_MODE",
+      "label": "Dark mode",
+      "domain": "THEME",
+      "uiOnly": true,
+      "type": "UX"
+    },
+    {
+      "id": "feature.THEME_COLORS",
+      "label": "Couleurs de thème",
+      "domain": "THEME",
+      "uiOnly": true,
+      "type": "UX"
+    },
+    {
+      "id": "feature.UI_ANIMATIONS",
+      "label": "Animations UI",
+      "domain": "THEME",
+      "uiOnly": true,
+      "type": "UX"
+    },
+    {
+      "id": "feature.DESIGN_VARIATIONS",
+      "label": "Variantes de design",
+      "domain": "THEME",
+      "uiOnly": true,
+      "type": "UX"
+    }
+  ]
+}

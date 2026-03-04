@@ -12,7 +12,7 @@ import { genericCompose } from "./compose-generic";
 import {
   buildWpSetupOptionsFromConfig,
   generateProjectWpDevAssets,
-} from "@/lib/projects/generateProjectWpDevAssets";
+} from "@/lib/projects";
 
 /** Monorepo root configs directory */
 const CONFIGS_ROOT = resolve(process.cwd(), "..", "configs");

@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@/generated/prisma/client";
 import { TechStack } from "@/generated/prisma/client";
-import { updateProjectSchema } from "@/lib/validators/project";
+import { updateProjectSchema } from "@/lib/validators";
 import { buildProjectDocIds, buildProjectDocRows } from "@/lib/docs/project-docs";
 import { computeLocalHost, computeNextPort, computeNextSlug } from "../domain/update-project.logic";
 import type { TraefikService } from "./traefik-service";

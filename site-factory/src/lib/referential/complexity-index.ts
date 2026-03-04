@@ -1,3 +1,4 @@
+//src/lib/referential/complexity-index.ts
 /**
  * Complexity Index (CI) — Référentiel v2
  *
@@ -5,10 +6,10 @@
  *   CI = SA + DE + (CB × 1.5) + (SD × 1.5)
  *
  * Axes :
- *   SA = Structure & Architecture (1-5)
- *   DE = Design & Expérience (1-5)
- *   CB = Contenu & Back-office (1-5)
- *   SD = Spécificités & Données (1-5)
+ *   SA = Surface applicative (1-5)    — étendue fonctionnelle
+ *   DE = Dépendances externes (1-5)   — intégrations tierces
+ *   CB = Criticité business (1-5)     — impact commercial/légal
+ *   SD = Sensibilité des données (1-5) — protection requise
  *
  * Plage : 5 (min) → 25 (max)
  *
@@ -24,19 +25,19 @@
  * les contraintes métier et le plancher stack.
  */
 
-import type { Category } from "./maintenance-tiers";
+import type { Category } from "./maintenance-cat";
 
 // ── Types ────────────────────────────────────────────────────────────
 
 /** Scores des 4 axes du CI (chacun de 1 à 5) */
 export interface CIAxes {
-  /** Structure & Architecture */
+  /** Surface applicative — étendue fonctionnelle du projet */
   sa: number;
-  /** Design & Expérience */
+  /** Dépendances externes — nombre et criticité des intégrations tierces */
   de: number;
-  /** Contenu & Back-office */
+  /** Criticité business — impact commercial et légal */
   cb: number;
-  /** Spécificités & Données */
+  /** Sensibilité des données — niveau de protection requis */
   sd: number;
 }
 
@@ -78,40 +79,40 @@ export const CI_THRESHOLDS: Array<{ max: number; category: Category }> = [
 // ── Labels ───────────────────────────────────────────────────────────
 
 export const CI_AXIS_LABELS: Record<keyof CIAxes, string> = {
-  sa: "Structure & Architecture",
-  de: "Design & Expérience",
-  cb: "Contenu & Back-office",
-  sd: "Spécificités & Données",
+  sa: "Surface applicative",
+  de: "Dépendances externes",
+  cb: "Criticité business",
+  sd: "Sensibilité des données",
 };
 
 export const CI_AXIS_DESCRIPTIONS: Record<keyof CIAxes, string[]> = {
   sa: [
-    "1 — Site one-page ou < 5 pages statiques",
-    "2 — Site multi-pages avec navigation standard",
-    "3 — Architecture multi-templates, formulaires complexes",
-    "4 — Architecture découplée, multi-zones, API custom",
-    "5 — SPA/SSR avancé, micro-services, CDN multi-régions",
+    "1 — Mini-site, 1-3 pages (landing page, site one-page)",
+    "2 — Site simple, structure standard (vitrine 5-10 pages, blog simple)",
+    "3 — Site structuré, contenus diversifiés (blog multi-catégories, catalogue)",
+    "4 — Application avec logique métier (e-commerce avancé, portail client)",
+    "5 — Plateforme complexe multi-fonctions (marketplace, SaaS)",
   ],
   de: [
-    "1 — Template standard, pas de personnalisation",
-    "2 — Personnalisation légère (couleurs, typo, logo)",
-    "3 — Design sur-mesure, animations, responsive avancé",
-    "4 — Design system complet, composants interactifs",
-    "5 — Design immersif, 3D, transitions complexes, A/B testing",
+    "1 — Aucune dépendance externe (site statique autonome)",
+    "2 — 1-2 services simples (formulaire de contact, analytics)",
+    "3 — 3-5 services ou 1 service critique (CRM, newsletter, paiement)",
+    "4 — Multi-services avec orchestration (ERP + CRM + emailing + paiement)",
+    "5 — Écosystème complexe, APIs critiques (multi-APIs, webhooks, temps réel)",
   ],
   cb: [
-    "1 — Contenu statique, pas de back-office",
-    "2 — CMS basique (pages, articles)",
-    "3 — CMS avancé (CPT, taxonomies, ACF, médias)",
-    "4 — Multi-langue, workflows éditoriaux, rôles",
-    "5 — DAM, PIM, workflows approbation, contenus dynamiques",
+    "1 — Impact négligeable (site personnel, projet interne)",
+    "2 — Présence en ligne standard (vitrine d'entreprise, blog d'information)",
+    "3 — Canal de vente ou de conversion (e-commerce simple, lead generation)",
+    "4 — Revenus significatifs dépendants du site (e-commerce fort volume, SaaS)",
+    "5 — Impact légal ou réglementaire (données financières, accises)",
   ],
   sd: [
-    "1 — Pas de données spécifiques",
-    "2 — Formulaire de contact, newsletter",
-    "3 — E-commerce simple, comptes clients, analytics",
-    "4 — Multi-devises, fiscalité, connecteurs CRM/ERP",
-    "5 — Données réglementées, calculs métier, IA, temps réel",
+    "1 — Données publiques uniquement (site vitrine sans formulaire)",
+    "2 — Données personnelles basiques (formulaire de contact, newsletter)",
+    "3 — Données personnelles étendues + comptes (comptes utilisateurs, commandes)",
+    "4 — Données financières ou sensibles (paiement en ligne, données bancaires)",
+    "5 — Données hautement sensibles (santé, réglementées, KYC)",
   ],
 };
 
@@ -121,27 +122,37 @@ export const CI_AXIS_DESCRIPTIONS: Record<keyof CIAxes, string[]> = {
  * Impact additionnel de chaque module sur le CI.
  * Utilisé pour estimer le CI quand les axes manuels ne sont pas renseignés.
  */
+/**
+ * Impact additionnel de chaque module sur le CI.
+ *
+ * Modules documentés (complexity-index.md) :
+ *   Multi-langue      : SA +1, DE +1         → CI +2
+ *   Paiement          : DE +1, CB +1, SD +1  → CI +4
+ *   Newsletter        : DE +1                → CI +1
+ *   Tunnel conversion : SA +1, CB +1         → CI +2.5
+ *   Accises/fiscalité : CB +2, SD +1         → CI +4.5
+ *   Tarification      : SA +1, CB +1         → CI +2.5
+ *   Headless          : SA +1, DE +2         → CI +3
+ *   Connecteurs       : DE +2                → CI +2
+ *   Dashboard perso   : SA +2                → CI +2
+ *   Assistant IA      : DE +1, SA +1         → CI +2
+ *   Performance       : (pas d'impact direct)
+ *
+ * Modules non documentés : impacts estimés (à valider).
+ */
 export const MODULE_CI_IMPACTS: Record<string, Partial<CIAxes>> = {
-  "module-multi-langue": { cb: 1, sd: 0.5 },
-  "module-multi-devises": { sd: 1 },
-  "module-paiement": { sd: 0.5 },
-  "module-livraison": { sd: 0.5 },
-  "module-tunnel-de-vente": { sa: 0.5, sd: 0.5 },
-  "module-analytics-woo": { sd: 0.5 },
-  "module-compte-client": { sa: 0.5, sd: 0.5 },
-  "module-newsletter-email-marketing": { sd: 0.5 },
-  "module-marketing-traking": { sd: 0.5 },
-  "module-seo-avance": { cb: 0.5 },
-  "module-filtre-et-recherche": { sa: 0.5, de: 0.5 },
-  "module-dark-mode": { de: 0.5 },
-  "module-accessibilite-renforcee": { de: 0.5 },
-  "module-connecteurs": { sa: 0.5, sd: 1 },
-  "module-assistant-ia": { sa: 1, sd: 1 },
-  "module-accises-fiscalite": { sd: 1.5 },
-  "module-tarification-metier": { sd: 1.5 },
-  "module-dashboard-personnalise": { sa: 1, de: 0.5 },
-  "module-performance-avancee": { sa: 1.5 },
-  "module-architecture-headless": { sa: 2 },
+  "module.B2B_COMMERCE": { sa: 1, de: 1, cb: 1 },
+  "module.MARKETPLACE": { sa: 2, de: 2, cb: 2, sd: 1 },
+  "module.LOGISTICS_ORCHESTRATION": { de: 2, cb: 1 },
+  "module.ADVANCED_PRICING": { sa: 1, cb: 1 },
+  "module.MARKETING_AUTOMATION": { de: 1, cb: 1 },
+  "module.PRODUCT_RECOMMENDATION": { sa: 1, de: 1, cb: 1 },
+  "module.BUSINESS_ANALYTICS": { sa: 1, de: 1 },
+  "module.ERP_INTEGRATIONS": { de: 2, cb: 1, sd: 1 },
+  "module.MULTI_CATALOG": { sa: 1, de: 1 },
+  "module.MULTI_STORE_ORCHESTRATION": { sa: 2, de: 2, cb: 1 },
+  "module.CMS_AUGMENTATION": { sa: 1 },
+  "module.IDENTITY_SSO": { de: 1, sd: 2 },
 };
 
 // ── Calcul ───────────────────────────────────────────────────────────
@@ -192,10 +203,10 @@ export function estimateCIAxes(params: {
   moduleIds: string[];
 }): CIAxes {
   // Axes de base par type de projet
+  // BLOG/VITRINE démarrent au minimum (CI=5 → CAT0) — les modules et contraintes escaladent
   const baseAxes: Record<string, CIAxes> = {
-    STARTER: { sa: 1, de: 1, cb: 1, sd: 1 },
-    BLOG: { sa: 2, de: 2, cb: 2, sd: 1 },
-    VITRINE: { sa: 2, de: 2, cb: 2, sd: 1 },
+    BLOG: { sa: 1, de: 1, cb: 1, sd: 1 },
+    VITRINE: { sa: 1, de: 1, cb: 1, sd: 1 },
     ECOM: { sa: 3, de: 2, cb: 3, sd: 3 },
     APP: { sa: 4, de: 3, cb: 3, sd: 4 },
   };

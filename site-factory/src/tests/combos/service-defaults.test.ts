@@ -1,4 +1,4 @@
-import { buildDefaultOptionalServiceRows } from "@/lib/service-defaults";
+import { buildDefaultOptionalServiceRows } from "@/lib/services";
 import { describe, it, expect } from "vitest";
 
 describe("buildDefaultOptionalServiceRows", () => {

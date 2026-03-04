@@ -1,0 +1,233 @@
+{
+  "_meta": {
+    "purpose": "Catalogue canonique des intégrations plugin/app avec compatibilité CMS et données de coûts récurrents.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/spec/load.ts",
+      "site-factory/src/lib/referential/engine/estimate-plugin-subscriptions.ts"
+    ],
+    "shape": {
+      "requiredTopLevel": ["version", "plugins"],
+      "pluginItemRequired": ["id", "label", "featureIds", "cmsIds"],
+      "optionalPricingFields": ["pricingMode", "priceMonthlyMin", "priceMonthlyMax", "billingNotes"],
+      "idConvention": "plugin.*"
+    }
+  },
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "id": "plugin.WOOCOMMERCE_DYNAMIC_PRICING",
+      "label": "WooCommerce Dynamic Pricing",
+      "featureIds": ["feature.ADVANCED_PRICING"],
+      "cmsIds": ["cms.WOOCOMMERCE"],
+      "vendor": "WooCommerce",
+      "url": "https://woocommerce.com/products/dynamic-pricing/",
+      "pricingMode": "PAID"
+    },
+    {
+      "id": "plugin.SHOPIFY_DISCOUNT_APPS",
+      "label": "Shopify Discount Apps",
+      "featureIds": ["feature.ADVANCED_PRICING"],
+      "cmsIds": ["cms.SHOPIFY"],
+      "vendor": "Shopify App Ecosystem",
+      "url": "https://apps.shopify.com/categories/store-design-discounts",
+      "pricingMode": "PAID",
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 79,
+      "billingNotes": "Apps Shopify souvent facturées mensuellement."
+    },
+    {
+      "id": "plugin.PRESTASHOP_PRICING_MODULES",
+      "label": "PrestaShop Pricing Modules",
+      "featureIds": ["feature.ADVANCED_PRICING"],
+      "cmsIds": ["cms.PRESTASHOP"],
+      "vendor": "PrestaShop Addons Ecosystem",
+      "url": "https://addons.prestashop.com/",
+      "pricingMode": "MIXED"
+    },
+    {
+      "id": "plugin.MAILCHIMP",
+      "label": "Mailchimp",
+      "featureIds": ["feature.NEWSLETTER_INTEGRATION", "feature.MARKETING_AUTOMATION"],
+      "cmsIds": [
+        "cms.WORDPRESS",
+        "cms.WOOCOMMERCE",
+        "cms.PRESTASHOP",
+        "cms.SHOPIFY",
+        "cms.DRUPAL",
+        "cms.HEADLESS"
+      ],
+      "pricingMode": "MIXED",
+      "priceMonthlyMin": 0,
+      "priceMonthlyMax": 89,
+      "vendor": "Intuit Mailchimp",
+      "url": "https://mailchimp.com/",
+      "billingNotes": "Peut être gratuit au départ puis payant selon volume."
+    },
+    {
+      "id": "plugin.KLAVIYO",
+      "label": "Klaviyo",
+      "featureIds": ["feature.NEWSLETTER_INTEGRATION", "feature.MARKETING_AUTOMATION"],
+      "cmsIds": ["cms.WOOCOMMERCE", "cms.PRESTASHOP", "cms.SHOPIFY", "cms.HEADLESS"],
+      "vendor": "Klaviyo",
+      "url": "https://www.klaviyo.com/",
+      "pricingMode": "PAID",
+      "priceMonthlyMin": 20,
+      "priceMonthlyMax": 350,
+      "billingNotes": "Facturation variable selon contacts/messages."
+    },
+    {
+      "id": "plugin.BREVO",
+      "label": "Brevo",
+      "featureIds": ["feature.NEWSLETTER_INTEGRATION"],
+      "cmsIds": [
+        "cms.WORDPRESS",
+        "cms.WOOCOMMERCE",
+        "cms.PRESTASHOP",
+        "cms.SHOPIFY",
+        "cms.DRUPAL",
+        "cms.HEADLESS"
+      ],
+      "pricingMode": "MIXED",
+      "priceMonthlyMin": 0,
+      "priceMonthlyMax": 69,
+      "vendor": "Brevo",
+      "url": "https://www.brevo.com/",
+      "billingNotes": "Plans gratuits/payant selon usage."
+    },
+    {
+      "id": "plugin.YOAST",
+      "label": "Yoast SEO",
+      "featureIds": ["feature.SEO_BASIC"],
+      "cmsIds": ["cms.WORDPRESS", "cms.WOOCOMMERCE"],
+      "vendor": "Yoast",
+      "url": "https://yoast.com/wordpress/plugins/seo/",
+      "pricingMode": "MIXED"
+    },
+    {
+      "id": "plugin.RANKMATH",
+      "label": "RankMath",
+      "featureIds": ["feature.SEO_BASIC"],
+      "cmsIds": ["cms.WORDPRESS", "cms.WOOCOMMERCE"],
+      "vendor": "Rank Math",
+      "url": "https://rankmath.com/",
+      "pricingMode": "MIXED"
+    },
+    {
+      "id": "plugin.SHOPIFY_SEO_APPS",
+      "label": "Shopify SEO Apps",
+      "featureIds": ["feature.SEO_BASIC"],
+      "cmsIds": ["cms.SHOPIFY"],
+      "vendor": "Shopify App Ecosystem",
+      "url": "https://apps.shopify.com/categories/store-design-site-optimization-seo",
+      "pricingMode": "PAID",
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 49
+    },
+    {
+      "id": "plugin.GA4_INTEGRATION",
+      "label": "GA4 Integration",
+      "featureIds": ["feature.ANALYTICS_BASIC"],
+      "cmsIds": [
+        "cms.WORDPRESS",
+        "cms.WOOCOMMERCE",
+        "cms.PRESTASHOP",
+        "cms.SHOPIFY",
+        "cms.DRUPAL",
+        "cms.HEADLESS"
+      ],
+      "vendor": "Google",
+      "url": "https://support.google.com/analytics/answer/10089681",
+      "pricingMode": "FREE"
+    },
+    {
+      "id": "plugin.JUDGE_ME",
+      "label": "Judge.me",
+      "featureIds": ["feature.REVIEWS"],
+      "cmsIds": ["cms.SHOPIFY"],
+      "vendor": "Judge.me",
+      "url": "https://judge.me/",
+      "pricingMode": "MIXED",
+      "priceMonthlyMin": 0,
+      "priceMonthlyMax": 69
+    },
+    {
+      "id": "plugin.YOTPO",
+      "label": "Yotpo",
+      "featureIds": ["feature.REVIEWS", "feature.WISHLIST"],
+      "cmsIds": ["cms.SHOPIFY", "cms.WOOCOMMERCE"],
+      "vendor": "Yotpo",
+      "url": "https://www.yotpo.com/",
+      "pricingMode": "PAID",
+      "priceMonthlyMin": 15,
+      "priceMonthlyMax": 199
+    },
+    {
+      "id": "plugin.TI_WISHLIST",
+      "label": "TI WooCommerce Wishlist",
+      "featureIds": ["feature.WISHLIST"],
+      "cmsIds": ["cms.WOOCOMMERCE"],
+      "vendor": "TemplateInvaders",
+      "url": "https://wordpress.org/plugins/ti-woocommerce-wishlist/",
+      "pricingMode": "MIXED"
+    },
+    {
+      "id": "plugin.WOOCS",
+      "label": "WOOCS Multi Currency",
+      "featureIds": ["feature.MULTI_CURRENCY"],
+      "cmsIds": ["cms.WOOCOMMERCE"],
+      "vendor": "RealMag777",
+      "url": "https://wordpress.org/plugins/woocommerce-currency-switcher/",
+      "pricingMode": "MIXED"
+    },
+    {
+      "id": "plugin.SHOPIFY_MARKETS",
+      "label": "Shopify Markets",
+      "featureIds": ["feature.MULTI_CURRENCY"],
+      "cmsIds": ["cms.SHOPIFY"],
+      "vendor": "Shopify",
+      "url": "https://help.shopify.com/manual/markets",
+      "pricingMode": "MIXED",
+      "priceMonthlyMin": 0,
+      "priceMonthlyMax": 49
+    },
+    {
+      "id": "plugin.WOOCOMMERCE_SHIPPING_EXTENSIONS",
+      "label": "WooCommerce Shipping Extensions",
+      "featureIds": ["feature.SHIPPING_RULES_BASIC"],
+      "cmsIds": ["cms.WOOCOMMERCE"],
+      "vendor": "WooCommerce",
+      "url": "https://woocommerce.com/product-category/woocommerce-extensions/shipping-extensions/",
+      "pricingMode": "MIXED"
+    },
+    {
+      "id": "plugin.SHOPIFY_SHIPPING_APPS",
+      "label": "Shopify Shipping Apps",
+      "featureIds": ["feature.SHIPPING_RULES_BASIC"],
+      "cmsIds": ["cms.SHOPIFY"],
+      "vendor": "Shopify App Ecosystem",
+      "url": "https://apps.shopify.com/categories/orders-and-shipping-shipping-solutions",
+      "pricingMode": "PAID",
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 99
+    },
+    {
+      "id": "plugin.OIDC_SSO",
+      "label": "OIDC / SSO Plugins",
+      "featureIds": ["feature.IDENTITY_SSO"],
+      "cmsIds": [
+        "cms.WORDPRESS",
+        "cms.WOOCOMMERCE",
+        "cms.PRESTASHOP",
+        "cms.SHOPIFY",
+        "cms.DRUPAL"
+      ],
+      "vendor": "OIDC SSO Ecosystem",
+      "url": "https://openid.net/developers/how-connect-works/",
+      "pricingMode": "PAID",
+      "priceMonthlyMin": 15,
+      "priceMonthlyMax": 149,
+      "billingNotes": "Souvent licence éditeur ou plugin premium."
+    }
+  ]
+}

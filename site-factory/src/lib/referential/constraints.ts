@@ -1,3 +1,4 @@
+//src/lib/referential/constraints.ts
 /**
  * Contraintes métier du projet — Référentiel v2
  *
@@ -99,34 +100,13 @@ export const COMMERCE_MODEL_LABELS: Record<CommerceModel, string> = {
 // ── Impact sur la catégorie ──────────────────────────────────────────
 
 /**
- * Chaque contrainte peut imposer un tier minimum.
+ * Chaque contrainte peut imposer une catégorie minimum.
  * Ces valeurs sont utilisées par le moteur de qualification pour
  * requalifier le projet vers le haut si nécessaire.
  */
-export const CONSTRAINT_TIER_IMPACTS = {
-  trafficLevel: {
-    LOW: 0,
-    MEDIUM: 1,
-    HIGH: 2,
-    VERY_HIGH: 3,
-  } as Record<TrafficLevel, number>,
-
-  productCount: {
-    NONE: 0,
-    SMALL: 2,
-    MEDIUM: 2,
-    LARGE: 3,
-  } as Record<ProductBucket, number>,
-
-  dataSensitivity: {
-    STANDARD: 0,
-    SENSITIVE: 2,
-    REGULATED: 3,
-  } as Record<DataSensitivity, number>,
-
-  scalabilityLevel: {
-    FIXED: 0,
-    GROWING: 1,
-    ELASTIC: 3,
-  } as Record<ScalabilityLevel, number>,
+export const CONSTRAINT_MIN_CATEGORY_INDEX = {
+  trafficLevel: { LOW: 0, MEDIUM: 1, HIGH: 2, VERY_HIGH: 3 },
+  productCount: { NONE: 0, SMALL: 2, MEDIUM: 2, LARGE: 3 },
+  dataSensitivity: { STANDARD: 0, SENSITIVE: 2, REGULATED: 3 },
+  scalabilityLevel: { FIXED: 0, GROWING: 1, ELASTIC: 3 },
 } as const;

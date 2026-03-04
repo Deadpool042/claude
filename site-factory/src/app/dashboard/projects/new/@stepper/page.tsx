@@ -1,4 +1,4 @@
-import { WizardStepper } from "../_components/wizard-stepper";
+import { WizardStepper } from "@/features/dashboard/projects/new";
 
 /**
  * Slot parallèle @stepper.

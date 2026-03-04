@@ -4,8 +4,8 @@ import type {
   ProjectFamilyInput,
   ProjectFrontendImplementationInput,
   ProjectImplementationInput,
-} from "@/lib/validators/project";
-import type { ProjectType, TechStack } from "@/lib/qualification";
+} from "@/lib/validators";
+import type { ProjectType, LegacyTechStack as TechStack } from "@/lib/referential";
 import type {
   CommerceModel,
   EditingFrequency,
