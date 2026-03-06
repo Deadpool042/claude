@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { normalizeDocId } from "@/lib/docs";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ interface FavoritePayload {
 
 export async function POST(req: Request) {
   const body = (await req.json()) as FavoritePayload;
-  const docId = typeof body.docId === "string" ? body.docId : "";
+  const docId = typeof body.docId === "string" ? normalizeDocId(body.docId) : "";
   const scope = body.scope === "project" ? "project" : "global";
   const action = body.action === "remove" ? "remove" : "add";
   const projectId =

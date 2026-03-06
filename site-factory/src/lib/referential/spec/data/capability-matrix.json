@@ -70,17 +70,11 @@
         },
         {
           "cmsId": "cms.PRESTASHOP",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.MAILCHIMP"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.SHOPIFY",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.SHOPIFY_SEO_APPS"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.DRUPAL",
@@ -98,10 +92,7 @@
       "rows": [
         {
           "cmsId": "cms.WORDPRESS",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.WOOCOMMERCE_DYNAMIC_PRICING"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.WOOCOMMERCE",
@@ -117,10 +108,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.MAILCHIMP"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -134,10 +122,7 @@
       "rows": [
         {
           "cmsId": "cms.WORDPRESS",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.WOOCOMMERCE_DYNAMIC_PRICING"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.WOOCOMMERCE",
@@ -153,45 +138,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.MAILCHIMP"
-          ]
-        },
-        {
-          "cmsId": "cms.HEADLESS",
-          "classification": "CUSTOM_APP"
-        }
-      ]
-    },
-    {
-      "featureId": "feature.SHIPPING_BASIC",
-      "rows": [
-        {
-          "cmsId": "cms.WORDPRESS",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.WOOCOMMERCE_SHIPPING_EXTENSIONS"
-          ]
-        },
-        {
-          "cmsId": "cms.WOOCOMMERCE",
-          "classification": "CMS_NATIVE"
-        },
-        {
-          "cmsId": "cms.PRESTASHOP",
-          "classification": "CMS_NATIVE"
-        },
-        {
-          "cmsId": "cms.SHOPIFY",
-          "classification": "CMS_NATIVE"
-        },
-        {
-          "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.SHOPIFY_SHIPPING_APPS"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -204,10 +151,7 @@
       "rows": [
         {
           "cmsId": "cms.WORDPRESS",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.WOOCOMMERCE_DYNAMIC_PRICING"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.WOOCOMMERCE",
@@ -223,10 +167,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.MAILCHIMP"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -235,14 +176,11 @@
       ]
     },
     {
-      "featureId": "feature.COUPONS",
+      "featureId": "feature.SHIPPING_BASIC",
       "rows": [
         {
           "cmsId": "cms.WORDPRESS",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.WOOCOMMERCE_DYNAMIC_PRICING"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.WOOCOMMERCE",
@@ -258,10 +196,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.MAILCHIMP"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -296,6 +231,35 @@
           "cmsId": "cms.HEADLESS",
           "classification": "FRAMEWORK_MODULE",
           "recommendedModuleId": "module.IDENTITY_SSO"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.COUPONS",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "CUSTOM_APP"
         }
       ]
     },
@@ -410,10 +374,7 @@
         },
         {
           "cmsId": "cms.PRESTASHOP",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.PRESTASHOP_PRICING_MODULES"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.SHOPIFY",
@@ -424,10 +385,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOAST"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -455,10 +413,7 @@
         },
         {
           "cmsId": "cms.PRESTASHOP",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOTPO"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.SHOPIFY",
@@ -470,10 +425,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOTPO"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -501,10 +453,7 @@
         },
         {
           "cmsId": "cms.PRESTASHOP",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOTPO"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.SHOPIFY",
@@ -515,10 +464,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.TI_WISHLIST"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -546,10 +492,7 @@
         },
         {
           "cmsId": "cms.PRESTASHOP",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.PRESTASHOP_PRICING_MODULES"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.SHOPIFY",
@@ -560,10 +503,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.SHOPIFY_MARKETS"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -591,10 +531,7 @@
         },
         {
           "cmsId": "cms.PRESTASHOP",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.PRESTASHOP_PRICING_MODULES"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.SHOPIFY",
@@ -605,10 +542,7 @@
         },
         {
           "cmsId": "cms.DRUPAL",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.SHOPIFY_SHIPPING_APPS"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.HEADLESS",
@@ -816,31 +750,19 @@
       "rows": [
         {
           "cmsId": "cms.WORDPRESS",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOTPO"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.WOOCOMMERCE",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOTPO"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.PRESTASHOP",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOTPO"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.SHOPIFY",
-          "classification": "PLUGIN_INTEGRATION",
-          "recommendedPluginIds": [
-            "plugin.YOTPO"
-          ]
+          "classification": "PLUGIN_INTEGRATION"
         },
         {
           "cmsId": "cms.DRUPAL",
@@ -1071,6 +993,426 @@
           "cmsId": "cms.HEADLESS",
           "classification": "FRAMEWORK_MODULE",
           "recommendedModuleId": "module.IDENTITY_SSO"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.BOOKING_APPOINTMENT",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.BOOKING"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.BOOKING_TABLE",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.BOOKING"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.BOOKING_EVENT",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.BOOKING"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.FORMS_CONTACT",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.LEAD_FORMS"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.LEAD_ROUTING",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.LEAD_FORMS"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.PAYMENTS_ONLINE",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.PAYMENTS_LIGHT"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.CONSENT_COOKIE_BANNER",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.COMPLIANCE_BASE"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.LEGAL_PAGES",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.COMPLIANCE_BASE"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.SEO_LOCAL",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.SEO_FOUNDATION"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.EVENT_TRACKING",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.ANALYTICS_FOUNDATION"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.I18N_MULTILANGUAGE",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.MULTILANGUAGE"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.SEARCH_BASIC",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.SEARCH"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.SEARCH_FACETS",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "PLUGIN_INTEGRATION"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.SEARCH"
+        }
+      ]
+    },
+    {
+      "featureId": "feature.CATALOG_NON_COMMERCE",
+      "rows": [
+        {
+          "cmsId": "cms.WORDPRESS",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.WOOCOMMERCE",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.PRESTASHOP",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.SHOPIFY",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.DRUPAL",
+          "classification": "CMS_NATIVE"
+        },
+        {
+          "cmsId": "cms.HEADLESS",
+          "classification": "FRAMEWORK_MODULE",
+          "recommendedModuleId": "module.CATALOG_SHOWCASE"
         }
       ]
     },

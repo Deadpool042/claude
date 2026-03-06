@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/shell/page-layout";
+import { PageLayout } from "@/shared/components/shell/page-layout";
 import { OffersClient } from "@/features/dashboard/offres";
 
 export default function OffresPage() {

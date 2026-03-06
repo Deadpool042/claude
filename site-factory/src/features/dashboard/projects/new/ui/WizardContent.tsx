@@ -2,10 +2,10 @@
 
 import { useWizard } from "../logic/WizardProvider";
 import { StepQuestionnaire } from "./step-questionnaire";
+import { StepRecommendation } from "./step-recommendation";
 import { StepTypeStack } from "./step-type-stack";
 import { StepModules } from "./step-modules";
-import { StepProjectInfo } from "./step-project-info";
-import { StepSummary } from "./step-summary";
+import { StepProjectSynthesis } from "./step-project-synthesis";
 import { WizardNav } from "./wizard-nav";
 
 export function WizardContent() {
@@ -14,10 +14,10 @@ export function WizardContent() {
 	return (
 		<div>
 			{step === 0 && <StepQuestionnaire />}
-			{step === 1 && <StepTypeStack />}
-			{step === 2 && <StepModules />}
-			{step === 3 && <StepProjectInfo />}
-			{step === 4 && <StepSummary />}
+			{step === 1 && <StepRecommendation />}
+			{step === 2 && <StepTypeStack />}
+			{step === 3 && <StepModules />}
+			{step === 4 && <StepProjectSynthesis />}
 
 			<WizardNav />
 		</div>

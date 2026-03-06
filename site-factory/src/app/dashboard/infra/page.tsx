@@ -1,15 +1,15 @@
 import { Network } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { PageLayout } from "@/components/shell/page-layout";
-import { EmptyState } from "@/components/shell/empty-state";
-import { Badge } from "@/components/ui/badge";
+import { PageLayout } from "@/shared/components/shell/page-layout";
+import { EmptyState } from "@/shared/components/shell/empty-state";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/components/ui/table";
 import {
   RegenerateButton,
   ToggleServiceButton,
@@ -25,6 +25,8 @@ import {
 } from "@/features/dashboard/infra";
 import Link from "next/link";
 import { localHostForMode } from "@/lib/docker";
+
+export const dynamic = "force-dynamic";
 
 export default async function InfraPage() {
   const traefikUrl =

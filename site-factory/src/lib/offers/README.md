@@ -1,16 +1,25 @@
-# Offers - Source of Truth
+# Offers (Application Layer)
 
-This folder is the single source of truth for pricing and module metadata.
+This folder is an application consumption layer, not the business canonical source.
 
-## Update prices
-- Base prices: edit `BASE_PRICES` in `offers.ts`.
-- Deployment fees: edit `DEPLOYMENT_FEES` in `offers.ts`.
+## Source-of-truth model
 
-## Update modules
-- Module ids must match `Docs/04-Modules/module-*.md` filenames.
-- Edit module labels, descriptions, categories, and prices in `MODULES`.
-- If you add/remove a module doc file, update `MODULE_IDS` and `MODULES` to match exactly.
+| Layer | Path | Role |
+|---|---|---|
+| Canonical | `Docs/_spec/*` | Business/functional source of truth (rules, catalogs, pricing logic, decision model). |
+| Derived | `site-factory/src/lib/referential/spec/data/*` | Generated runtime mirror from `Docs/_spec` (never edited manually). |
+| Application | `site-factory/src/lib/offers/*` | UI-facing adapters and compatibility structures used by the app (for example `/dashboard/offres`). |
+| Internal | `Docs/interne/*` | Internal notes and audits; not canonical business truth. |
 
-## UI updates
-- The `/dashboard/offres` page reads only from `offers.ts`.
-- Any change in `offers.ts` is reflected in the UI automatically.
+## Editing rules
+
+1. Change business rules in `Docs/_spec/*` first.
+2. Run `pnpm spec:sync` to refresh derived runtime data.
+3. Run `pnpm spec:check` to detect drift.
+4. Update this folder only for application-level adaptation (labels, ordering, compatibility mapping, UI consumption).
+
+## Non-goals for this folder
+
+- Do not treat `offers.ts` as canonical business truth.
+- Do not define competing business rules here when they belong to `_spec`.
+- Do not use this README as canonical functional documentation.

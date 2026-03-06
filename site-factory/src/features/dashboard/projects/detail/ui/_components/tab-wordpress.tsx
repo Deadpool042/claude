@@ -4,7 +4,7 @@ import type { DeployTarget } from "@/lib/referential";
 import type { HostingProfileId } from "@/lib/hosting";
 import type { DevMode } from "@/generated/prisma/client";
 import { WpToolbox } from "../wordpress/_components/wp-toolbox";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
 
 interface TabWordpressProps {
   projectId: string;

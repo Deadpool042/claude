@@ -1,7 +1,7 @@
-import { FieldSelect } from "@/components/shared/FieldSelect";
-import { InlineHint } from "@/components/shared/InlineHint";
-import { Label } from "@/components/ui/label";
-import type { WizardContextType } from "../../logic/WizardProvider";
+import { FieldSelect } from "@/shared/components/FieldSelect";
+import { InlineHint } from "@/shared/components/InlineHint";
+import { Label } from "@/shared/components/ui/label";
+import type { WizardContextType } from "../../logic/wizard-types";
 
 interface ContextSectionProps {
   projectType: WizardContextType["projectType"];

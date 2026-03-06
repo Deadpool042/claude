@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/shared/components/ui/label";
 
 interface ClientOption {
   id: string;

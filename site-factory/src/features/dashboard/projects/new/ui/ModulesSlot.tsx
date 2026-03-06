@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { InlineHint } from "@/components/shared/InlineHint";
-import { StepCard } from "@/components/shared/StepCard";
+import { Badge } from "@/shared/components/ui/badge";
+import { InlineHint } from "@/shared/components/InlineHint";
+import { StepCard } from "@/shared/components/StepCard";
 import { MODULE_CATALOG } from "@/lib/referential";
 import { Layers } from "lucide-react";
 import { useWizard } from "../logic/WizardProvider";

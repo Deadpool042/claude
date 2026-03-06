@@ -16,7 +16,9 @@ const files = [
   "decision-rules.json",
   "commercial.json",
   "custom-stacks.json",
+  "stack-profiles.json",
   "shared-socle.json",
+  "infra-services.json",
 ];
 
 await mkdir(targetDir, { recursive: true });

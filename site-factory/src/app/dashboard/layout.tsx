@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AppShell } from "@/components/shell/app-shell";
+import { AppShell } from "@/shared/components/shell/app-shell";
 
 export default function DashboardLayout({
   children,

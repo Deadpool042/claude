@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Plus, Users } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { PageLayout } from "@/components/shell/page-layout";
-import { EmptyState } from "@/components/shell/empty-state";
-import { Button } from "@/components/ui/button";
+import { PageLayout } from "@/shared/components/shell/page-layout";
+import { EmptyState } from "@/shared/components/shell/empty-state";
+import { Button } from "@/shared/components/ui/button";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/components/ui/table";
 
 interface ClientsPageProps {
   searchParams: Promise<{ q?: string }>;

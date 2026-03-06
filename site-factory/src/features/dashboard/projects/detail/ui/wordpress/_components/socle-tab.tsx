@@ -7,8 +7,8 @@ import {
   Loader2,
   XCircle,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   INFRA_FEATURES,
   PLUGIN_CATEGORY_EMOJI,
@@ -16,8 +16,8 @@ import {
   WP_FEATURE_LABELS,
   type WpInfraFeature,
   type PluginCategory,
-} from "@/lib/wp";
-import type { WpInfraStatusValue } from "@/lib/wp";
+} from "@/lib/wp/features";
+import type { WpInfraStatusValue } from "@/lib/wp/infra-status";
 import type { SoclePluginExpectation, SocleSnapshot, WpInfo } from "./types";
 
 type PluginState = "active" | "inactive" | "missing";

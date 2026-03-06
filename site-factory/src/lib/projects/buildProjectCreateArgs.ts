@@ -191,6 +191,7 @@ export function buildProjectCreateArgs(input: BuildProjectInput): BuiltProject {
       ciScore: data.qualification?.ciScore ?? null,
       ciCategory: data.qualification?.ciCategory ?? null,
       ciAxesJson: data.qualification?.ciAxesJson ?? null,
+      taxonomySignal: data.taxonomySignal ?? null,
     },
   };
 

@@ -3,19 +3,13 @@ import { normalizeModuleIds } from "@/lib/referential";
 import { listDocs, type DocMeta } from "./index";
 
 const PROJECT_ALLOWED_CATEGORIES = new Set([
-  "01-Socle-Technique",
-  "02-Complexity-Index",
-  "03-Maintenance",
-  "04-Modules",
-  "05-Bonnes-Pratiques",
-  "06-Integration-Technologie",
-  "07-Exemples",
+  "qualification",
+  "recommandation",
+  "technique",
 ]);
 
-const STACK_DEPENDENT_CATEGORIES = new Set([
-  "06-Integration-Technologie",
-  "07-Exemples",
-]);
+const MODULE_DOC_PREFIX = "technique/modules/";
+const STACK_DOC_PREFIX = "technique/socle/";
 
 function parseModuleIds(modulesJson: string | null): string[] {
   if (!modulesJson) return [];
@@ -35,12 +29,16 @@ function isDocForProject(
 ): boolean {
   if (!PROJECT_ALLOWED_CATEGORIES.has(doc.categoryKey)) return false;
 
-  if (doc.categoryKey === "04-Modules") {
+  if (doc.id.startsWith(MODULE_DOC_PREFIX)) {
     if (doc.moduleId) return moduleIds.has(doc.moduleId);
     return moduleIds.size > 0 && doc.id.endsWith("modules.md");
   }
 
-  if (STACK_DEPENDENT_CATEGORIES.has(doc.categoryKey)) {
+  if (
+    doc.id.startsWith(STACK_DOC_PREFIX) &&
+    doc.id !== "technique/socle/README.md" &&
+    doc.id !== "technique/socle/socle-technique-canonique.md"
+  ) {
     return Boolean(techStack);
   }
 

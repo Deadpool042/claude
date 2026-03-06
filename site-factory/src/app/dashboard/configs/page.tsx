@@ -1,9 +1,9 @@
 import { readdir, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Settings, FileCode } from "lucide-react";
-import { PageLayout } from "@/components/shell/page-layout";
-import { EmptyState } from "@/components/shell/empty-state";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageLayout } from "@/shared/components/shell/page-layout";
+import { EmptyState } from "@/shared/components/shell/empty-state";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { ComposePreview } from "@/features/dashboard/configs";
 
 type ComposeMode = "dev" | "prod-like";

@@ -2,7 +2,7 @@
 "use client";
 
 import { useWizard } from "../logic/WizardProvider";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import {
   ArrowLeft,
   ArrowRight,
@@ -24,6 +24,7 @@ export function WizardNav() {
     formAction,
     formFields,
     projectType,
+    taxonomySignal,
     techStack,
     deployTarget,
     isHeadless,
@@ -69,11 +70,13 @@ export function WizardNav() {
       )}
 
       {/* ── Blockers ─────────────────────────────── */}
-      {!canGoNext && nextReasons.length > 0 && step < 4 && (
+      {!canGoNext && nextReasons.length > 0 && (
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
           <div className="flex items-center gap-2 font-medium">
             <AlertTriangle className="size-4" />
-            Informations manquantes
+            {step === 4
+              ? "Informations manquantes avant création"
+              : "Informations manquantes"}
           </div>
           <ul className="mt-2 list-disc pl-4 space-y-1">
             {nextReasons.map((reason) => (
@@ -119,6 +122,11 @@ export function WizardNav() {
               type="hidden"
               name="type"
               value={projectType ?? "VITRINE"}
+            />
+            <input
+              type="hidden"
+              name="taxonomySignal"
+              value={taxonomySignal ?? ""}
             />
             <input
               type="hidden"
@@ -281,7 +289,7 @@ export function WizardNav() {
               type="submit"
               size="lg"
               className="gap-2"
-              disabled={isPending}
+              disabled={isPending || !canGoNext}
             >
               {isPending ? (
                 <Loader2 className="size-4 animate-spin" />

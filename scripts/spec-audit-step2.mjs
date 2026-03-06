@@ -197,15 +197,6 @@ for (const category of ["CAT0", "CAT1", "CAT2", "CAT3", "CAT4"]) {
   }
 }
 
-if (!commercial.annexCosts?.deploySetupFeeRange) {
-  result.warnings.push("commercial missing deploySetupFeeRange");
-  result.proposedFixes.push({
-    file: "Docs/_spec/commercial.json",
-    node: "annexCosts.deploySetupFeeRange",
-    value: { min: 390, max: 390 },
-  });
-}
-
 if (!commercial.pluginRecurringCosts) {
   result.warnings.push("commercial missing pluginRecurringCosts aggregate");
   result.proposedFixes.push({

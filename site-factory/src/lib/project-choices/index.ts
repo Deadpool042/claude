@@ -390,7 +390,12 @@ export function getImplementationOptions(
 ): ImplementationOption[] {
   const options = IMPLEMENTATION_OPTIONS.filter((item) => item.family === family);
   if (supportFilter === "all") return options;
-  return options.filter((item) => item.support === "SUPPORTED");
+  return options.filter(
+    (item) =>
+      item.support === "SUPPORTED" ||
+      item.support === "SAAS" ||
+      Boolean(item.sourceCmsId),
+  );
 }
 
 export function getImplementationLabel(value: ProjectImplementationInput | null): string {

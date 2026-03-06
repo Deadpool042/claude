@@ -90,6 +90,8 @@ export {
   type DeployTarget,
   type DeployFeeDef,
   type DeployFeeHeadless,
+  type HostingCostDef,
+  type DeployComplexity,
   DEPLOY_FEES,
   DEPLOY_FEES_HEADLESS,
   HOSTING_COSTS,
@@ -142,6 +144,7 @@ export {
   SPEC_PLUGINS,
   SPEC_MODULES,
   SPEC_DECISION_RULES,
+  SPEC_INFRA_SERVICES,
   getSpec,
   loadReferentialSpec,
 } from "./spec";
@@ -159,6 +162,9 @@ export type {
   ResolveFeatureInput,
   ResolveFeatureOutput,
   FullSpec,
+  InfraServiceItem,
+  InfraServiceCategory,
+  InfraServicesSpec,
 } from "./spec";
 
 export { resolveFeature } from "./engine/resolve-feature";

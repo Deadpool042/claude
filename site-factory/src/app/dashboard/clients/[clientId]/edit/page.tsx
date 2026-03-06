@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { PageLayout } from "@/components/shell/page-layout";
-import { BreadcrumbOverride } from "@/components/shell/breadcrumb-context";
+import { PageLayout } from "@/shared/components/shell/page-layout";
+import { BreadcrumbOverride } from "@/shared/providers/breadcrumb-context";
 import { ClientEditForm } from "@/features/dashboard/clients";
 
 interface EditClientPageProps {

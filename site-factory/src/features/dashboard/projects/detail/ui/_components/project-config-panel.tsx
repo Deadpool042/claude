@@ -3,9 +3,9 @@
 import { useActionState, useCallback, useEffect, useState } from "react";
 import { Database, Gauge, HardDrive, Mail, Search, TableProperties, Zap, ArrowLeftRight } from "lucide-react";
 import { updateProjectConfigAction } from "@/features/dashboard/projects/server-actions";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import type { ProjectConfigPanelProps } from "./project-config-panel.types";
 import { useProjectConfigPanelState } from "./use-project-config-panel";
 import { DeployTargetBanner } from "./deploy-target-banner";

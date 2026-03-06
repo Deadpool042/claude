@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { Loader2 } from "lucide-react";
 import type { WpCronEvent } from "../types";
 import { formatArgs, formatDate } from "./utils/helpers";

@@ -94,6 +94,12 @@ export const editingFrequencyEnum = z.enum(["RARE", "REGULAR", "DAILY"]);
 export const commerceModelEnum = z.enum(["SAAS", "SELF_HOSTED", "HEADLESS"]);
 export const backendModeEnum = z.enum(["FULLSTACK", "SEPARATE"]);
 export const backendFamilyEnum = z.enum(["BAAS_STANDARD", "BAAS_ADVANCED", "CUSTOM_API"]);
+export const taxonomyDisambiguationSignalEnum = z.enum([
+  "SITE_VITRINE",
+  "SITE_BUSINESS",
+  "MVP_SAAS",
+  "APP_METIER",
+]);
 
 
 
@@ -174,6 +180,10 @@ export const createProjectSchema = z.object({
   devMode: devModeEnum.default("DEV_COMFORT"),
 
   type: projectTypeEnum.default("VITRINE"),
+  taxonomySignal: taxonomyDisambiguationSignalEnum
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => (v === "" ? undefined : v)),
   description: z
     .string()
     .max(2000, "La description ne doit pas dépasser 2000 caractères")
@@ -276,6 +286,10 @@ export const updateProjectSchema = z.object({
     .min(2, "Le nom doit contenir au moins 2 caractères")
     .max(100, "Le nom ne doit pas dépasser 100 caractères"),
   type: projectTypeEnum,
+  taxonomySignal: taxonomyDisambiguationSignalEnum
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => (v === "" ? undefined : v)),
   status: projectStatusEnum,
   description: z
     .string()

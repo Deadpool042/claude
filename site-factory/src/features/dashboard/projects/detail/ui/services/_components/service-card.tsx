@@ -14,14 +14,14 @@ import {
   Server,
   LayoutDashboard,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 import type { ServiceInfo } from "./services-orchestrator";
 
 interface ServiceCardProps {

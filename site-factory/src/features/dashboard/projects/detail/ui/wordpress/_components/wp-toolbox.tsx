@@ -14,22 +14,22 @@ import {
   Sparkles,
   Search,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { WP_PRESET_LIST, type WpPreset } from "@/lib/wp";
+} from "@/shared/components/ui/card";
+import { WP_PRESET_LIST, type WpPreset } from "@/lib/wp/presets";
 import type {
   WpPluginSearchResult,
   WpPluginSearchResponse,
 } from "@/app/api/wp-plugins/search/route";
-import type { WpInfraStatus } from "@/lib/wp";
-import { INFRA_FEATURES, type WpInfraFeature } from "@/lib/wp";
+import type { WpInfraStatus } from "@/lib/wp/infra-status";
+import { INFRA_FEATURES, type WpInfraFeature } from "@/lib/wp/features";
 
 import type {
   LogFilters,

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
-import { PageLayout } from "@/components/shell/page-layout";
+import { normalizeDocId } from "@/lib/docs";
+import { PageLayout } from "@/shared/components/shell/page-layout";
 import { DocsClient } from "@/features/dashboard/docs";
 
 function parseModules(value: string | null): string[] {
@@ -12,6 +13,10 @@ function parseModules(value: string | null): string[] {
   } catch {
     return [];
   }
+}
+
+function normalizeDocIds(docIds: string[]): string[] {
+  return Array.from(new Set(docIds.map((docId) => normalizeDocId(docId))));
 }
 
 export const dynamic = "force-dynamic";
@@ -43,8 +48,8 @@ export default async function DocsPage() {
     type: project.type,
     techStack: project.techStack ?? null,
     modules: parseModules(project.qualification?.modules ?? null),
-    docs: project.docs.map((doc) => doc.docId),
-    favorites: project.docFavorites.map((doc) => doc.docId),
+    docs: normalizeDocIds(project.docs.map((doc) => doc.docId)),
+    favorites: normalizeDocIds(project.docFavorites.map((doc) => doc.docId)),
   }));
 
   return (
@@ -54,7 +59,7 @@ export default async function DocsPage() {
     >
       <DocsClient
         projects={mappedProjects}
-        globalFavorites={globalFavorites.map((doc) => doc.docId)}
+        globalFavorites={normalizeDocIds(globalFavorites.map((doc) => doc.docId))}
       />
     </PageLayout>
   );

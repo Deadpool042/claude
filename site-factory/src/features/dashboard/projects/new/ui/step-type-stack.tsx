@@ -1,15 +1,15 @@
 //src/app/dashboard/projects/new/_components/step-type-stack.tsx
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { FieldSelect } from "@/components/shared/FieldSelect";
-import { FieldSwitch } from "@/components/shared/FieldSwitch";
-import { InlineHint } from "@/components/shared/InlineHint";
-import { OptionTiles } from "@/components/shared/OptionTiles";
-import { StepCard } from "@/components/shared/StepCard";
-import { SupportBadge } from "@/components/shared/SupportBadge";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { FieldSelect } from "@/shared/components/FieldSelect";
+import { FieldSwitch } from "@/shared/components/FieldSwitch";
+import { InlineHint } from "@/shared/components/InlineHint";
+import { OptionTiles } from "@/shared/components/OptionTiles";
+import { StepCard } from "@/shared/components/StepCard";
+import { SupportBadge } from "@/shared/components/SupportBadge";
 import { Info, Layers, Server, Zap, Workflow } from "lucide-react";
 import {
   getFrontendImplementationLabel,
@@ -26,8 +26,12 @@ import type {
   TrafficLevel,
 } from "@/lib/referential";
 import { useTypeStackVM } from "./type-stack/use-type-stack-vm";
+import { useWizard } from "../logic/WizardProvider";
+import { buildWizardDecisionFlow } from "../logic/wizard-flow";
+import { WizardDecisionFlowPanel } from "./wizard-decision-flow-panel";
 
 export function StepTypeStack() {
+  const wizardFlow = useWizard();
   const {
     applyPatch,
     viewModel,
@@ -55,6 +59,36 @@ export function StepTypeStack() {
     commerceModelHint,
     wizard,
   } = useTypeStackVM();
+  const decisionFlowItems = buildWizardDecisionFlow({
+    projectType: wizardFlow.projectType,
+    offerProjectType: wizardFlow.offerProjectType,
+    projectFamily: wizardFlow.projectFamily,
+    projectImplementation: wizardFlow.projectImplementation,
+    projectImplementationLabel: wizardFlow.projectImplementationLabel,
+    projectFrontendImplementation: wizardFlow.projectFrontendImplementation,
+    projectFrontendImplementationLabel: wizardFlow.projectFrontendImplementationLabel,
+    hostingSelectionMode: wizardFlow.hostingSelectionMode,
+    hostingTarget: wizardFlow.hostingTarget,
+    hostingTargetBack: wizardFlow.hostingTargetBack,
+    hostingTargetFront: wizardFlow.hostingTargetFront,
+    selectedModules: wizardFlow.selectedModules,
+    formFields: wizardFlow.formFields,
+    qualification: wizardFlow.qualification,
+    budgetBandEffective: wizardFlow.budgetBandEffective,
+    clientKnowledge: wizardFlow.clientKnowledge,
+    primaryGoal: wizardFlow.primaryGoal,
+    ambitionLevel: wizardFlow.ambitionLevel,
+    targetTimeline: wizardFlow.targetTimeline,
+    needsEditing: wizardFlow.needsEditing,
+    editingMode: wizardFlow.editingMode,
+    editingFrequency: wizardFlow.editingFrequency,
+    editorialPushOwner: wizardFlow.editorialPushOwner,
+    clientAccessPolicy: wizardFlow.clientAccessPolicy,
+    trafficLevel: wizardFlow.trafficLevel,
+    dataSensitivity: wizardFlow.dataSensitivity,
+    scalabilityLevel: wizardFlow.scalabilityLevel,
+    canonicalTaxonomyResolution: wizardFlow.canonicalTaxonomyResolution,
+  });
 
   const {
     projectType,
@@ -89,11 +123,17 @@ export function StepTypeStack() {
 
   return (
     <div className="space-y-4">
+      <WizardDecisionFlowPanel
+        currentStep={wizardFlow.step}
+        items={decisionFlowItems}
+        description="La recommandation est déjà posée. Cette étape verrouille l’implémentation, l’architecture et l’hébergement retenus."
+      />
+
       <InlineHint>
-        Pré-remplissage issu du questionnaire besoin. Ajustements possibles sur chaque section technique.
+        Cette étape traduit la recommandation en choix de mise en œuvre : stack, architecture, édition et hébergement.
       </InlineHint>
 
-      <StepCard title="Type fonctionnel" icon={Zap} tone="bg-primary/10 text-primary">
+      <StepCard title="Périmètre retenu" icon={Zap} tone="bg-primary/10 text-primary">
         <OptionTiles
           options={projectTypeOptions.map((pt) => ({
             value: pt.value,
@@ -317,10 +357,10 @@ export function StepTypeStack() {
       </StepCard>
 
       <StepCard
-        title="Proposition technique"
+        title="Architecture choisie"
         icon={Layers}
         tone="bg-indigo-500/10 text-indigo-500"
-        description="Famille et implémentation proposées selon les contraintes."
+        description="Famille et implémentation recommandées selon les contraintes capturées."
       >
         <div className="space-y-2">
           <Label>Famille</Label>

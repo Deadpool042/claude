@@ -179,14 +179,17 @@ export function resolveFeature(input: ResolveFeatureInput): ResolveFeatureOutput
   }
 
   if (row.classification === "PLUGIN_INTEGRATION") {
-    if (pluginRuleSatisfied(input, (row.recommendedPluginIds?.length ?? 0) > 0)) {
+    const hasRecommendations = (row.recommendedPluginIds?.length ?? 0) > 0;
+    if (pluginRuleSatisfied(input, true)) {
       return {
         classification: "PLUGIN_INTEGRATION",
         implementationType: toImplementationType("PLUGIN_INTEGRATION"),
-        ...(row.recommendedPluginIds?.length
+        ...(hasRecommendations
           ? { recommendedPluginIds: row.recommendedPluginIds }
           : {}),
-        reason: "Écosystème plugin mature et économiquement préférable",
+        reason: hasRecommendations
+          ? "Écosystème plugin mature et économiquement préférable"
+          : "Voie plugin retenue sans recommandation explicite",
       };
     }
 

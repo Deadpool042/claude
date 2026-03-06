@@ -1,13 +1,14 @@
-//src/lib/referential/maintenance-cat.ts
 /**
- * Grille de maintenance — Référentiel v2
+ * Grille de maintenance — Référentiel v2 (spec-driven)
  *
+ * Dérivé de Docs/_spec/commercial.json (maintenanceByCategory).
  * 5 niveaux de maintenance alignés sur les 5 catégories (Cat 0 → Cat 4).
- * Chaque catégorie a un prix mensuel fixe, un périmètre défini et un split
- * prestataire/agence pour le mode sous-traitant.
  *
- * Tarifs : 39 / 69 / 109 / 139 / à partir de 179 €/mois
+ * ⚠ Les prix proviennent du spec JSON (source de vérité unique).
+ *   Si les prix doivent changer, mettre à jour commercial.json.
  */
+
+import { SPEC_COMMERCIAL } from "./spec";
 
 // ── Types ────────────────────────────────────────────────────────────
 
@@ -32,99 +33,29 @@ export interface MaintenanceCatDef {
   splitPrestataire: number;
 }
 
-// ── Données ──────────────────────────────────────────────────────────
+// ── Données dérivées du spec ─────────────────────────────────────────
 
-export const MAINTENANCE_CATS: MaintenanceCatDef[] = [
-  {
-    id: "MINIMAL",
-    label: "Minimal",
-    shortLabel: "Cat 0",
-    priceMonthly: 39,
-    priceLabel: "39 €/mois",
-    category: "CAT0",
-    catIndex: 0,
-    scope: [
-      "Monitoring uptime",
-      "Sauvegardes automatiques (hebdomadaire)",
-      "Mises à jour core (trimestriel)",
-      "Support email (48h)",
-    ],
-    splitPrestataire: 70,
-  },
-  {
-    id: "STANDARD",
-    label: "Standard",
-    shortLabel: "Cat 1",
-    priceMonthly: 69,
-    priceLabel: "69 €/mois",
-    category: "CAT1",
-    catIndex: 1,
-    scope: [
-      "Tout Cat 0",
-      "Mises à jour core + plugins (mensuel)",
-      "Sauvegardes automatiques (quotidien)",
-      "Rapport mensuel",
-      "Support email (24h)",
-    ],
-    splitPrestataire: 70,
-  },
-  {
-    id: "ADVANCED",
-    label: "Avancée",
-    shortLabel: "Cat 2",
-    priceMonthly: 109,
-    priceLabel: "109 €/mois",
-    category: "CAT2",
-    catIndex: 2,
-    scope: [
-      "Tout Cat 1",
-      "Mises à jour bimensuelles",
-      "Audit sécurité (trimestriel)",
-      "Monitoring performance",
-      "Support email prioritaire (12h)",
-      "1 intervention corrective/mois",
-    ],
-    splitPrestataire: 70,
-  },
-  {
-    id: "BUSINESS",
-    label: "Métier renforcée",
-    shortLabel: "Cat 3",
-    priceMonthly: 139,
-    priceLabel: "139 €/mois",
-    category: "CAT3",
-    catIndex: 3,
-    scope: [
-      "Tout Cat 2",
-      "Mises à jour hebdomadaires",
-      "Audit sécurité (mensuel)",
-      "Monitoring avancé (APM)",
-      "Support prioritaire (4h)",
-      "2 interventions correctives/mois",
-      "Rapport détaillé mensuel",
-    ],
-    splitPrestataire: 70,
-  },
-  {
-    id: "PREMIUM",
-    label: "Premium",
-    shortLabel: "Cat 4",
-    priceMonthly: 179,
-    priceLabel: "à partir de 179 €/mois",
-    category: "CAT4",
-    catIndex: 4,
-    scope: [
-      "Tout Cat 3",
-      "Mises à jour en continu",
-      "Audit sécurité + pentest",
-      "SLA garanti",
-      "Support dédié (2h)",
-      "Interventions illimitées",
-      "Comité technique mensuel",
-    ],
-    splitPrestataire: 60,
-  },
-];
+export const CATEGORY_ORDER: Category[] = ["CAT0", "CAT1", "CAT2", "CAT3", "CAT4"];
+
+const _spec = SPEC_COMMERCIAL.maintenanceByCategory;
+
+export const MAINTENANCE_CATS: MaintenanceCatDef[] = CATEGORY_ORDER.map((cat, idx) => {
+  const entry = _spec[cat]!;
+  const id = (entry.id ?? cat) as MaintenanceCat;
+  const monthly = entry.monthly;
+  const isLast = idx === CATEGORY_ORDER.length - 1;
+  return {
+    id,
+    label: entry.label,
+    shortLabel: entry.shortLabel ?? `Cat ${idx}`,
+    priceMonthly: monthly,
+    priceLabel: isLast ? `à partir de ${monthly} €/mois` : `${monthly} €/mois`,
+    category: cat,
+    catIndex: idx,
+    scope: entry.scope ?? [],
+    splitPrestataire: entry.splitPrestataire ?? 70,
+  };
+});
 
 // ── Lookups ──────────────────────────────────────────────────────────
 
@@ -140,50 +71,24 @@ export const MAINTENANCE_CAT_BY_CATEGORY: Record<Category, MaintenanceCatDef> =
     MaintenanceCatDef
   >;
 
-export const MAINTENANCE_CAT_ORDER: MaintenanceCat[] = [
-  "MINIMAL",
-  "STANDARD",
-  "ADVANCED",
-  "BUSINESS",
-  "PREMIUM",
-];
-
-export const CATEGORY_ORDER: Category[] = ["CAT0", "CAT1", "CAT2", "CAT3", "CAT4"];
+export const MAINTENANCE_CAT_ORDER: MaintenanceCat[] =
+  MAINTENANCE_CATS.map((t) => t.id);
 
 // ── Labels (rétro-compatibilité) ─────────────────────────────────────
 
-export const MAINTENANCE_LABELS: Record<MaintenanceCat, string> = {
-  MINIMAL: "Minimal",
-  STANDARD: "Standard",
-  ADVANCED: "Avancée",
-  BUSINESS: "Métier renforcée",
-  PREMIUM: "Premium",
-};
+export const MAINTENANCE_LABELS: Record<MaintenanceCat, string> =
+  Object.fromEntries(MAINTENANCE_CATS.map((t) => [t.id, t.label])) as Record<MaintenanceCat, string>;
 
-export const MAINTENANCE_PRICES: Record<MaintenanceCat, string> = {
-  MINIMAL: "29 €/mois",
-  STANDARD: "59 €/mois",
-  ADVANCED: "129 €/mois",
-  BUSINESS: "249 €/mois",
-  PREMIUM: "490 €/mois",
-};
+export const MAINTENANCE_PRICES: Record<MaintenanceCat, string> =
+  Object.fromEntries(MAINTENANCE_CATS.map((t) => [t.id, `${t.priceMonthly} €/mois`])) as Record<MaintenanceCat, string>;
 
-export const CATEGORY_LABELS: Record<Category, string> = {
-  CAT0: "Cat.0 — Starter",
-  CAT1: "Cat.1 — Standard",
-  CAT2: "Cat.2 — Avancé",
-  CAT3: "Cat.3 — Métier",
-  CAT4: "Cat.4 — Premium",
-};
+export const CATEGORY_LABELS: Record<Category, string> =
+  Object.fromEntries(MAINTENANCE_CATS.map((t) => [t.category, `Cat.${t.catIndex} — ${t.label}`])) as Record<Category, string>;
 
-export const CATEGORY_SHORT: Record<Category, string> = {
-  CAT0: "Cat.0",
-  CAT1: "Cat.1",
-  CAT2: "Cat.2",
-  CAT3: "Cat.3",
-  CAT4: "Cat.4",
-};
+export const CATEGORY_SHORT: Record<Category, string> =
+  Object.fromEntries(MAINTENANCE_CATS.map((t) => [t.category, `Cat.${t.catIndex}`])) as Record<Category, string>;
 
+// UI colors — non-spec, hardcoded
 export const CATEGORY_COLORS: Record<Category, string> = {
   CAT0: "text-slate-600 bg-slate-50 border-slate-200 dark:text-slate-400 dark:bg-slate-950/30 dark:border-slate-800",
   CAT1: "text-emerald-600 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-950/30 dark:border-emerald-800",
@@ -194,13 +99,8 @@ export const CATEGORY_COLORS: Record<Category, string> = {
 
 // ── Mapping catégorie → maintenance ──────────────────────────────────
 
-export const CATEGORY_MAINTENANCE: Record<Category, MaintenanceCat> = {
-  CAT0: "MINIMAL",
-  CAT1: "STANDARD",
-  CAT2: "ADVANCED",
-  CAT3: "BUSINESS",
-  CAT4: "PREMIUM",
-};
+export const CATEGORY_MAINTENANCE: Record<Category, MaintenanceCat> =
+  Object.fromEntries(MAINTENANCE_CATS.map((t) => [t.category, t.id])) as Record<Category, MaintenanceCat>;
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -216,9 +116,6 @@ export function indexToCategory(index: number): Category {
   const clamped = Math.max(0, Math.min(4, index));
   return CATEGORY_ORDER[clamped];
 }
-
-/** Alias de compatibilité: Use indexToCategory */
-// export const tierIndexToCategory = indexToCategory;
 
 export function getMaintenanceForCategory(cat: Category): MaintenanceCatDef {
   return MAINTENANCE_CAT_BY_CATEGORY[cat];

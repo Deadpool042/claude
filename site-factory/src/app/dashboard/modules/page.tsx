@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/shell/page-layout";
+import { PageLayout } from "@/shared/components/shell/page-layout";
 import { ModulesClient } from "@/features/dashboard/modules";
 
 export default function ModulesPage() {

@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useMediaQuery } from "@/hooks";
-import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/shared/hooks";
+import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/shared/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
@@ -18,7 +18,7 @@ import {
   DrawerTitle,
   DrawerDescription,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/shared/components/ui/drawer";
 
 type ComposeMode = "dev" | "prod-like";
 

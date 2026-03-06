@@ -5,6 +5,8 @@ import modulesJson from "./data/modules.json";
 import decisionRulesJson from "./data/decision-rules.json";
 import commercialJson from "./data/commercial.json";
 import customStacksJson from "./data/custom-stacks.json";
+import stackProfilesJson from "./data/stack-profiles.json";
+import infraServicesJson from "./data/infra-services.json";
 import {
   cmsSpecSchema,
   featuresSpecSchema,
@@ -13,6 +15,8 @@ import {
   decisionRulesSpecSchema,
   commercialSpecSchema,
   customStacksSpecSchema,
+  stackProfilesSpecSchema,
+  infraServicesSpecSchema,
 } from "./schema";
 import type { FullSpec } from "./types";
 
@@ -35,6 +39,8 @@ export function loadReferentialSpec(): FullSpec {
   const decisionRules = decisionRulesSpecSchema.parse(decisionRulesJson);
   const commercial = commercialSpecSchema.parse(commercialJson);
   const customStacks = customStacksSpecSchema.parse(customStacksJson);
+  const stackProfiles = stackProfilesSpecSchema.parse(stackProfilesJson);
+  const infraServices = infraServicesSpecSchema.parse(infraServicesJson);
 
   const cmsIds = new Set(cms.cms.map((item) => item.id));
   const featureIds = new Set(features.features.map((item) => item.id));
@@ -148,6 +154,15 @@ export function loadReferentialSpec(): FullSpec {
     "cms.HEADLESS doit supporter GIT_MDX, HEADLESS_CMS et CUSTOM_ADMIN"
   );
 
+  // ── Infra services cross-validation ──
+  const infraCategories = new Set(infraServices.categories.map((c) => c.id));
+  for (const svc of infraServices.services) {
+    assert(
+      infraCategories.has(svc.category),
+      `infra service ${svc.id} référence catégorie inconnue: ${svc.category}`
+    );
+  }
+
   return {
     cms: {
       ...cms,
@@ -182,5 +197,7 @@ export function loadReferentialSpec(): FullSpec {
     decisionRules,
     commercial,
     customStacks,
+    stackProfiles,
+    infraServices,
   } as FullSpec;
 }

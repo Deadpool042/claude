@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Plus, FolderKanban } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { PageLayout } from "@/components/shell/page-layout";
-import { EmptyState } from "@/components/shell/empty-state";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { PageLayout } from "@/shared/components/shell/page-layout";
+import { EmptyState } from "@/shared/components/shell/empty-state";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/shared/components/ui/table";
 import {
   PROJECT_TYPE_LABELS,
   PROJECT_STATUS_LABELS,

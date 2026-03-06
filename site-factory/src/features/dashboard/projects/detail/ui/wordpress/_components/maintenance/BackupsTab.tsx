@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/shared/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { Loader2 } from "lucide-react";
 import type { BackupEntry, MaintenanceStatus } from "../types";
 import { formatBytes, formatDate } from "./utils/helpers";

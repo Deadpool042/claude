@@ -54,7 +54,8 @@
       "Bash(git mv src/lib/referential/deploy-fees.ts src/lib/referential/deploy.ts)",
       "Bash(cat -n /Users/laurent/Desktop/claude/site-factory/src/app/dashboard/projects/[projectId]/edit/_components/project-edit-form.tsx)",
       "Bash(npx vitest run src/tests/combos/qualification.test.ts)",
-      "Bash(git add -A)"
+      "Bash(git add -A)",
+      "Bash(git commit:*)"
     ]
   }
 }

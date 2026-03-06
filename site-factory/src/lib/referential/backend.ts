@@ -1,25 +1,34 @@
-//script:src/lib/referential/backend.ts
-export type BackendFamily = "BAAS_STANDARD" | "BAAS_ADVANCED" | "CUSTOM_API" ;
+/**
+ * Familles backend — Référentiel v2 (spec-driven)
+ *
+ * Dérivé de Docs/_spec/decision-rules.json (backendFamilies, backendOpsHeavyCoefficient).
+ */
 
-export const BACKEND_FAMILY_LABELS: Record<BackendFamily, string> = {
-  BAAS_STANDARD: "BaaS standard",
-  BAAS_ADVANCED: "BaaS avancé",
-  CUSTOM_API: "Backend API custom",
-};
+import { SPEC_DECISION_RULES } from "./spec";
 
-export const BACKEND_FAMILY_DESCRIPTIONS: Record<BackendFamily, string> = {
-  BAAS_STANDARD: "Supabase, Firebase, Appwrite Cloud.",
-  BAAS_ADVANCED: "RLS/ACL avancés, multi-tenant strict, audit logs.",
-  CUSTOM_API: "NestJS, Symfony API, Django.",
-};
+// ── Types ────────────────────────────────────────────────────────────
 
-export const BACKEND_FAMILY_COEFFICIENTS: Record<BackendFamily, number> = {
-  BAAS_STANDARD: 1.0,
-  BAAS_ADVANCED: 1.15,
-  CUSTOM_API: 1.3,
-};
+export type BackendFamily = "BAAS_STANDARD" | "BAAS_ADVANCED" | "CUSTOM_API";
 
-export const BACKEND_OPS_HEAVY_COEFFICIENT = 0.1;
+// ── Données dérivées du spec ─────────────────────────────────────────
+
+const _backendFamilies = SPEC_DECISION_RULES.backendFamilies ?? {};
+
+export const BACKEND_FAMILY_LABELS: Record<BackendFamily, string> = Object.fromEntries(
+  Object.entries(_backendFamilies).map(([k, v]) => [k, v.label]),
+) as Record<BackendFamily, string>;
+
+export const BACKEND_FAMILY_DESCRIPTIONS: Record<BackendFamily, string> = Object.fromEntries(
+  Object.entries(_backendFamilies).map(([k, v]) => [k, v.description]),
+) as Record<BackendFamily, string>;
+
+export const BACKEND_FAMILY_COEFFICIENTS: Record<BackendFamily, number> = Object.fromEntries(
+  Object.entries(_backendFamilies).map(([k, v]) => [k, v.coefficient]),
+) as Record<BackendFamily, number>;
+
+export const BACKEND_OPS_HEAVY_COEFFICIENT = SPEC_DECISION_RULES.backendOpsHeavyCoefficient ?? 0.1;
+
+// ── Helpers ──────────────────────────────────────────────────────────
 
 export function getBackendMultiplier(
   family?: BackendFamily | null,

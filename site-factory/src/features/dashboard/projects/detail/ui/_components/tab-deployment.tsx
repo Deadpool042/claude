@@ -3,9 +3,9 @@
 import { useActionState, useCallback } from "react";
 import { Cloud, Lock } from "lucide-react";
 import { updateDeploymentAction } from "@/features/dashboard/projects/server-actions";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { DEPLOY_TARGET_LABELS } from "@/lib/validators";
 import { HOSTING_PROFILES } from "@/lib/hosting";
 import {

@@ -6,14 +6,14 @@ import {
   Euro,
   Layers,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 import {
   CATEGORY_LABELS,
   CATEGORY_COLORS,
@@ -24,12 +24,20 @@ import {
   type Category,
   type MaintenanceCat,
 } from "@/lib/referential";
-import { formatEur } from "@/lib/currency";
+import { formatEur } from "@/shared/lib/currency";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import type { DeployTarget } from "@/generated/prisma/client";
 import { localHostForMode, localServiceHost } from "@/lib/docker";
 import { isServiceEnabledForMode } from "@/lib/generators/compose/services/enabled";
+import {
+  CANONICAL_TAXONOMY_LABELS,
+  TAXONOMY_SIGNAL_SOURCE_LABELS,
+  TAXONOMY_SIGNAL_LABELS,
+  type CanonicalProjectTaxonomy,
+  type TaxonomyDisambiguationSignal,
+  type TaxonomySignalResolutionSource,
+} from "@/lib/taxonomy";
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -61,6 +69,11 @@ interface TabOverviewProps {
     estimatedBudget: number | null;
   } | null;
   enabledServiceIds: string[];
+  taxonomy?: {
+    signal: TaxonomyDisambiguationSignal | null;
+    signalSource: TaxonomySignalResolutionSource;
+    canonicalTaxonomy: CanonicalProjectTaxonomy | null;
+  };
 }
 
  const ACCESS_SERVICES = [
@@ -77,6 +90,7 @@ export function TabOverview({
   socleStatus,
   qualification,
   enabledServiceIds,
+  taxonomy,
 }: TabOverviewProps) {
   const themeLabel = socleStatus?.theme
     ? socleStatus.theme === "sf-tt5"
@@ -217,15 +231,32 @@ export function TabOverview({
             <CardDescription>Catégorie</CardDescription>
           </CardHeader>
           <CardContent>
-            {project.category ? (
-              <Badge
-                className={`text-sm ${CATEGORY_COLORS[project.category as Category]}`}
-              >
-                {CATEGORY_LABELS[project.category as Category]}
-              </Badge>
-            ) : (
-              <span className="text-muted-foreground">—</span>
-            )}
+            <div className="space-y-2">
+              {project.category ? (
+                <Badge
+                  className={`text-sm ${CATEGORY_COLORS[project.category as Category]}`}
+                >
+                  {CATEGORY_LABELS[project.category as Category]}
+                </Badge>
+              ) : (
+                <span className="text-muted-foreground">—</span>
+              )}
+              {(taxonomy?.canonicalTaxonomy || taxonomy?.signal) && (
+                <div className="space-y-1">
+                  {taxonomy?.canonicalTaxonomy && (
+                    <Badge variant="secondary" className="text-[10px]">
+                      {CANONICAL_TAXONOMY_LABELS[taxonomy.canonicalTaxonomy]}
+                    </Badge>
+                  )}
+                  {taxonomy?.signal && (
+                    <p className="text-[11px] text-muted-foreground">
+                      {TAXONOMY_SIGNAL_LABELS[taxonomy.signal]} (
+                      {TAXONOMY_SIGNAL_SOURCE_LABELS[taxonomy.signalSource]})
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

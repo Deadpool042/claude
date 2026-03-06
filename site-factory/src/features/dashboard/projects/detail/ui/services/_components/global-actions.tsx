@@ -10,8 +10,8 @@ import {
   Eraser,
   Bomb,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import type { ServiceInfo } from "./services-orchestrator";
 
 interface GlobalActionsProps {

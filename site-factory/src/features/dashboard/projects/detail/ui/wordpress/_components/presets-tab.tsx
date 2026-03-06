@@ -1,18 +1,18 @@
 "use client";
 
 import { Loader2, Shield, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 
 import {
   PLUGIN_CATEGORY_LABELS,
   PLUGIN_CATEGORY_EMOJI,
   type PluginCategory,
   WP_FEATURE_LABELS,
-} from "@/lib/wp";
+} from "@/lib/wp/features";
 
-import type { WpPreset } from "@/lib/wp";
-import { resolveWpPlugins, type ResolvedPlugin } from "@/lib/wp";
+import type { WpPreset } from "@/lib/wp/presets";
+import { resolveWpPlugins, type ResolvedPlugin } from "@/lib/wp/plugin-resolver";
 import type { HostingProfileId } from "@/lib/hosting";
 
 // ── helpers ───────────────────────────────────────────────────────────

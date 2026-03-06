@@ -1,4 +1,4 @@
-import type { WizardContextType } from "./WizardProvider";
+import type { WizardContextType } from "./wizard-types";
 
 interface DiscoveryLabelInput {
   editingMode: WizardContextType["editingMode"];

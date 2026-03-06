@@ -1,0 +1,540 @@
+{
+  "_meta": {
+    "purpose": "Profils de stack techniques et familles de pricing.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/stack-families.ts",
+      "site-factory/src/lib/referential/stack-profiles.ts"
+    ],
+    "shape": {
+      "requiredTopLevel": [
+        "version",
+        "families",
+        "profiles",
+        "implementationMapping",
+        "projectFamilyMapping"
+      ],
+      "familyItemRequired": [
+        "id",
+        "label",
+        "basePrice",
+        "maintenanceFloor",
+        "description"
+      ],
+      "profileItemRequired": [
+        "id",
+        "label",
+        "family",
+        "capabilities",
+        "hostingCompat",
+        "complexityFactor",
+        "maintenanceFloorIndex",
+        "legacyTechStack",
+        "hasPluginEcosystem",
+        "summary",
+        "pricingNotes"
+      ]
+    }
+  },
+  "version": "1.0.0",
+  "families": [
+    {
+      "id": "CMS_SIMPLE",
+      "label": "CMS simple",
+      "description": "Site vitrine ou blog avec un CMS clé en main (WordPress, Ghost). Installation rapide, maintenance légère.",
+      "basePrice": {
+        "from": 1200,
+        "label": "CMS simple (WordPress, Ghost...)"
+      },
+      "maintenanceFloor": 0
+    },
+    {
+      "id": "CMS_ADVANCED",
+      "label": "CMS avancé",
+      "description": "CMS configuré avec types de contenu personnalisés, ACF/custom fields et workflow éditorial structuré.",
+      "basePrice": {
+        "from": 1800,
+        "label": "CMS avancé (WordPress configuré, Craft...)"
+      },
+      "maintenanceFloor": 0
+    },
+    {
+      "id": "SSG_JAMSTACK",
+      "label": "SSG / JAMstack",
+      "description": "Site statique généré (Astro, Eleventy, Hugo). Performance maximale, hébergement minimal, contenu en fichiers ou headless CMS.",
+      "basePrice": {
+        "from": 2000,
+        "label": "SSG / JAMstack (Astro, Eleventy, Hugo...)"
+      },
+      "maintenanceFloor": 0
+    },
+    {
+      "id": "SSR_FRAMEWORK",
+      "label": "Framework SSR",
+      "description": "Application rendue côté serveur (Next.js, Nuxt, SvelteKit). Contenu dynamique, API routes et interactions riches.",
+      "basePrice": {
+        "from": 2500,
+        "label": "Framework SSR (Next.js, Nuxt, SvelteKit...)"
+      },
+      "maintenanceFloor": 0
+    },
+    {
+      "id": "HEADLESS_INTEGRATION",
+      "label": "Intégration headless",
+      "description": "Architecture découplée CMS + frontend indépendant. Flexibilité maximale mais maintenance plus exigeante.",
+      "basePrice": {
+        "from": 3500,
+        "label": "Headless CMS + frontend (WP headless, Strapi + Next...)"
+      },
+      "maintenanceFloor": 4
+    },
+    {
+      "id": "ECOMMERCE_STANDARD",
+      "label": "E-commerce standard",
+      "description": "Boutique en ligne classique (WooCommerce, PrestaShop, Shopify). Catalogue, checkout et paiement intégrés.",
+      "basePrice": {
+        "from": 3500,
+        "label": "E-commerce standard (WooCommerce, PrestaShop, Shopify...)"
+      },
+      "maintenanceFloor": 0
+    },
+    {
+      "id": "ECOMMERCE_HEADLESS",
+      "label": "E-commerce headless",
+      "description": "E-commerce découplé (Medusa, Saleor, Shopify Hydrogen). Frontend custom avec API commerce en backend.",
+      "basePrice": {
+        "from": 5500,
+        "label": "E-commerce headless (Medusa, Saleor, Shopify H2...)"
+      },
+      "maintenanceFloor": 4
+    },
+    {
+      "id": "APP_CUSTOM",
+      "label": "App / Plateforme",
+      "description": "Application web ou plateforme sur mesure. Architecture full-stack dédiée avec logique métier complexe.",
+      "basePrice": {
+        "from": 4500,
+        "label": "Application / Plateforme custom"
+      },
+      "maintenanceFloor": 4
+    }
+  ],
+  "profiles": [
+    {
+      "id": "wordpress-minimal",
+      "label": "WordPress minimal",
+      "family": "CMS_SIMPLE",
+      "capabilities": [
+        "PHP",
+        "PLUGIN_ECOSYSTEM"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "SHARED_HOSTING"
+      ],
+      "complexityFactor": 1,
+      "maintenanceFloorIndex": 0,
+      "legacyTechStack": "WORDPRESS",
+      "hasPluginEcosystem": true,
+      "summary": "WordPress léger pour starter / pages simples.",
+      "pricingNotes": [
+        "Configuration minimale",
+        "Écosystème plugin disponible",
+        "Base starter (×1.0)"
+      ]
+    },
+    {
+      "id": "wordpress",
+      "label": "WordPress (classique)",
+      "family": "CMS_ADVANCED",
+      "capabilities": [
+        "PHP",
+        "PLUGIN_ECOSYSTEM"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "SHARED_HOSTING"
+      ],
+      "complexityFactor": 1,
+      "maintenanceFloorIndex": 1,
+      "legacyTechStack": "WORDPRESS",
+      "hasPluginEcosystem": true,
+      "summary": "CMS complet avec plugins, thèmes FSE, configuration.",
+      "pricingNotes": [
+        "Plugins disponibles (gratuits/premium)",
+        "Configuration et intégration rapide",
+        "Coût référence (×1.0)"
+      ]
+    },
+    {
+      "id": "wordpress-headless",
+      "label": "WordPress headless",
+      "family": "HEADLESS_INTEGRATION",
+      "capabilities": [
+        "PHP",
+        "PLUGIN_ECOSYSTEM",
+        "HEADLESS_CMS",
+        "API_ROUTES"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "SHARED_HOSTING"
+      ],
+      "complexityFactor": 1.6,
+      "maintenanceFloorIndex": 4,
+      "legacyTechStack": "WORDPRESS",
+      "hasPluginEcosystem": true,
+      "summary": "WordPress en API + frontend JS séparé.",
+      "pricingNotes": [
+        "Découplage front/back",
+        "API, auth, CORS, cache",
+        "Surcoût coordination (×1.6)"
+      ]
+    },
+    {
+      "id": "woocommerce",
+      "label": "WooCommerce",
+      "family": "ECOMMERCE_STANDARD",
+      "capabilities": [
+        "PHP",
+        "PLUGIN_ECOSYSTEM",
+        "ECOMMERCE"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "SHARED_HOSTING"
+      ],
+      "complexityFactor": 1,
+      "maintenanceFloorIndex": 2,
+      "legacyTechStack": "WORDPRESS",
+      "hasPluginEcosystem": true,
+      "summary": "E-commerce WordPress complet.",
+      "pricingNotes": [
+        "Plugins WooCommerce disponibles",
+        "Paramétrage checkout/produits",
+        "Coût référence e-commerce (×1.0)"
+      ]
+    },
+    {
+      "id": "woocommerce-headless",
+      "label": "WooCommerce headless",
+      "family": "ECOMMERCE_HEADLESS",
+      "capabilities": [
+        "PHP",
+        "PLUGIN_ECOSYSTEM",
+        "ECOMMERCE",
+        "HEADLESS_CMS",
+        "API_ROUTES"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "SHARED_HOSTING"
+      ],
+      "complexityFactor": 1.8,
+      "maintenanceFloorIndex": 4,
+      "legacyTechStack": "WORDPRESS",
+      "hasPluginEcosystem": true,
+      "summary": "E-commerce headless WooCommerce.",
+      "pricingNotes": [
+        "Checkout et panier custom",
+        "API WooCommerce + front JS",
+        "Surcoût le plus élevé (×1.8)"
+      ]
+    },
+    {
+      "id": "nextjs",
+      "label": "Next.js",
+      "family": "SSR_FRAMEWORK",
+      "capabilities": [
+        "SSG",
+        "SSR",
+        "ISR",
+        "EDGE",
+        "API_ROUTES",
+        "NODE",
+        "FULLSTACK"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "VERCEL"
+      ],
+      "complexityFactor": 1.3,
+      "maintenanceFloorIndex": 1,
+      "legacyTechStack": "NEXTJS",
+      "hasPluginEcosystem": false,
+      "summary": "Framework React full-stack (SSR/SSG/ISR).",
+      "pricingNotes": [
+        "Développement front/back custom",
+        "Pas de plugins équivalents WP",
+        "Surcoût notable (×1.3)"
+      ]
+    },
+    {
+      "id": "nuxt",
+      "label": "Nuxt",
+      "family": "SSR_FRAMEWORK",
+      "capabilities": [
+        "SSG",
+        "SSR",
+        "ISR",
+        "EDGE",
+        "API_ROUTES",
+        "NODE",
+        "FULLSTACK"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "VERCEL"
+      ],
+      "complexityFactor": 1.3,
+      "maintenanceFloorIndex": 1,
+      "legacyTechStack": "NUXT",
+      "hasPluginEcosystem": false,
+      "summary": "Framework Vue full-stack (SSR/SSG).",
+      "pricingNotes": [
+        "Développement front/back custom",
+        "Pas de plugins équivalents WP",
+        "Surcoût notable (×1.3)"
+      ]
+    },
+    {
+      "id": "astro",
+      "label": "Astro",
+      "family": "SSG_JAMSTACK",
+      "capabilities": [
+        "SSG",
+        "SSR",
+        "NODE",
+        "STATIC_ONLY"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "VERCEL"
+      ],
+      "complexityFactor": 1.2,
+      "maintenanceFloorIndex": 0,
+      "legacyTechStack": "ASTRO",
+      "hasPluginEcosystem": false,
+      "summary": "Framework SSG-first avec islands architecture.",
+      "pricingNotes": [
+        "Développement custom",
+        "Moins de complexité runtime",
+        "Surcoût modéré (×1.2)"
+      ]
+    },
+    {
+      "id": "sveltekit",
+      "label": "SvelteKit",
+      "family": "SSR_FRAMEWORK",
+      "capabilities": [
+        "SSG",
+        "SSR",
+        "API_ROUTES",
+        "NODE",
+        "FULLSTACK"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "VERCEL"
+      ],
+      "complexityFactor": 1.3,
+      "maintenanceFloorIndex": 1,
+      "legacyTechStack": null,
+      "hasPluginEcosystem": false,
+      "summary": "Framework Svelte full-stack.",
+      "pricingNotes": [
+        "Développement custom complet",
+        "Écosystème plus restreint",
+        "Surcoût notable (×1.3)"
+      ]
+    },
+    {
+      "id": "remix",
+      "label": "Remix",
+      "family": "SSR_FRAMEWORK",
+      "capabilities": [
+        "SSR",
+        "API_ROUTES",
+        "NODE",
+        "FULLSTACK"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "VERCEL"
+      ],
+      "complexityFactor": 1.3,
+      "maintenanceFloorIndex": 1,
+      "legacyTechStack": "NEXTJS",
+      "hasPluginEcosystem": false,
+      "summary": "Framework React SSR orienté web standards.",
+      "pricingNotes": [
+        "Développement custom complet",
+        "Architecture loaders/actions",
+        "Surcoût notable (×1.3)"
+      ]
+    },
+    {
+      "id": "strapi",
+      "label": "Strapi",
+      "family": "HEADLESS_INTEGRATION",
+      "capabilities": [
+        "API_ROUTES",
+        "NODE",
+        "HEADLESS_CMS"
+      ],
+      "hostingCompat": [
+        "DOCKER"
+      ],
+      "complexityFactor": 1.4,
+      "maintenanceFloorIndex": 4,
+      "legacyTechStack": "NEXTJS",
+      "hasPluginEcosystem": true,
+      "summary": "CMS headless Node.js auto-hébergé.",
+      "pricingNotes": [
+        "API auto-générée",
+        "Back-office inclus",
+        "Nécessite frontend séparé (×1.4)"
+      ]
+    },
+    {
+      "id": "prestashop",
+      "label": "PrestaShop",
+      "family": "ECOMMERCE_STANDARD",
+      "capabilities": [
+        "PHP",
+        "PLUGIN_ECOSYSTEM",
+        "ECOMMERCE"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "SHARED_HOSTING"
+      ],
+      "complexityFactor": 1,
+      "maintenanceFloorIndex": 2,
+      "legacyTechStack": "WORDPRESS",
+      "hasPluginEcosystem": true,
+      "summary": "E-commerce PHP open source.",
+      "pricingNotes": [
+        "Modules disponibles (marketplace)",
+        "Solution e-commerce mature",
+        "Coût référence e-commerce (×1.0)"
+      ]
+    },
+    {
+      "id": "shopify",
+      "label": "Shopify",
+      "family": "ECOMMERCE_STANDARD",
+      "capabilities": [
+        "ECOMMERCE"
+      ],
+      "hostingCompat": [],
+      "complexityFactor": 0.8,
+      "maintenanceFloorIndex": 1,
+      "legacyTechStack": null,
+      "hasPluginEcosystem": true,
+      "summary": "E-commerce SaaS clé en main.",
+      "pricingNotes": [
+        "Configuration thème + apps",
+        "Hébergement inclus (SaaS)",
+        "Coût réduit (×0.8)"
+      ]
+    },
+    {
+      "id": "shopify-headless",
+      "label": "Shopify headless (Hydrogen)",
+      "family": "ECOMMERCE_HEADLESS",
+      "capabilities": [
+        "ECOMMERCE",
+        "SSR",
+        "NODE",
+        "HEADLESS_CMS"
+      ],
+      "hostingCompat": [
+        "DOCKER",
+        "VERCEL"
+      ],
+      "complexityFactor": 1.6,
+      "maintenanceFloorIndex": 4,
+      "legacyTechStack": "NEXTJS",
+      "hasPluginEcosystem": false,
+      "summary": "Storefront custom Shopify (Hydrogen/Remix).",
+      "pricingNotes": [
+        "Storefront custom React",
+        "API Storefront Shopify",
+        "Surcoût élevé (×1.6)"
+      ]
+    },
+    {
+      "id": "medusa",
+      "label": "Medusa",
+      "family": "ECOMMERCE_HEADLESS",
+      "capabilities": [
+        "ECOMMERCE",
+        "API_ROUTES",
+        "NODE",
+        "HEADLESS_CMS"
+      ],
+      "hostingCompat": [
+        "DOCKER"
+      ],
+      "complexityFactor": 1.8,
+      "maintenanceFloorIndex": 4,
+      "legacyTechStack": "NEXTJS",
+      "hasPluginEcosystem": false,
+      "summary": "E-commerce headless open source Node.js.",
+      "pricingNotes": [
+        "Backend e-commerce Node.js",
+        "Nécessite frontend custom",
+        "Surcoût élevé (×1.8)"
+      ]
+    }
+  ],
+  "implementationMapping": {
+    "WORDPRESS": "wordpress",
+    "GHOST": "wordpress-minimal",
+    "CRAFT": "wordpress",
+    "DRUPAL": "wordpress",
+    "JOOMLA": "wordpress",
+    "WEBFLOW": "wordpress-minimal",
+    "WORDPRESS_HEADLESS": "wordpress-headless",
+    "WOOCOMMERCE_HEADLESS": "woocommerce-headless",
+    "STRAPI": "strapi",
+    "CONTENTFUL": "strapi",
+    "SANITY": "strapi",
+    "PRISMIC": "strapi",
+    "DIRECTUS": "strapi",
+    "STORYBLOK": "strapi",
+    "ASTRO": "astro",
+    "ELEVENTY": "astro",
+    "HUGO": "astro",
+    "JEKYLL": "astro",
+    "GATSBY": "astro",
+    "NEXT_SSG": "nextjs",
+    "NUXT_SSG": "nuxt",
+    "NEXTJS": "nextjs",
+    "NUXT": "nuxt",
+    "SVELTEKIT": "sveltekit",
+    "REMIX": "remix",
+    "SHOPIFY": "shopify",
+    "BIGCOMMERCE": "shopify",
+    "WEBFLOW_COMMERCE": "shopify",
+    "WOOCOMMERCE": "woocommerce",
+    "PRESTASHOP": "prestashop",
+    "MAGENTO": "prestashop",
+    "SHOPWARE": "prestashop",
+    "SYLIUS": "prestashop",
+    "SHOPIFY_HEADLESS": "shopify-headless",
+    "MEDUSA": "medusa",
+    "COMMERCETOOLS": "medusa",
+    "SALEOR": "medusa"
+  },
+  "projectFamilyMapping": {
+    "STATIC_SSG": "SSG_JAMSTACK",
+    "CMS_MONO": "CMS_ADVANCED",
+    "CMS_HEADLESS": "HEADLESS_INTEGRATION",
+    "COMMERCE_SAAS": "ECOMMERCE_STANDARD",
+    "COMMERCE_SELF_HOSTED": "ECOMMERCE_STANDARD",
+    "COMMERCE_HEADLESS": "ECOMMERCE_HEADLESS",
+    "APP_PLATFORM": "APP_CUSTOM"
+  }
+}

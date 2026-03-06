@@ -3,6 +3,7 @@ import type { DeployTarget, TechStack } from "@/generated/prisma/client";
 export type UpdateProjectDto = {
   name: string;
   type: string;
+  taxonomySignal?: string | null;
   status: string;
 
   description: string | null;
@@ -81,6 +82,7 @@ export function formDataToUpdateProjectDto(formData: FormData): {
   const raw = {
     name: formData.get("name"),
     type: formData.get("type"),
+    taxonomySignal: getStr(formData, "taxonomySignal") ?? undefined,
     status: formData.get("status"),
     description: getStr(formData, "description") ?? undefined,
     domain: getStr(formData, "domain"),

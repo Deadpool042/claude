@@ -1,72 +1,57 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useMemo } from "react";
 
 interface MarkdownPreviewProps {
   content: string;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
+type Block =
+  | { type: "heading"; level: number; text: string }
+  | { type: "paragraph"; lines: string[] }
+  | { type: "code"; language: string | null; code: string }
+  | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "blockquote"; lines: string[] }
+  | { type: "hr" }
+  | { type: "table"; headers: string[]; rows: string[][] };
 
-function sanitizeUrl(raw: string): string {
-  const trimmed = raw.trim();
-  const lower = trimmed.toLowerCase();
+const INLINE_PATTERN =
+  /(\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
 
-  if (
-    lower.startsWith("javascript:") ||
-    lower.startsWith("data:") ||
-    lower.startsWith("vbscript:")
-  ) {
-    return "#";
-  }
-
-  if (
-    lower.startsWith("http://") ||
-    lower.startsWith("https://") ||
-    lower.startsWith("mailto:") ||
-    lower.startsWith("tel:") ||
-    trimmed.startsWith("/") ||
-    trimmed.startsWith("#") ||
-    trimmed.startsWith("./") ||
-    trimmed.startsWith("../")
-  ) {
-    return trimmed;
-  }
-
-  return "#";
-}
-
-function applyInline(text: string): string {
-  const codeSpans: string[] = [];
-  let output = text.replace(/`([^`]+)`/g, (_match, codeText: string) => {
-    const token = `@@CODE${String(codeSpans.length)}@@`;
-    codeSpans.push(`<code>${escapeHtml(codeText)}</code>`);
-    return token;
+function renderInline(text: string): ReactNode[] {
+  const parts = text.split(INLINE_PATTERN).filter(Boolean);
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("__") && part.endsWith("__")) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={index}>{part.slice(1, -1)}</em>;
+    }
+    if (part.startsWith("_") && part.endsWith("_")) {
+      return <em key={index}>{part.slice(1, -1)}</em>;
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={index}>{part.slice(1, -1)}</code>;
+    }
+    if (part.startsWith("[") && part.includes("](") && part.endsWith(")")) {
+      const splitIndex = part.indexOf("](");
+      const label = part.slice(1, splitIndex);
+      const url = part.slice(splitIndex + 2, -1);
+      return (
+        <a key={index} href={url} target="_blank" rel="noreferrer noopener">
+          {label}
+        </a>
+      );
+    }
+    return <span key={index}>{part}</span>;
   });
-  output = escapeHtml(output);
-  output = output.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-  output = output.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-  output = output.replace(
-    /\[([^\]]+)\]\(([^)]+)\)/g,
-    (_match, label: string, url: string) => {
-      const safeUrl = sanitizeUrl(url);
-      return `<a href="${safeUrl}" target="_blank" rel="noreferrer noopener">${label}</a>`;
-    },
-  );
-  codeSpans.forEach((markup, index) => {
-    output = output.replace(`@@CODE${String(index)}@@`, markup);
-  });
-  return output;
 }
 
-function splitTableRow(line: string): string[] {
+function parseTableRow(line: string): string[] {
   return line
     .trim()
     .replace(/^\|/, "")
@@ -75,159 +60,183 @@ function splitTableRow(line: string): string[] {
     .map((cell) => cell.trim());
 }
 
-function isTableDivider(line: string): boolean {
-  const trimmed = line.trim();
-  if (!trimmed.includes("|")) return false;
-  const cells = splitTableRow(trimmed);
-  return (
-    cells.length > 1 &&
-    cells.every((cell) => /^:?-{3,}:?$/.test(cell))
-  );
-}
+function parseMarkdown(content: string): Block[] {
+  const blocks: Block[] = [];
+  const lines = content.replace(/\r\n/g, "\n").split("\n");
+  let index = 0;
 
-function renderMarkdownToHtml(source: string): string {
-  const lines = source.replace(/\r\n/g, "\n").split("\n");
-  const html: string[] = [];
-  let i = 0;
-  let inCode = false;
-  let codeLang = "";
-  let codeLines: string[] = [];
+  while (index < lines.length) {
+    const line = lines[index];
 
-  while (i < lines.length) {
-    const line = lines[i] ?? "";
+    if (!line.trim()) {
+      index += 1;
+      continue;
+    }
 
-    if (line.startsWith("```")) {
-      if (!inCode) {
-        inCode = true;
-        codeLang = line.replace(/```/, "").trim();
-        codeLines = [];
-      } else {
-        const code = escapeHtml(codeLines.join("\n"));
-        const langClass = codeLang ? ` language-${codeLang}` : "";
-        html.push(
-          `<pre><code class="code-block${langClass}">${code}</code></pre>`,
-        );
-        inCode = false;
-        codeLang = "";
-        codeLines = [];
+    const trimmedLine = line.trim();
+
+    if (trimmedLine.startsWith("```")) {
+      const language = trimmedLine.slice(3).trim() || null;
+      const codeLines: string[] = [];
+      index += 1;
+      while (index < lines.length && !lines[index].trim().startsWith("```")) {
+        codeLines.push(lines[index]);
+        index += 1;
       }
-      i += 1;
+      if (index < lines.length) index += 1;
+      blocks.push({ type: "code", language, code: codeLines.join("\n") });
       continue;
     }
 
-    if (inCode) {
-      codeLines.push(line);
-      i += 1;
+    const headingMatch = line.match(/^\s*(#{1,6})\s+(.*)$/);
+    if (headingMatch) {
+      blocks.push({
+        type: "heading",
+        level: headingMatch[1].length,
+        text: headingMatch[2],
+      });
+      index += 1;
       continue;
     }
 
-    if (/^#{1,6}\s+/.test(line)) {
-      const level = line.match(/^#{1,6}/)?.[0].length ?? 1;
-      const text = line.replace(/^#{1,6}\s+/, "");
-      html.push(`<h${level}>${applyInline(text)}</h${level}>`);
-      i += 1;
-      continue;
-    }
-
-    if (line.trim() === "---" || line.trim() === "***") {
-      html.push("<hr />");
-      i += 1;
+    if (/^([-*_])\1\1+$/.test(line.trim())) {
+      blocks.push({ type: "hr" });
+      index += 1;
       continue;
     }
 
     if (line.trim().startsWith(">")) {
       const quoteLines: string[] = [];
-      while (i < lines.length && lines[i]?.trim().startsWith(">")) {
-        quoteLines.push(lines[i]?.replace(/^\s*>\s?/, "") ?? "");
-        i += 1;
+      while (index < lines.length && lines[index].trim().startsWith(">")) {
+        quoteLines.push(lines[index].replace(/^\s*>\s?/, ""));
+        index += 1;
       }
-      html.push(`<blockquote>${applyInline(quoteLines.join(" "))}</blockquote>`);
+      blocks.push({ type: "blockquote", lines: quoteLines });
       continue;
     }
 
-    const nextLine = lines[i + 1] ?? "";
-    if (line.includes("|") && isTableDivider(nextLine)) {
-      const headerCells = splitTableRow(line);
-      const bodyRows: string[][] = [];
-      i += 2;
-      while (i < lines.length && lines[i]?.includes("|")) {
-        bodyRows.push(splitTableRow(lines[i] ?? ""));
-        i += 1;
+    if (
+      line.includes("|") &&
+      index + 1 < lines.length &&
+      /^\s*\|?[:\- ]+\|?/.test(lines[index + 1])
+    ) {
+      const headers = parseTableRow(line);
+      index += 2;
+      const rows: string[][] = [];
+      while (index < lines.length && lines[index].includes("|")) {
+        rows.push(parseTableRow(lines[index]));
+        index += 1;
       }
-      const headerHtml = headerCells
-        .map((cell) => `<th>${applyInline(cell)}</th>`)
-        .join("");
-      const bodyHtml = bodyRows
-        .map((row) => {
-          const cells = row
-            .map((cell) => `<td>${applyInline(cell)}</td>`)
-            .join("");
-          return `<tr>${cells}</tr>`;
-        })
-        .join("");
-      html.push(
-        `<div class="table-wrap"><table><thead><tr>${headerHtml}</tr></thead><tbody>${bodyHtml}</tbody></table></div>`,
-      );
+      blocks.push({ type: "table", headers, rows });
       continue;
     }
 
     if (/^\s*[-*]\s+/.test(line)) {
       const items: string[] = [];
-      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i] ?? "")) {
-        items.push((lines[i] ?? "").replace(/^\s*[-*]\s+/, ""));
-        i += 1;
+      while (index < lines.length && /^\s*[-*]\s+/.test(lines[index])) {
+        items.push(lines[index].replace(/^\s*[-*]\s+/, ""));
+        index += 1;
       }
-      const listItems = items.map((item) => `<li>${applyInline(item)}</li>`).join("");
-      html.push(`<ul>${listItems}</ul>`);
+      blocks.push({ type: "list", ordered: false, items });
       continue;
     }
 
     if (/^\s*\d+\.\s+/.test(line)) {
       const items: string[] = [];
-      while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i] ?? "")) {
-        items.push((lines[i] ?? "").replace(/^\s*\d+\.\s+/, ""));
-        i += 1;
+      while (index < lines.length && /^\s*\d+\.\s+/.test(lines[index])) {
+        items.push(lines[index].replace(/^\s*\d+\.\s+/, ""));
+        index += 1;
       }
-      const listItems = items.map((item) => `<li>${applyInline(item)}</li>`).join("");
-      html.push(`<ol>${listItems}</ol>`);
-      continue;
-    }
-
-    if (line.trim() === "") {
-      i += 1;
+      blocks.push({ type: "list", ordered: true, items });
       continue;
     }
 
     const paragraphLines: string[] = [];
-    while (i < lines.length && (lines[i]?.trim() ?? "") !== "") {
-      if (
-        lines[i]?.startsWith("```") ||
-        /^#{1,6}\s+/.test(lines[i] ?? "") ||
-        /^\s*[-*]\s+/.test(lines[i] ?? "") ||
-        /^\s*\d+\.\s+/.test(lines[i] ?? "") ||
-        (lines[i]?.includes("|") && isTableDivider(lines[i + 1] ?? "")) ||
-        (lines[i]?.trim() ?? "") === "---"
-      ) {
-        break;
-      }
-      paragraphLines.push(lines[i] ?? "");
-      i += 1;
+    while (index < lines.length && lines[index].trim()) {
+      paragraphLines.push(lines[index]);
+      index += 1;
     }
-    const paragraph = paragraphLines.join(" ").trim();
-    if (paragraph) {
-      html.push(`<p>${applyInline(paragraph)}</p>`);
-    }
+    blocks.push({ type: "paragraph", lines: paragraphLines });
   }
 
-  return html.join("\n");
+  return blocks;
 }
 
 export function MarkdownPreview({ content }: MarkdownPreviewProps) {
-  const html = useMemo(() => renderMarkdownToHtml(content), [content]);
+  const blocks = useMemo(() => parseMarkdown(content), [content]);
+  const headingTags: Record<number, "h1" | "h2" | "h3" | "h4" | "h5" | "h6"> = {
+    1: "h1",
+    2: "h2",
+    3: "h3",
+    4: "h4",
+    5: "h5",
+    6: "h6",
+  };
+
   return (
-    <div
-      className="markdown-preview"
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <div className="markdown-preview">
+      {blocks.map((block, blockIndex) => {
+        if (block.type === "heading") {
+          const HeadingTag = headingTags[block.level] ?? "h2";
+          return (
+            <HeadingTag key={blockIndex}>
+              {renderInline(block.text)}
+            </HeadingTag>
+          );
+        }
+        if (block.type === "paragraph") {
+          const text = block.lines.join(" ");
+          return <p key={blockIndex}>{renderInline(text)}</p>;
+        }
+        if (block.type === "code") {
+          return (
+            <pre key={blockIndex}>
+              <code data-language={block.language ?? undefined}>
+                {block.code}
+              </code>
+            </pre>
+          );
+        }
+        if (block.type === "list") {
+          const ListTag = block.ordered ? "ol" : "ul";
+          return (
+            <ListTag key={blockIndex}>
+              {block.items.map((item, itemIndex) => (
+                <li key={itemIndex}>{renderInline(item)}</li>
+              ))}
+            </ListTag>
+          );
+        }
+        if (block.type === "blockquote") {
+          const text = block.lines.join("\n");
+          return <blockquote key={blockIndex}>{renderInline(text)}</blockquote>;
+        }
+        if (block.type === "table") {
+          return (
+            <div key={blockIndex} className="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    {block.headers.map((header, headerIndex) => (
+                      <th key={headerIndex}>{renderInline(header)}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {row.map((cell, cellIndex) => (
+                        <td key={cellIndex}>{renderInline(cell)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+        return <hr key={blockIndex} />;
+      })}
+    </div>
   );
 }

@@ -1,174 +1,151 @@
 /**
- * Frais de déploiement — Référentiel v2
+ * Frais de déploiement — Référentiel v3 (spec-driven, source unique)
  *
- * Forfaits de mise en production (one-shot) par cible de déploiement.
- * Couvre le travail de déploiement initial : DNS, SSL, CI/CD, containers, etc.
+ * Dérivé de Docs/_spec/commercial.json (deployFees, hostingCosts, saasCosts, stackDeployCompat).
+ * Les variantes headless sont intégrées dans chaque cible via le sous-objet `headless`.
  */
+
+import { SPEC_COMMERCIAL } from "./spec";
 
 // ── Types ────────────────────────────────────────────────────────────
 
 export type DeployTarget = "DOCKER" | "VERCEL" | "SHARED_HOSTING";
+export type DeployComplexity = "LOW" | "MEDIUM" | "HIGH";
 
 export interface DeployFeeDef {
   id: DeployTarget;
   label: string;
-  /** Forfait one-shot HT (€) */
+  description: string;
   cost: number;
-  /** Description du périmètre inclus */
+  complexity: DeployComplexity;
   scope: string[];
+  headless?: {
+    label: string;
+    description: string;
+    cost: number;
+    complexity: DeployComplexity;
+    scope: string[];
+  };
 }
 
 export interface DeployFeeHeadless {
   id: string;
   deployTarget: DeployTarget;
   label: string;
-  /** Forfait one-shot HT (€) pour architectures headless (2 services) */
   cost: number;
 }
 
-// ── Données ──────────────────────────────────────────────────────────
+export interface HostingCostDef {
+  label: string;
+  description: string;
+  range: { min: number; max: number };
+  rangeLabel: string;
+  headless?: {
+    label: string;
+    description: string;
+    range: { min: number; max: number };
+    rangeLabel: string;
+  };
+}
 
-export const DEPLOY_FEES: Record<DeployTarget, DeployFeeDef> = {
-  SHARED_HOSTING: {
-    id: "SHARED_HOSTING",
-    label: "Mutualisé (o2switch, OVH...)",
-    cost: 200,
-    scope: [
-      "Upload FTP / cPanel",
-      "Configuration DNS",
-      "SSL Let's Encrypt",
-      "Configuration PHP",
-    ],
-  },
-  VERCEL: {
-    id: "VERCEL",
-    label: "Vercel / Cloud",
-    cost: 150,
-    scope: [
-      "Configuration projet Vercel",
-      "Variables d'environnement",
-      "Custom domain",
-      "Preview branches",
-    ],
-  },
-  DOCKER: {
-    id: "DOCKER",
-    label: "Docker / VPS",
-    cost: 500,
-    scope: [
-      "Dockerfile + docker-compose",
-      "Reverse proxy (Traefik / Nginx)",
-      "CI/CD pipeline",
-      "Sauvegardes automatiques",
-      "Monitoring basique",
-    ],
-  },
-};
+// ── Données dérivées du spec ─────────────────────────────────────────
 
-/** Forfaits spéciaux pour les architectures headless (2 services) */
-export const DEPLOY_FEES_HEADLESS: DeployFeeHeadless[] = [
-  {
-    id: "headless_split",
-    deployTarget: "SHARED_HOSTING",
-    label: "Split : mutualisé (WP) + Vercel (frontend)",
-    cost: 350,
-  },
-  {
-    id: "headless_unified",
-    deployTarget: "DOCKER",
-    label: "Docker unifié (WP + frontend)",
-    cost: 500,
-  },
-];
+const _deployFees = SPEC_COMMERCIAL.deployFees ?? {};
+const _hostingCosts = SPEC_COMMERCIAL.hostingCosts ?? {};
+const _saasCosts = SPEC_COMMERCIAL.saasCosts ?? {};
+const _stackDeployCompat = SPEC_COMMERCIAL.stackDeployCompat ?? {};
 
-// ── Coûts d'hébergement indicatifs (à la charge du client) ───────────
+function formatRange(r: { min: number; max: number }): string {
+  return `${r.min}–${r.max} €/mois`;
+}
 
-export const HOSTING_COSTS: Record<DeployTarget, { label: string; range: string }> = {
-  SHARED_HOSTING: {
-    label: "Mutualisé (o2switch, OVH...)",
-    range: "3–10 €/mois",
-  },
-  VERCEL: {
-    label: "Vercel / Cloud",
-    range: "0–20 €/mois",
-  },
-  DOCKER: {
-    label: "VPS géré",
-    range: "15–50 €/mois",
-  },
-};
+export const DEPLOY_FEES = Object.fromEntries(
+  Object.entries(_deployFees).map(([key, val]) => {
+    const v = val as { id: string; label: string; description?: string; cost: number; complexity?: string; scope: string[]; headless?: { label: string; description?: string; cost: number; complexity?: string; scope: string[] } };
+    const entry: DeployFeeDef = {
+      id: key as DeployTarget,
+      label: v.label,
+      description: v.description ?? "",
+      cost: v.cost,
+      complexity: (v.complexity as DeployComplexity) ?? "MEDIUM",
+      scope: v.scope,
+    };
+    if (v.headless) {
+      entry.headless = {
+        label: v.headless.label,
+        description: v.headless.description ?? "",
+        cost: v.headless.cost,
+        complexity: (v.headless.complexity as DeployComplexity) ?? "HIGH",
+        scope: v.headless.scope,
+      };
+    }
+    return [key, entry];
+  }),
+) as Record<DeployTarget, DeployFeeDef>;
 
-export const HOSTING_COSTS_HEADLESS: Record<DeployTarget, { label: string; range: string }> = {
-  SHARED_HOSTING: {
-    label: "Split : mutualisé (WP) + Vercel (frontend)",
-    range: "3–30 €/mois",
-  },
-  DOCKER: {
-    label: "Unifié : VPS (WP + frontend)",
-    range: "15–50 €/mois",
-  },
-  VERCEL: {
-    label: "—",
-    range: "N/A",
-  },
-};
+/** Rétro-compatible : liste plate des frais headless dérivée de deployFees.*.headless */
+export const DEPLOY_FEES_HEADLESS: DeployFeeHeadless[] = Object.entries(DEPLOY_FEES)
+  .filter(([, v]) => v.headless != null)
+  .map(([key, v]) => ({
+    id: `headless_${key.toLowerCase()}`,
+    deployTarget: key as DeployTarget,
+    label: v.headless!.label,
+    cost: v.headless!.cost,
+  }));
 
-// -- Coût plateforme Saas (ex. Shopify) — à la charge du client
+export const HOSTING_COSTS = Object.fromEntries(
+  Object.entries(_hostingCosts).map(([key, val]) => {
+    const v = val as { label: string; description?: string; range: { min: number; max: number }; headless?: { label: string; description?: string; range: { min: number; max: number } } };
+    const entry: HostingCostDef = {
+      label: v.label,
+      description: v.description ?? "",
+      range: v.range,
+      rangeLabel: formatRange(v.range),
+    };
+    if (v.headless) {
+      entry.headless = {
+        label: v.headless.label,
+        description: v.headless.description ?? "",
+        range: v.headless.range,
+        rangeLabel: formatRange(v.headless.range),
+      };
+    }
+    return [key, entry];
+  }),
+) as Record<DeployTarget, HostingCostDef>;
 
-export const SAAS_COSTS: Record<string, { label: string; range: string }> = {
-  SHOPIFY: {
-    label: "Shopify",
-    range: "29–299 $/mois",
-  },
-  BIGCOMMERCE: {
-    label: "BigCommerce",
-    range: "29–299 $/mois",
-  },
-  WEBFLOW_COMMERCE: {
-    label: "Webflow Commerce",
-    range: "29–212 $/mois",
-  },
-};
+/** Rétro-compatible : Record headless dérivé de hostingCosts.*.headless */
+export const HOSTING_COSTS_HEADLESS: Record<DeployTarget, { label: string; range: string; description: string }> = Object.fromEntries(
+  Object.entries(HOSTING_COSTS).map(([key, v]) => [
+    key,
+    v.headless
+      ? { label: v.headless.label, range: v.headless.rangeLabel, description: v.headless.description }
+      : { label: "—", range: "N/A", description: "Non applicable" },
+  ]),
+) as Record<DeployTarget, { label: string; range: string; description: string }>;
+
+export const SAAS_COSTS: Record<string, { label: string; range: string }> = _saasCosts as Record<string, { label: string; range: string }>;
 
 // ── Labels ───────────────────────────────────────────────────────────
 
-export const DEPLOY_TARGET_LABELS: Record<DeployTarget, string> = {
-  DOCKER: "Docker / VPS",
-  VERCEL: "Vercel / Cloud",
-  SHARED_HOSTING: "Mutualisé",
-  
-};
+export const DEPLOY_TARGET_LABELS: Record<DeployTarget, string> = Object.fromEntries(
+  Object.entries(DEPLOY_FEES).map(([key, val]) => [key, val.label]),
+) as Record<DeployTarget, string>;
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
-/**
- * Résout le coût de mise en production selon la cible et le mode headless.
- */
 export function getDeployCost(deployTarget: DeployTarget, isHeadless: boolean): number {
-  if (isHeadless) {
-    const headlessFee = DEPLOY_FEES_HEADLESS.find((f) => f.deployTarget === deployTarget);
-    return headlessFee?.cost ?? DEPLOY_FEES[deployTarget].cost;
+  const fee = DEPLOY_FEES[deployTarget];
+  if (isHeadless && fee.headless) {
+    return fee.headless.cost;
   }
-  return DEPLOY_FEES[deployTarget].cost;
+  return fee.cost;
 }
 
-/**
- * Compatibilité stack ↔ déploiement.
- *
- * - Mutualisé : PHP uniquement → WordPress classique
- * - Vercel : Serverless → Next.js, Nuxt, Astro
- * - Docker : Tout fonctionne
- */
-export const STACK_DEPLOY_COMPAT: Record<string, DeployTarget[]> = {
-  WORDPRESS: ["DOCKER", "SHARED_HOSTING"],
-  NEXTJS: ["DOCKER", "VERCEL"],
-  NUXT: ["DOCKER", "VERCEL"],
-  ASTRO: ["DOCKER", "VERCEL"],
-};
+export const STACK_DEPLOY_COMPAT: Record<string, DeployTarget[]> = Object.fromEntries(
+  Object.entries(_stackDeployCompat).map(([key, val]) => [key, val as DeployTarget[]]),
+);
 
-/**
- * Résout les cibles de déploiement autorisées.
- */
 export function getAllowedDeployTargets(
   legacyTechStack: string,
   isHeadless: boolean,
@@ -176,5 +153,5 @@ export function getAllowedDeployTargets(
   if (legacyTechStack === "WORDPRESS" && isHeadless) {
     return ["SHARED_HOSTING", "DOCKER"];
   }
-  return STACK_DEPLOY_COMPAT[legacyTechStack] ?? ["DOCKER"];
+  return (STACK_DEPLOY_COMPAT[legacyTechStack] as DeployTarget[]) ?? ["DOCKER"];
 }

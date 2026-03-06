@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Catalogue canonique des modules framework réutilisables (hors CMS_NATIVE et hors wrappers plugin simples).",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "consumedBy": [
       "site-factory/src/lib/referential/spec/load.ts",
       "site-factory/src/lib/referential/engine/estimate-quote.ts"
@@ -14,29 +14,70 @@
       "moduleItemRequired": [
         "id",
         "label",
+        "description",
+        "details",
         "featureIds",
+        "targetCategory",
+        "minCategory",
+        "requalifiesTo",
+        "isStructurant",
         "pricingMode",
         "priceSetupMin",
         "priceSetupMax",
+        "priceMonthlyMin",
+        "priceMonthlyMax",
+        "jsMultiplier",
+        "splitPrestataireSetup",
+        "splitPrestataireMonthly",
+        "group",
+        "icon",
+        "wpNote",
+        "ciImpact",
         "economicGuardrails"
+      ],
+      "moduleItemOptional": [
+        "setupTiers",
+        "subscriptionTiers",
+        "classificationRationale",
+        "pluginInsufficiencyRationale"
       ],
       "idConvention": "module.*"
     }
   },
-  "version": "1.0.0",
+  "version": "2.0.0",
   "modules": [
     {
       "id": "module.B2B_COMMERCE",
       "label": "B2B commerce",
+      "description": "Module framework pour le commerce B2B : comptes entreprise avec hiérarchie, grilles tarifaires par groupe, workflow de commande avec validation et devis en ligne. Développement custom car les plugins B2B existants ne couvrent pas la gouvernance multi-CMS ni la réutilisabilité cross-projet.",
+      "details": [
+        "Tarifs pro",
+        "Process commande B2B",
+        "Comptes entreprises"
+      ],
       "featureIds": [
         "feature.B2B_COMMERCE"
       ],
       "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 1900,
       "priceSetupMax": 2900,
       "priceMonthlyMin": 39,
       "priceMonthlyMax": 149,
+      "jsMultiplier": 1.2,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "ShoppingCart",
+      "wpNote": "Module métier spécifique",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1,
+        "cb": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.7,
         "mustStayBelowBaseProjectPrice": true,
@@ -47,15 +88,36 @@
     {
       "id": "module.MARKETPLACE",
       "label": "Marketplace",
+      "description": "Module framework marketplace multi-vendeurs : onboarding vendeurs, gestion des commissions, split payment, catalogues par vendeur et tableau de bord vendeur. Architecture complexe nécessitant du dev custom car aucun plugin standard ne gère l'ensemble du flux de bout en bout.",
+      "details": [
+        "Onboarding vendeurs",
+        "Commissions",
+        "Flux marketplace"
+      ],
       "featureIds": [
         "feature.MARKETPLACE"
       ],
       "targetCategory": "CAT3",
+      "minCategory": "CAT3",
+      "requalifiesTo": "CAT3",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 2900,
       "priceSetupMax": 4900,
       "priceMonthlyMin": 79,
       "priceMonthlyMax": 220,
+      "jsMultiplier": 1.2,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "Store",
+      "wpNote": "Architecture marketplace avancée",
+      "ciImpact": {
+        "sa": 2,
+        "de": 2,
+        "cb": 2,
+        "sd": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.75,
         "mustStayBelowBaseProjectPrice": true,
@@ -66,15 +128,34 @@
     {
       "id": "module.LOGISTICS_ORCHESTRATION",
       "label": "Logistics orchestration",
+      "description": "Module d'orchestration logistique : routage intelligent des commandes vers les entrepôts, intégration multi-transporteurs, gestion des retours et suivi en temps réel. Dev custom car les solutions du marché sont trop couplées à un seul CMS.",
+      "details": [
+        "Règles de livraison",
+        "Orchestration transporteurs",
+        "Suivi flux"
+      ],
       "featureIds": [
         "feature.LOGISTICS_ORCHESTRATION"
       ],
       "targetCategory": "CAT3",
+      "minCategory": "CAT3",
+      "requalifiesTo": "CAT3",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 2600,
       "priceSetupMax": 4300,
       "priceMonthlyMin": 59,
       "priceMonthlyMax": 180,
+      "jsMultiplier": 1.2,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "Truck",
+      "wpNote": "Intégration logistique multi-canaux",
+      "ciImpact": {
+        "de": 2,
+        "cb": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.72,
         "mustStayBelowBaseProjectPrice": true,
@@ -85,15 +166,34 @@
     {
       "id": "module.ADVANCED_PRICING",
       "label": "Advanced pricing",
+      "description": "Module de tarification avancée : prix par segment client, remises par volume avec paliers, promotions temporaires et prix barrés dynamiques. Les plugins pricing existants ne couvrent pas durablement les besoins multi-CMS et la maintenance CI.",
+      "details": [
+        "Règles de prix",
+        "Segmentation",
+        "Calculs avancés"
+      ],
       "featureIds": [
         "feature.ADVANCED_PRICING"
       ],
       "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 1500,
       "priceSetupMax": 2600,
       "priceMonthlyMin": 29,
       "priceMonthlyMax": 120,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "metier",
+      "icon": "Calculator",
+      "wpNote": "Règles métier custom",
+      "ciImpact": {
+        "sa": 1,
+        "cb": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.62,
         "mustStayBelowBaseProjectPrice": true,
@@ -105,15 +205,70 @@
     {
       "id": "module.MARKETING_AUTOMATION",
       "label": "Marketing automation",
+      "description": "Module d'automation marketing : scénarios cross-canal (email, SMS, push), segmentation avancée avec scoring, relances panier abandonné et parcours post-achat. Dev custom car les intégrations natives des SaaS (Klaviyo, Brevo) ne suffisent pas pour une orchestration transversale multi-CMS.",
+      "details": [
+        "Automations",
+        "Segmentation",
+        "Tracking campagnes"
+      ],
       "featureIds": [
         "feature.MARKETING_AUTOMATION"
       ],
       "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 1300,
       "priceSetupMax": 2400,
       "priceMonthlyMin": 29,
       "priceMonthlyMax": 160,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "Target",
+      "wpNote": "Intégration CRM/marketing",
+      "ciImpact": {
+        "de": 1,
+        "cb": 1
+      },
+      "setupTiers": [
+        {
+          "id": "automation-standard",
+          "name": "Standard",
+          "description": "Workflows de base et segmentation simple",
+          "priceSetup": 1300,
+          "requalifiesTo": "CAT2"
+        },
+        {
+          "id": "automation-avance",
+          "name": "Avancé",
+          "description": "Scénarios cross-canal et scoring",
+          "priceSetup": 2400,
+          "requalifiesTo": "CAT3"
+        }
+      ],
+      "subscriptionTiers": [
+        {
+          "id": "automation-starter",
+          "name": "Starter",
+          "description": "Scénarios basiques",
+          "priceMonthly": 29
+        },
+        {
+          "id": "automation-business",
+          "name": "Business",
+          "description": "Segmentation enrichie",
+          "priceMonthly": 79
+        },
+        {
+          "id": "automation-premium",
+          "name": "Premium",
+          "description": "Orchestration multi-journeys",
+          "priceMonthly": 160
+        }
+      ],
       "economicGuardrails": {
         "maxBaseProjectShare": 0.58,
         "mustStayBelowBaseProjectPrice": true,
@@ -125,15 +280,35 @@
     {
       "id": "module.PRODUCT_RECOMMENDATION",
       "label": "Product recommendation",
+      "description": "Module de recommandation produit : algorithmes de cross-sell/upsell, suggestions contextuelles (page, historique, panier) et A/B testing des stratégies de reco. Les plugins existants sont trop couplés et non réutilisables entre projets.",
+      "details": [
+        "Cross-sell",
+        "Upsell",
+        "Recommandation contextuelle"
+      ],
       "featureIds": [
         "feature.PRODUCT_RECOMMENDATION"
       ],
       "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 1700,
       "priceSetupMax": 2900,
       "priceMonthlyMin": 35,
       "priceMonthlyMax": 140,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "Sparkles",
+      "wpNote": "Moteur de reco produit",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1,
+        "cb": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.66,
         "mustStayBelowBaseProjectPrice": true,
@@ -145,15 +320,34 @@
     {
       "id": "module.BUSINESS_ANALYTICS",
       "label": "Business analytics",
+      "description": "Module analytics métier : dashboards CA/marge/panier moyen, cohortes clients, rapports de conversion et exports automatisés. Dev custom car les outils standard (GA4) ne couvrent pas les KPI métier spécifiques.",
+      "details": [
+        "KPIs",
+        "Dashboards",
+        "Exports"
+      ],
       "featureIds": [
         "feature.BUSINESS_ANALYTICS"
       ],
       "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 1600,
       "priceSetupMax": 2800,
       "priceMonthlyMin": 39,
       "priceMonthlyMax": 150,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "metier",
+      "icon": "BarChart3",
+      "wpNote": "Reporting métier",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.64,
         "mustStayBelowBaseProjectPrice": true,
@@ -164,15 +358,35 @@
     {
       "id": "module.ERP_INTEGRATIONS",
       "label": "ERP integrations",
+      "description": "Module d'intégration ERP/SI : connecteurs bidirectionnels (SAP, Odoo, Sage…), synchronisation stocks/commandes/comptabilité avec gestion des erreurs et rejeux. Architecture middleware custom pour garantir la résilience des flux.",
+      "details": [
+        "Connecteurs ERP",
+        "Synchronisation",
+        "Résilience des flux"
+      ],
       "featureIds": [
         "feature.ERP_INTEGRATIONS"
       ],
       "targetCategory": "CAT3",
+      "minCategory": "CAT3",
+      "requalifiesTo": "CAT3",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 2800,
       "priceSetupMax": 5200,
       "priceMonthlyMin": 89,
       "priceMonthlyMax": 260,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "technique",
+      "icon": "Plug",
+      "wpNote": "Intégrations SI avancées",
+      "ciImpact": {
+        "de": 2,
+        "cb": 1,
+        "sd": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.78,
         "mustStayBelowBaseProjectPrice": true,
@@ -183,15 +397,34 @@
     {
       "id": "module.MULTI_CATALOG",
       "label": "Multi catalog",
+      "description": "Module multi-catalogues : gestion de catalogues distincts par marque, marché ou canal depuis une même instance, avec règles de visibilité et enrichissement par contexte.",
+      "details": [
+        "Catalogues distincts",
+        "Règles d'affichage",
+        "Pilotage catalogue"
+      ],
       "featureIds": [
         "feature.MULTI_CATALOG"
       ],
       "targetCategory": "CAT3",
+      "minCategory": "CAT3",
+      "requalifiesTo": "CAT3",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 2300,
       "priceSetupMax": 4100,
       "priceMonthlyMin": 49,
       "priceMonthlyMax": 190,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "Layers",
+      "wpNote": "Structuration multi-catalogues",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.7,
         "mustStayBelowBaseProjectPrice": true,
@@ -202,15 +435,35 @@
     {
       "id": "module.MULTI_STORE_ORCHESTRATION",
       "label": "Multi-store orchestration",
+      "description": "Module d'orchestration multi-boutiques : configuration partagée, stocks mutualisés, pricing par boutique et reporting consolidé. Nécessite du dev custom car aucun CMS ne gère nativement le pilotage centralisé de N boutiques.",
+      "details": [
+        "Multi-boutiques",
+        "Opérations centralisées",
+        "Synchronisation"
+      ],
       "featureIds": [
         "feature.MULTI_STORE_ORCHESTRATION"
       ],
       "targetCategory": "CAT3",
+      "minCategory": "CAT3",
+      "requalifiesTo": "CAT3",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 2400,
       "priceSetupMax": 4300,
       "priceMonthlyMin": 59,
       "priceMonthlyMax": 210,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "Layers3",
+      "wpNote": "Orchestration retail multi-store",
+      "ciImpact": {
+        "sa": 2,
+        "de": 2,
+        "cb": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.72,
         "mustStayBelowBaseProjectPrice": true,
@@ -221,15 +474,33 @@
     {
       "id": "module.CMS_AUGMENTATION",
       "label": "CMS augmentation",
+      "description": "Module d'augmentation CMS : blocs éditoriaux avancés, types de contenu sur mesure, workflows de validation et optimisation de la chaîne éditoriale. Étend les capacités natives du CMS sans dépendre de plugins tiers.",
+      "details": [
+        "Blocs avancés",
+        "Workflows éditoriaux",
+        "Optimisations contenu"
+      ],
       "featureIds": [
         "feature.CMS_AUGMENTATION"
       ],
       "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 1100,
       "priceSetupMax": 2100,
       "priceMonthlyMin": 19,
       "priceMonthlyMax": 90,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "BookOpen",
+      "wpNote": "Augmentation CMS orientée contenu",
+      "ciImpact": {
+        "sa": 1
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.52,
         "mustStayBelowBaseProjectPrice": true,
@@ -240,17 +511,610 @@
     {
       "id": "module.IDENTITY_SSO",
       "label": "Identity and SSO",
+      "description": "Module IAM/SSO : authentification unifiée (SAML, OAuth, OIDC), gestion des rôles et permissions, provisioning automatique et audit des accès. Dev custom car les plugins SSO existants ne couvrent pas la gouvernance multi-CMS ni l'intégration SI.",
+      "details": [
+        "SSO",
+        "Gestion rôles",
+        "Sécurisation accès"
+      ],
       "featureIds": [
         "feature.IDENTITY_SSO"
       ],
       "targetCategory": "CAT3",
+      "minCategory": "CAT3",
+      "requalifiesTo": "CAT3",
+      "isStructurant": true,
       "pricingMode": "RANGE",
       "priceSetupMin": 1900,
       "priceSetupMax": 3600,
       "priceMonthlyMin": 29,
       "priceMonthlyMax": 120,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "technique",
+      "icon": "Shield",
+      "wpNote": "IAM / SSO entreprise",
+      "ciImpact": {
+        "de": 1,
+        "sd": 2
+      },
       "economicGuardrails": {
         "maxBaseProjectShare": 0.68,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.BOOKING",
+      "moduleId": "module.BOOKING",
+      "label": "Booking",
+      "name": "Booking",
+      "description": "Module de réservation : prise de rendez-vous, tables et événements avec disponibilité, confirmations et annulations.",
+      "details": [
+        "Rendez-vous",
+        "Tables",
+        "Événements"
+      ],
+      "implementationStrategies": [
+        "Gestion des disponibilités",
+        "Notifications et confirmations",
+        "Synchronisation calendriers"
+      ],
+      "featureIds": [
+        "feature.BOOKING_APPOINTMENT",
+        "feature.BOOKING_TABLE",
+        "feature.BOOKING_EVENT"
+      ],
+      "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
+      "estimatedEffort": "M",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1600,
+      "priceSetupMax": 2600,
+      "priceMonthlyMin": 29,
+      "priceMonthlyMax": 120,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "metier",
+      "icon": "Calendar",
+      "wpNote": "Réservations multi-format",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1,
+        "cb": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.6,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.LEAD_FORMS",
+      "moduleId": "module.LEAD_FORMS",
+      "label": "Lead forms",
+      "name": "Lead forms",
+      "description": "Module de capture de leads : formulaires, routage, notifications et intégration CRM.",
+      "details": [
+        "Formulaires",
+        "Routage",
+        "Notifications"
+      ],
+      "implementationStrategies": [
+        "Form builder intégré",
+        "Anti-spam et validation",
+        "Webhooks/CRM"
+      ],
+      "featureIds": [
+        "feature.FORMS_CONTACT",
+        "feature.LEAD_ROUTING"
+      ],
+      "targetCategory": "CAT1",
+      "minCategory": "CAT1",
+      "requalifiesTo": "CAT1",
+      "isStructurant": true,
+      "estimatedEffort": "S",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 600,
+      "priceSetupMax": 1400,
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 49,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "FormInput",
+      "wpNote": "Génération de leads",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.45,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.NEWSLETTER",
+      "moduleId": "module.NEWSLETTER",
+      "label": "Newsletter",
+      "name": "Newsletter",
+      "description": "Module newsletter : gestion d'abonnements, double opt-in et synchronisation emailing.",
+      "details": [
+        "Opt-in",
+        "Segmentation de base",
+        "Sync emailing"
+      ],
+      "implementationStrategies": [
+        "Connecteurs SaaS",
+        "Double opt-in",
+        "Webhooks"
+      ],
+      "featureIds": [
+        "feature.NEWSLETTER_INTEGRATION"
+      ],
+      "targetCategory": "CAT1",
+      "minCategory": "CAT1",
+      "requalifiesTo": "CAT1",
+      "isStructurant": true,
+      "estimatedEffort": "S",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 700,
+      "priceSetupMax": 1500,
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 59,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "Mail",
+      "wpNote": "Connecteurs emailing",
+      "ciImpact": {
+        "de": 1,
+        "cb": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.45,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.REVIEWS",
+      "moduleId": "module.REVIEWS",
+      "label": "Reviews",
+      "name": "Reviews",
+      "description": "Module d'avis clients : collecte, modération et affichage avec SEO.",
+      "details": [
+        "Collecte",
+        "Modération",
+        "Rich snippets"
+      ],
+      "implementationStrategies": [
+        "Collecte post-achat",
+        "Widgets d'affichage",
+        "Synchronisation tiers"
+      ],
+      "featureIds": [
+        "feature.REVIEWS"
+      ],
+      "targetCategory": "CAT1",
+      "minCategory": "CAT1",
+      "requalifiesTo": "CAT1",
+      "isStructurant": true,
+      "estimatedEffort": "S",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 600,
+      "priceSetupMax": 1400,
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 49,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "Star",
+      "wpNote": "Avis produits",
+      "ciImpact": {
+        "sa": 1,
+        "cb": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.45,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.SEO_FOUNDATION",
+      "moduleId": "module.SEO_FOUNDATION",
+      "label": "SEO foundation",
+      "name": "SEO foundation",
+      "description": "Module SEO de base : meta, sitemaps, données structurées et SEO local.",
+      "details": [
+        "Meta & sitemaps",
+        "Données structurées",
+        "SEO local"
+      ],
+      "implementationStrategies": [
+        "Optimisation on-page",
+        "Schema.org",
+        "Monitoring SEO"
+      ],
+      "featureIds": [
+        "feature.SEO_BASIC",
+        "feature.SEO_LOCAL"
+      ],
+      "targetCategory": "CAT1",
+      "minCategory": "CAT1",
+      "requalifiesTo": "CAT1",
+      "isStructurant": true,
+      "estimatedEffort": "S",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 600,
+      "priceSetupMax": 1300,
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 39,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "Search",
+      "wpNote": "Fondations SEO",
+      "ciImpact": {
+        "sa": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.4,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.ANALYTICS_FOUNDATION",
+      "moduleId": "module.ANALYTICS_FOUNDATION",
+      "label": "Analytics foundation",
+      "name": "Analytics foundation",
+      "description": "Module analytics de base : GA4, tracking événements et dashboards essentiels.",
+      "details": [
+        "GA4",
+        "Events",
+        "Dashboards"
+      ],
+      "implementationStrategies": [
+        "Plan de marquage",
+        "Events clés",
+        "Tableaux de bord"
+      ],
+      "featureIds": [
+        "feature.ANALYTICS_BASIC",
+        "feature.EVENT_TRACKING"
+      ],
+      "targetCategory": "CAT1",
+      "minCategory": "CAT1",
+      "requalifiesTo": "CAT1",
+      "isStructurant": true,
+      "estimatedEffort": "S",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 700,
+      "priceSetupMax": 1500,
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 49,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "metier",
+      "icon": "LineChart",
+      "wpNote": "KPI essentiels",
+      "ciImpact": {
+        "de": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.45,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.COMPLIANCE_BASE",
+      "moduleId": "module.COMPLIANCE_BASE",
+      "label": "Compliance base",
+      "name": "Compliance base",
+      "description": "Module conformité : bannière cookies, pages légales et consentements.",
+      "details": [
+        "Consentement",
+        "Pages légales",
+        "Traçabilité"
+      ],
+      "implementationStrategies": [
+        "CMP/consentement",
+        "Templates juridiques",
+        "Journalisation"
+      ],
+      "featureIds": [
+        "feature.CONSENT_COOKIE_BANNER",
+        "feature.LEGAL_PAGES"
+      ],
+      "targetCategory": "CAT1",
+      "minCategory": "CAT1",
+      "requalifiesTo": "CAT1",
+      "isStructurant": true,
+      "estimatedEffort": "S",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 500,
+      "priceSetupMax": 1200,
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 39,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "technique",
+      "icon": "ShieldCheck",
+      "wpNote": "RGPD de base",
+      "ciImpact": {
+        "sd": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.4,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.PAYMENTS_LIGHT",
+      "moduleId": "module.PAYMENTS_LIGHT",
+      "label": "Payments light",
+      "name": "Payments light",
+      "description": "Module de paiement léger : intégration CB/wallet, 3DS et webhooks.",
+      "details": [
+        "PSP",
+        "3DS",
+        "Webhooks"
+      ],
+      "implementationStrategies": [
+        "Intégration PSP",
+        "Sécurisation paiements",
+        "Gestion erreurs"
+      ],
+      "featureIds": [
+        "feature.PAYMENTS_ONLINE"
+      ],
+      "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
+      "estimatedEffort": "M",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1200,
+      "priceSetupMax": 2200,
+      "priceMonthlyMin": 19,
+      "priceMonthlyMax": 79,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "CreditCard",
+      "wpNote": "Paiements essentiels",
+      "ciImpact": {
+        "de": 1,
+        "cb": 1,
+        "sd": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.55,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.ECOMMERCE_BASE",
+      "moduleId": "module.ECOMMERCE_BASE",
+      "label": "E-commerce base",
+      "name": "E-commerce base",
+      "description": "Module socle e-commerce : catalogue, checkout, taxes, livraison et comptes clients.",
+      "details": [
+        "Catalogue",
+        "Checkout",
+        "Taxes & livraison"
+      ],
+      "implementationStrategies": [
+        "Workflow e-commerce",
+        "Gestion taxes",
+        "Livraison"
+      ],
+      "featureIds": [
+        "feature.PRODUCT_CATALOG",
+        "feature.CHECKOUT",
+        "feature.TAX_MANAGEMENT",
+        "feature.SHIPPING_BASIC",
+        "feature.CUSTOMER_ACCOUNTS",
+        "feature.COUPONS"
+      ],
+      "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
+      "estimatedEffort": "M",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1800,
+      "priceSetupMax": 3200,
+      "priceMonthlyMin": 39,
+      "priceMonthlyMax": 129,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 70,
+      "splitPrestataireMonthly": 70,
+      "group": "ecommerce",
+      "icon": "ShoppingBag",
+      "wpNote": "Socle boutique",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1,
+        "cb": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.65,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.CATALOG_SHOWCASE",
+      "moduleId": "module.CATALOG_SHOWCASE",
+      "label": "Catalog showcase",
+      "name": "Catalog showcase",
+      "description": "Module de catalogue vitrine sans achat : fiches, filtres simples et présentation.",
+      "details": [
+        "Fiches",
+        "Filtres",
+        "Présentation"
+      ],
+      "implementationStrategies": [
+        "Types de contenu",
+        "Listing optimisé",
+        "SEO catalogue"
+      ],
+      "featureIds": [
+        "feature.CATALOG_NON_COMMERCE"
+      ],
+      "targetCategory": "CAT1",
+      "minCategory": "CAT1",
+      "requalifiesTo": "CAT1",
+      "isStructurant": true,
+      "estimatedEffort": "S",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 600,
+      "priceSetupMax": 1300,
+      "priceMonthlyMin": 9,
+      "priceMonthlyMax": 39,
+      "jsMultiplier": 1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "LayoutGrid",
+      "wpNote": "Catalogue non-commerce",
+      "ciImpact": {
+        "sa": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.4,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.MULTILANGUAGE",
+      "moduleId": "module.MULTILANGUAGE",
+      "label": "Multilanguage",
+      "name": "Multilanguage",
+      "description": "Module multilingue : gestion des versions, hreflang et fallback.",
+      "details": [
+        "Traductions",
+        "Hreflang",
+        "Fallback"
+      ],
+      "implementationStrategies": [
+        "Routing i18n",
+        "Workflow trad",
+        "Fallback automatique"
+      ],
+      "featureIds": [
+        "feature.I18N_MULTILANGUAGE"
+      ],
+      "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
+      "estimatedEffort": "M",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1100,
+      "priceSetupMax": 2100,
+      "priceMonthlyMin": 19,
+      "priceMonthlyMax": 79,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "Languages",
+      "wpNote": "Contenus multilingues",
+      "ciImpact": {
+        "sa": 1,
+        "de": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.55,
+        "mustStayBelowBaseProjectPrice": true,
+        "nonUxThemeFeature": true
+      },
+      "classificationRationale": "Module framework réutilisable à forte valeur métier transversale.",
+      "pluginInsufficiencyRationale": "Les plugins existants ne couvrent pas durablement les besoins multi-CMS, la réutilisabilité et la gouvernance CI/maintenance."
+    },
+    {
+      "id": "module.SEARCH",
+      "moduleId": "module.SEARCH",
+      "label": "Search",
+      "name": "Search",
+      "description": "Module de recherche : indexation, recherche interne et facettes.",
+      "details": [
+        "Indexation",
+        "Recherche interne",
+        "Facettes"
+      ],
+      "implementationStrategies": [
+        "Search API",
+        "Index optimisé",
+        "Réglage pertinence"
+      ],
+      "featureIds": [
+        "feature.SEARCH_BASIC",
+        "feature.SEARCH_FACETS"
+      ],
+      "targetCategory": "CAT2",
+      "minCategory": "CAT2",
+      "requalifiesTo": "CAT2",
+      "isStructurant": true,
+      "estimatedEffort": "M",
+      "pricingMode": "RANGE",
+      "priceSetupMin": 1200,
+      "priceSetupMax": 2300,
+      "priceMonthlyMin": 19,
+      "priceMonthlyMax": 99,
+      "jsMultiplier": 1.1,
+      "splitPrestataireSetup": 60,
+      "splitPrestataireMonthly": 70,
+      "group": "contenu",
+      "icon": "Search",
+      "wpNote": "Recherche interne",
+      "ciImpact": {
+        "de": 1
+      },
+      "economicGuardrails": {
+        "maxBaseProjectShare": 0.55,
         "mustStayBelowBaseProjectPrice": true,
         "nonUxThemeFeature": true
       },

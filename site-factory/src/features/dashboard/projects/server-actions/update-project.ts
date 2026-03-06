@@ -22,6 +22,7 @@ import {
 } from "@/lib/qualification-runtime";
 import {
   DEFAULT_CONSTRAINTS,
+  type Category as RuntimeCategory,
   type DeployTarget,
   estimateQuoteFromSpec,
   normalizeModuleIds,
@@ -37,6 +38,12 @@ import {
 } from "@/lib/projects";
 import { generateProjectWpThemeAssets } from "@/lib/projects";
 import { resolveCmsIdFromImplementation } from "@/lib/project-choices";
+import {
+  normalizeTaxonomySignalForProjectType,
+  readPersistedTaxonomySignalDualSource,
+  resolveTaxonomySignalFromRuntimeContext,
+  serializeQualificationCiAxesJson,
+} from "@/lib/taxonomy";
 
 /** ───────────────────────────────────────────────────────────────
  * Types
@@ -145,6 +152,7 @@ function buildRawFromFormData(formData: FormData) {
   return {
     name: formData.get("name"),
     type: formData.get("type"),
+    taxonomySignal: getStr(formData, "taxonomySignal"),
     status: formData.get("status"),
     description: getStr(formData, "description"),
     domain: getStrOrNull(formData, "domain"),
@@ -303,8 +311,35 @@ export async function updateProjectAction(
     constraints.commerceModel = null;
   }
 
+  const explicitTaxonomySignal = normalizeTaxonomySignalForProjectType(
+    parsed.data.type,
+    parsed.data.taxonomySignal ?? null,
+  );
+  const persistedTaxonomySignal = readPersistedTaxonomySignalDualSource({
+    projectType: parsed.data.type,
+    taxonomySignal: existing.qualification?.taxonomySignal ?? null,
+    ciAxesJson: existing.qualification?.ciAxesJson ?? null,
+  });
+  const stableTaxonomySignal = explicitTaxonomySignal ?? persistedTaxonomySignal;
+  const runtimeTaxonomySignal =
+    stableTaxonomySignal ??
+    resolveTaxonomySignalFromRuntimeContext({
+      projectType: parsed.data.type,
+      category: (parsed.data.category ??
+        existing.category ??
+        null) as RuntimeCategory | null,
+      selectedModulesCount: selectedModuleIds.length,
+      trafficLevel: constraints.trafficLevel,
+      needsEditing: constraints.needsEditing,
+      dataSensitivity: constraints.dataSensitivity,
+      scalabilityLevel: constraints.scalabilityLevel,
+      backendFamily: constraints.backendFamily ?? null,
+      backendOpsHeavy: constraints.backendOpsHeavy ?? null,
+    }).signal;
+
   const offerInput = {
     projectType: parsed.data.type as ProjectType,
+    taxonomySignal: runtimeTaxonomySignal,
     projectFamily: parsed.data.projectFamily ?? existing.projectFamily ?? null,
     needsEditing: constraints.needsEditing,
     editingFrequency: constraints.editingFrequency,
@@ -357,9 +392,11 @@ export async function updateProjectAction(
     qualification.maintenance ?? parsed.data.qualification?.maintenanceLevel ?? null;
   const ciScore = qualification.ci?.score ?? rawQualification.ciScore ?? null;
   const ciCategory = qualification.ci?.category ?? rawQualification.ciCategory ?? null;
-  const ciAxesJson = qualification.ci
-    ? JSON.stringify(qualification.ci.axes)
-    : rawQualification.ciAxesJson ?? null;
+  const ciAxesJson = serializeQualificationCiAxesJson({
+    taxonomySignal: stableTaxonomySignal,
+    ciAxes: qualification.ci?.axes,
+    previousCiAxesJson: rawQualification.ciAxesJson ?? null,
+  });
   const normalizedModules =
     activeModuleIds.length > 0 ? JSON.stringify(activeModuleIds) : null;
   const resolvedProjectImplementationId =
@@ -465,6 +502,7 @@ export async function updateProjectAction(
           ciScore: ciScore,
           ciCategory: ciCategory,
           ciAxesJson: ciAxesJson,
+          taxonomySignal: stableTaxonomySignal,
         },
         update: {
           modules: normalizedModules,
@@ -483,6 +521,7 @@ export async function updateProjectAction(
           ciScore: ciScore,
           ciCategory: ciCategory,
           ciAxesJson: ciAxesJson,
+          taxonomySignal: stableTaxonomySignal,
         },
       });
 

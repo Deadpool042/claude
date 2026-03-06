@@ -13,26 +13,26 @@ import {
   Search,
   Star,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
+import { Input } from "@/shared/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/shared/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { Textarea } from "@/shared/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { EmptyState } from "@/components/shell/empty-state";
+} from "@/shared/components/ui/tooltip";
+import { EmptyState } from "@/shared/components/shell/empty-state";
 import { MarkdownPreview } from "./MarkdownPreview";
 
 interface DocMeta {
@@ -71,43 +71,31 @@ interface DocsClientProps {
 
 const CATEGORY_ORDER = [
   "ROOT",
-  "01-Socle-Technique",
-  "02-Complexity-Index",
-  "03-Maintenance",
-  "04-Modules",
-  "05-Bonnes-Pratiques",
-  "06-Integration-Technologie",
-  "07-Exemples",
-  "08-Commercial",
-  "09-Interne",
+  "produit",
+  "qualification",
+  "recommandation",
+  "technique",
+  "_spec",
+  "interne",
 ];
 
 const CATEGORY_STYLES: Record<string, string> = {
   ROOT: "bg-primary/10 text-primary border-primary/20",
-  "01-Socle-Technique": "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
-  "02-Complexity-Index": "bg-indigo-500/10 text-indigo-300 border-indigo-500/30",
-  "03-Maintenance": "bg-amber-500/10 text-amber-300 border-amber-500/30",
-  "04-Modules": "bg-cyan-500/10 text-cyan-300 border-cyan-500/30",
-  "05-Bonnes-Pratiques": "bg-lime-500/10 text-lime-300 border-lime-500/30",
-  "06-Integration-Technologie": "bg-fuchsia-500/10 text-fuchsia-300 border-fuchsia-500/30",
-  "07-Exemples": "bg-teal-500/10 text-teal-300 border-teal-500/30",
-  "08-Commercial": "bg-sky-500/10 text-sky-300 border-sky-500/30",
-  "09-Interne": "bg-rose-500/10 text-rose-300 border-rose-500/30",
+  produit: "bg-sky-500/10 text-sky-300 border-sky-500/30",
+  qualification: "bg-amber-500/10 text-amber-300 border-amber-500/30",
+  recommandation: "bg-cyan-500/10 text-cyan-300 border-cyan-500/30",
+  technique: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
+  _spec: "bg-slate-500/10 text-slate-300 border-slate-500/30",
+  interne: "bg-rose-500/10 text-rose-300 border-rose-500/30",
 };
 
 const CORE_DOC_CATEGORIES = new Set([
-  "01-Socle-Technique",
-  "02-Complexity-Index",
-  "03-Maintenance",
-  "05-Bonnes-Pratiques",
+  "produit",
+  "qualification",
+  "recommandation",
 ]);
 
-const STACK_DOC_CATEGORIES = new Set([
-  "06-Integration-Technologie",
-  "07-Exemples",
-]);
-
-const INTERNAL_DOC_CATEGORIES = new Set(["09-Interne"]);
+const INTERNAL_DOC_CATEGORIES = new Set(["interne"]);
 
 function encodeDocId(id: string): string {
   return id
@@ -415,20 +403,28 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
         return projectDocIds.has(doc.id);
       }
 
-      if (doc.categoryKey === "04-Modules") {
+      if (doc.id.startsWith("technique/modules/")) {
         if (doc.moduleId) return relevantModules.has(doc.moduleId);
         return selectedProject.modules.length > 0
           ? doc.id.endsWith("modules.md")
           : false;
       }
 
-      if (INTERNAL_DOC_CATEGORIES.has(doc.categoryKey)) return false;
+      if (INTERNAL_DOC_CATEGORIES.has(doc.categoryKey) || doc.categoryKey === "_spec") {
+        return false;
+      }
 
-      if (STACK_DOC_CATEGORIES.has(doc.categoryKey)) {
+      if (
+        doc.id.startsWith("technique/socle/") &&
+        doc.id !== "technique/socle/README.md" &&
+        doc.id !== "technique/socle/socle-technique-canonique.md"
+      ) {
         return Boolean(selectedProject.techStack);
       }
 
       if (CORE_DOC_CATEGORIES.has(doc.categoryKey)) return true;
+
+      if (doc.categoryKey === "technique") return true;
 
       return true;
     },

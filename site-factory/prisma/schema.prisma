@@ -218,6 +218,13 @@ enum BackendFamily {
   CUSTOM_API
 }
 
+enum TaxonomyDisambiguationSignal {
+  SITE_VITRINE
+  SITE_BUSINESS
+  MVP_SAAS
+  APP_METIER
+}
+
 model Project {
   id           String        @id @default(cuid())
   clientId     String
@@ -407,6 +414,7 @@ model ProjectQualification {
   ciScore     Float?           @map("ci_score")
   ciCategory  ProjectCategory? @map("ci_category")
   ciAxesJson  String?          @map("ci_axes_json") @db.Text
+  taxonomySignal TaxonomyDisambiguationSignal? @map("taxonomy_signal")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

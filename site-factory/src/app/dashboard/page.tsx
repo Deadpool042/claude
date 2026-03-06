@@ -1,22 +1,24 @@
 import Link from "next/link";
 import { Users, FolderKanban, Plus } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { PageLayout } from "@/components/shell/page-layout";
-import { DataPanel } from "@/components/shell/data-panel";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { PageLayout } from "@/shared/components/shell/page-layout";
+import { DataPanel } from "@/shared/components/shell/data-panel";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 import {
   PROJECT_TYPE_LABELS,
   PROJECT_STATUS_LABELS,
 } from "@/lib/validators";
 import { RunningProjects } from "@/features/dashboard/home";
+
+export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const [clientCount, projectCount, recentProjects] = await Promise.all([

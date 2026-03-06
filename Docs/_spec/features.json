@@ -15,7 +15,8 @@
         "id",
         "label",
         "domain",
-        "uiOnly"
+        "uiOnly",
+        "description"
       ],
       "idConvention": "feature.*"
     }
@@ -27,217 +28,386 @@
       "label": "Pages CMS",
       "domain": "CONTENT",
       "uiOnly": false,
-      "type": "CMS"
+      "type": "CMS",
+      "description": "Création et gestion de pages de contenu (ex: page d'accueil, à propos, contact).",
+      "dependencies": [],
+      "tags": []
     },
     {
       "id": "feature.BLOG",
       "label": "Blog",
       "domain": "CONTENT",
       "uiOnly": false,
-      "type": "CMS"
+      "type": "CMS",
+      "description": "Système de publication d'articles avec catégories, tags, archives et flux RSS."
     },
     {
       "id": "feature.PRODUCT_CATALOG",
       "label": "Catalogue produits",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Gestion du catalogue produits : fiches, variantes, images, catégories et filtres de recherche."
     },
     {
       "id": "feature.CHECKOUT",
       "label": "Checkout",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Tunnel de commande complet : panier, adresse, paiement et confirmation."
     },
     {
       "id": "feature.TAX_MANAGEMENT",
       "label": "Gestion des taxes",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Calcul et application automatique des taxes (TVA, sales tax) selon la localisation du client."
     },
     {
       "id": "feature.SHIPPING_BASIC",
       "label": "Livraison basique",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Options de livraison simples : tarif fixe, gratuit au-dessus d'un seuil, retrait en magasin."
     },
     {
       "id": "feature.CUSTOMER_ACCOUNTS",
       "label": "Comptes clients",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Espace client avec historique de commandes, adresses enregistrées et gestion du profil."
     },
     {
       "id": "feature.COUPONS",
       "label": "Coupons",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Codes de réduction : pourcentage, montant fixe, livraison offerte, avec conditions d'application."
     },
     {
       "id": "feature.ANALYTICS_BASIC",
       "label": "Analytics basique",
       "domain": "ANALYTICS",
       "uiOnly": false,
-      "type": "ANALYTICS"
+      "type": "ANALYTICS",
+      "description": "Suivi des visites, pages vues, taux de rebond et conversions via Google Analytics ou équivalent."
     },
     {
       "id": "feature.NEWSLETTER_INTEGRATION",
       "label": "Newsletter",
       "domain": "MARKETING",
       "uiOnly": false,
-      "type": "MARKETING"
+      "type": "MARKETING",
+      "description": "Formulaire d'inscription et synchronisation des contacts avec un service d'emailing (Mailchimp, Brevo…)."
     },
     {
       "id": "feature.SEO_BASIC",
       "label": "SEO basique",
       "domain": "MARKETING",
       "uiOnly": false,
-      "type": "MARKETING"
+      "type": "MARKETING",
+      "description": "Optimisation SEO on-page : balises meta, sitemap XML, URLs canoniques et données structurées."
     },
     {
       "id": "feature.REVIEWS",
       "label": "Avis clients",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Système de notation et d'avis clients sur les produits avec modération et affichage public."
     },
     {
       "id": "feature.WISHLIST",
       "label": "Wishlist",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Liste de souhaits permettant aux clients de sauvegarder des produits pour un achat ultérieur."
     },
     {
       "id": "feature.MULTI_CURRENCY",
       "label": "Multi-devise",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Affichage des prix et paiement dans plusieurs devises avec conversion automatique ou taux manuels."
     },
     {
       "id": "feature.SHIPPING_RULES_BASIC",
       "label": "Règles de livraison basiques",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Règles conditionnelles de livraison : par poids, zone géographique ou montant du panier."
     },
     {
       "id": "feature.ADVANCED_PRICING",
       "label": "Tarification avancée",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Prix par groupe client, remises par volume, prix barrés et promotions temporaires."
     },
     {
       "id": "feature.B2B_COMMERCE",
       "label": "Commerce B2B",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Fonctions B2B : demande de devis, catalogue restreint, commandes en gros et conditions de paiement."
     },
     {
       "id": "feature.MARKETPLACE",
       "label": "Marketplace",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Place de marché multi-vendeurs avec gestion des boutiques, commissions et split payment."
     },
     {
       "id": "feature.LOGISTICS_ORCHESTRATION",
       "label": "Orchestration logistique",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Orchestration des flux logistiques : multi-entrepôts, routage des commandes et gestion des retours."
     },
     {
       "id": "feature.MARKETING_AUTOMATION",
       "label": "Marketing automation",
       "domain": "MARKETING",
       "uiOnly": false,
-      "type": "MARKETING"
+      "type": "MARKETING",
+      "description": "Scénarios automatisés : emails de panier abandonné, relances post-achat et segmentation client."
     },
     {
       "id": "feature.PRODUCT_RECOMMENDATION",
       "label": "Recommandation produit",
       "domain": "ANALYTICS",
       "uiOnly": false,
-      "type": "ANALYTICS"
+      "type": "ANALYTICS",
+      "description": "Suggestions de produits personnalisées basées sur l'historique de navigation et les achats."
     },
     {
       "id": "feature.BUSINESS_ANALYTICS",
       "label": "Analytics métier",
       "domain": "ANALYTICS",
       "uiOnly": false,
-      "type": "ANALYTICS"
+      "type": "ANALYTICS",
+      "description": "Tableaux de bord métier : CA, marge, panier moyen, taux de conversion et cohortes clients."
     },
     {
       "id": "feature.ERP_INTEGRATIONS",
       "label": "Intégrations ERP",
       "domain": "INTEGRATION",
       "uiOnly": false,
-      "type": "CMS"
+      "type": "CMS",
+      "description": "Connecteurs ERP (SAP, Odoo, Sage…) pour synchroniser stocks, commandes et données comptables."
     },
     {
       "id": "feature.MULTI_CATALOG",
       "label": "Multi-catalogue",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Gestion de catalogues distincts par marque, marché ou canal de vente depuis une même instance."
     },
     {
       "id": "feature.MULTI_STORE_ORCHESTRATION",
       "label": "Orchestration multi-store",
       "domain": "ECOMMERCE",
       "uiOnly": false,
-      "type": "COMMERCE"
+      "type": "COMMERCE",
+      "description": "Pilotage centralisé de plusieurs boutiques : configuration partagée, stocks mutualisés et reporting consolidé."
     },
     {
       "id": "feature.CMS_AUGMENTATION",
       "label": "Augmentation CMS",
       "domain": "CONTENT",
       "uiOnly": false,
-      "type": "CMS"
+      "type": "CMS",
+      "description": "Extensions CMS avancées : champs personnalisés, types de contenu sur mesure et blocs réutilisables."
     },
     {
       "id": "feature.IDENTITY_SSO",
       "label": "Identity & SSO",
       "domain": "SECURITY",
       "uiOnly": false,
-      "type": "CMS"
+      "type": "CMS",
+      "description": "Authentification unifiée (SSO) via SAML, OAuth ou OpenID Connect avec gestion des rôles."
+    },
+    {
+      "id": "feature.BOOKING_APPOINTMENT",
+      "label": "Prise de rendez-vous",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE",
+      "dependencies": [],
+      "description": "Réservation de créneaux pour services avec confirmations et annulations."
+    },
+    {
+      "id": "feature.BOOKING_TABLE",
+      "label": "Réservation de table",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE",
+      "dependencies": [],
+      "description": "Gestion des réservations de tables avec disponibilités, confirmations et no-show."
+    },
+    {
+      "id": "feature.BOOKING_EVENT",
+      "label": "Réservation d'événement",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE",
+      "dependencies": [],
+      "description": "Inscriptions ou billetterie d'événements avec quotas et confirmations."
+    },
+    {
+      "id": "feature.FORMS_CONTACT",
+      "label": "Formulaire de contact",
+      "domain": "MARKETING",
+      "uiOnly": false,
+      "type": "MARKETING",
+      "dependencies": [],
+      "description": "Formulaires de contact avec notifications, anti-spam et stockage des demandes."
+    },
+    {
+      "id": "feature.LEAD_ROUTING",
+      "label": "Routage des leads",
+      "domain": "MARKETING",
+      "uiOnly": false,
+      "type": "MARKETING",
+      "dependencies": [
+        "feature.FORMS_CONTACT"
+      ],
+      "description": "Distribution automatique des demandes vers les bons destinataires (CRM, équipe, pipeline)."
+    },
+    {
+      "id": "feature.PAYMENTS_ONLINE",
+      "label": "Paiements en ligne",
+      "domain": "ECOMMERCE",
+      "uiOnly": false,
+      "type": "COMMERCE",
+      "dependencies": [
+        "feature.CHECKOUT"
+      ],
+      "description": "Encaissement en ligne via prestataires de paiement (CB, wallet, virement) avec sécurisation."
+    },
+    {
+      "id": "feature.CONSENT_COOKIE_BANNER",
+      "label": "Bannière cookies",
+      "domain": "SECURITY",
+      "uiOnly": false,
+      "type": "CMS",
+      "dependencies": [],
+      "description": "Bannière de consentement avec gestion des cookies et préférences utilisateur."
+    },
+    {
+      "id": "feature.LEGAL_PAGES",
+      "label": "Pages légales",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS",
+      "dependencies": [],
+      "description": "Pages obligatoires (mentions légales, CGU/CGV, politique de confidentialité)."
+    },
+    {
+      "id": "feature.SEO_LOCAL",
+      "label": "SEO local",
+      "domain": "MARKETING",
+      "uiOnly": false,
+      "type": "MARKETING",
+      "dependencies": [
+        "feature.SEO_BASIC"
+      ],
+      "description": "Optimisation SEO locale : NAP, données structurées et pages géolocalisées."
+    },
+    {
+      "id": "feature.EVENT_TRACKING",
+      "label": "Tracking d'événements",
+      "domain": "ANALYTICS",
+      "uiOnly": false,
+      "type": "ANALYTICS",
+      "dependencies": [
+        "feature.ANALYTICS_BASIC"
+      ],
+      "description": "Suivi d'événements clés (clics, formulaires, parcours) via tags ou pixels."
+    },
+    {
+      "id": "feature.I18N_MULTILANGUAGE",
+      "label": "Multilingue",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS",
+      "dependencies": [],
+      "description": "Gestion de contenus multilingues avec sélecteur de langue et fallback."
+    },
+    {
+      "id": "feature.SEARCH_BASIC",
+      "label": "Recherche interne",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS",
+      "dependencies": [],
+      "description": "Recherche de contenus ou produits avec indexation et pertinence basique."
+    },
+    {
+      "id": "feature.SEARCH_FACETS",
+      "label": "Recherche à facettes",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS",
+      "dependencies": [
+        "feature.SEARCH_BASIC"
+      ],
+      "description": "Filtres avancés (facettes) pour affiner les résultats de recherche."
+    },
+    {
+      "id": "feature.CATALOG_NON_COMMERCE",
+      "label": "Catalogue non-commerce",
+      "domain": "CONTENT",
+      "uiOnly": false,
+      "type": "CMS",
+      "dependencies": [],
+      "description": "Catalogue d'offres ou références sans logique d'achat (portfolio, services, fiches)."
     },
     {
       "id": "feature.DARK_MODE",
       "label": "Dark mode",
       "domain": "THEME",
       "uiOnly": true,
-      "type": "UX"
+      "type": "UX",
+      "description": "Basculement automatique ou manuel entre thème clair et sombre selon les préférences utilisateur."
     },
     {
       "id": "feature.THEME_COLORS",
       "label": "Couleurs de thème",
       "domain": "THEME",
       "uiOnly": true,
-      "type": "UX"
+      "type": "UX",
+      "description": "Palette de couleurs personnalisable : couleurs primaire, secondaire, accent et arrière-plans."
     },
     {
       "id": "feature.UI_ANIMATIONS",
       "label": "Animations UI",
       "domain": "THEME",
       "uiOnly": true,
-      "type": "UX"
+      "type": "UX",
+      "description": "Micro-interactions et transitions animées (scroll, hover, apparition) pour enrichir l'expérience."
     },
     {
       "id": "feature.DESIGN_VARIATIONS",
       "label": "Variantes de design",
       "domain": "THEME",
       "uiOnly": true,
-      "type": "UX"
+      "type": "UX",
+      "description": "Déclinaisons visuelles du thème : layouts alternatifs, styles de header/footer et variantes de grille."
     }
   ]
 }

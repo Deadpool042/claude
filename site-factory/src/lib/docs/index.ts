@@ -17,38 +17,69 @@ interface DocContent extends DocMeta {
 
 const DOCS_ROOT = process.env.DOCS_ROOT ?? path.join(process.cwd(), "..", "Docs");
 
+const LEGACY_DOC_ID_MAP: Record<string, string> = {
+  "00-vision-produit.md": "produit/vision-produit.md",
+  "01-positionnement-offres.md": "produit/positionnement-offres.md",
+  "02-taxonomie-projets.md": "produit/taxonomie-projets.md",
+  "03-logique-de-qualification.md": "qualification/logique-de-qualification.md",
+  "04-glossaire-et-mapping-taxonomique.md": "produit/glossaire-et-mapping-taxonomique.md",
+  "01-framework-overview.md": "technique/architecture-spec-first.md",
+  "02-supported-cms.md": "recommandation/cms-supportes.md",
+  "03-feature-classification.md": "recommandation/classification-des-capacites.md",
+  "04-cms-capability-matrix.md": "recommandation/matrice-capacites-cms.md",
+  "05-framework-modules.md": "technique/catalogue-modules-framework.md",
+  "06-plugin-integrations.md": "technique/integrations-plugins-et-apps.md",
+  "07-custom-apps.md": "technique/mode-custom-app.md",
+  "08-decision-engine.md": "recommandation/moteur-de-decision.md",
+  "_prompts/README.md": "interne/prompts/README.md",
+} as const;
+
+const LEGACY_DOC_PREFIX_REWRITES = [
+  ["09-Interne/", "interne/"],
+  ["90-interne/", "interne/"],
+  ["10-socle-technique/", "technique/socle/"],
+] as const;
+
 const CATEGORY_LABELS: Record<string, string> = {
   ROOT: "Documentation",
-  "01-Socle-Technique": "Socle technique",
-  "02-Complexity-Index": "Complexity Index",
-  "03-Maintenance": "Maintenance",
-  "04-Modules": "Modules",
-  "05-Bonnes-Pratiques": "Bonnes pratiques",
-  "06-Integration-Technologie": "Integration & techno",
-  "07-Exemples": "Exemples",
-  "08-Commercial": "Commercial",
-  "09-Interne": "Interne",
+  produit: "Produit",
+  qualification: "Qualification",
+  recommandation: "Recommandation",
+  technique: "Technique",
+  interne: "Interne",
+  _spec: "_spec",
 };
 
 const CATEGORY_TAGS: Record<string, string> = {
   ROOT: "docs",
-  "01-Socle-Technique": "socle",
-  "02-Complexity-Index": "complexity",
-  "03-Maintenance": "maintenance",
-  "04-Modules": "modules",
-  "05-Bonnes-Pratiques": "bonnes-pratiques",
-  "06-Integration-Technologie": "integration",
-  "07-Exemples": "exemples",
-  "08-Commercial": "commercial",
-  "09-Interne": "interne",
+  produit: "produit",
+  qualification: "qualification",
+  recommandation: "recommandation",
+  technique: "technique",
+  interne: "interne",
+  _spec: "spec",
 };
 
-function normalizeId(id: string): string {
+function sanitizeDocId(id: string): string {
   return id.replaceAll("\\", "/").replace(/^\/+/, "");
 }
 
+export function normalizeDocId(id: string): string {
+  const safeId = sanitizeDocId(id);
+  const directMatch = LEGACY_DOC_ID_MAP[safeId];
+  if (directMatch) return directMatch;
+
+  for (const [from, to] of LEGACY_DOC_PREFIX_REWRITES) {
+    if (safeId.startsWith(from)) {
+      return `${to}${safeId.slice(from.length)}`;
+    }
+  }
+
+  return safeId;
+}
+
 function resolveDocPath(id: string): string {
-  const safeId = normalizeId(id);
+  const safeId = normalizeDocId(id);
   const resolved = path.resolve(DOCS_ROOT, safeId);
   if (resolved !== DOCS_ROOT && !resolved.startsWith(`${DOCS_ROOT}${path.sep}`)) {
     throw new Error("Invalid doc path");
@@ -77,12 +108,13 @@ function titleFromContent(content: string, fallback: string): string {
 }
 
 function toDocMeta(id: string, content: string, updatedAt: Date): DocMeta {
-  const segments = id.split("/");
+  const canonicalId = normalizeDocId(id);
+  const segments = canonicalId.split("/");
   const categoryKey = segments.length > 1 ? segments[0] : "ROOT";
-  const filename = segments[segments.length - 1] ?? id;
+  const filename = segments[segments.length - 1] ?? canonicalId;
   const title = titleFromContent(content, filename.replace(/\.md$/, ""));
   const moduleId =
-    categoryKey === "04-Modules" && filename.startsWith("module-")
+    canonicalId.startsWith("technique/modules/") && filename.startsWith("module-")
       ? filename.replace(/\.md$/, "")
       : undefined;
 
@@ -91,7 +123,7 @@ function toDocMeta(id: string, content: string, updatedAt: Date): DocMeta {
   if (filename === "modules.md") tags.push("catalog");
 
   const base: DocMeta = {
-    id,
+    id: canonicalId,
     title,
     category: CATEGORY_LABELS[categoryKey] ?? categoryKey,
     categoryKey,
@@ -110,7 +142,7 @@ export async function listDocs(): Promise<DocMeta[]> {
     files.map(async (file) => {
       const content = await fs.readFile(file, "utf8");
       const stat = await fs.stat(file);
-      const id = normalizeId(path.relative(DOCS_ROOT, file));
+      const id = normalizeDocId(path.relative(DOCS_ROOT, file));
       return toDocMeta(id, content, stat.mtime);
     }),
   );
@@ -129,7 +161,7 @@ export async function readDoc(id: string): Promise<DocContent | null> {
       fs.readFile(filePath, "utf8"),
       fs.stat(filePath),
     ]);
-    return { ...toDocMeta(normalizeId(id), content, stat.mtime), content };
+    return { ...toDocMeta(normalizeDocId(id), content, stat.mtime), content };
   } catch {
     return null;
   }
@@ -139,5 +171,5 @@ export async function writeDoc(id: string, content: string): Promise<DocMeta> {
   const filePath = resolveDocPath(id);
   await fs.writeFile(filePath, content, "utf8");
   const stat = await fs.stat(filePath);
-  return toDocMeta(normalizeId(id), content, stat.mtime);
+  return toDocMeta(normalizeDocId(id), content, stat.mtime);
 }

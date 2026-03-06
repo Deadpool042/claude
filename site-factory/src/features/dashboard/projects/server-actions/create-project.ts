@@ -35,6 +35,10 @@ import {
 import type { Category as SpecCategory } from "@/lib/referential/spec/types";
 import { deriveOfferProjectType, deriveQualificationProjectType } from "@/lib/wizard-domain";
 import {
+  normalizeTaxonomySignalForProjectType,
+  serializeQualificationCiAxesJson,
+} from "@/lib/taxonomy";
+import {
   buildWpSetupOptionsFromConfig,
   generateProjectWpDevAssets,
 } from "@/lib/projects";
@@ -130,6 +134,7 @@ export async function createProjectAction(
     name: getStr(formData, "name"),
     clientId: getStr(formData, "clientId"),
     type: getStr(formData, "type") ?? "VITRINE",
+    taxonomySignal: getStr(formData, "taxonomySignal"),
     devMode: getStr(formData, "devMode") ?? "DEV_COMFORT",
 
     description: getStr(formData, "description"),
@@ -178,6 +183,10 @@ export async function createProjectAction(
   if (!parsed.success) {
     return { error: parsed.error.errors[0]?.message ?? "Données invalides" };
   }
+  const explicitTaxonomySignal = normalizeTaxonomySignalForProjectType(
+    parsed.data.type,
+    parsed.data.taxonomySignal ?? null,
+  );
 
   const resolvedTechStack = parsed.data.techStack as TechStack | undefined;
   const wpHeadless = formData.get("wpHeadless") === "true";
@@ -188,6 +197,7 @@ export async function createProjectAction(
   let ciScore = parsed.data.qualification?.ciScore ?? undefined;
   let ciCategory = parsed.data.qualification?.ciCategory ?? undefined;
   let ciAxesJson = parsed.data.qualification?.ciAxesJson ?? undefined;
+  let ciAxesPayload: unknown = undefined;
 
   if (resolvedTechStack) {
     const selectedModuleIds = parseModuleIds(parsed.data.qualification?.modules);
@@ -225,6 +235,7 @@ export async function createProjectAction(
 
     const offerInput = {
       projectType: parsed.data.type as ProjectType,
+      taxonomySignal: explicitTaxonomySignal,
       projectFamily: parsed.data.projectFamily ?? null,
       needsEditing: constraints.needsEditing,
       editingFrequency: constraints.editingFrequency,
@@ -276,14 +287,17 @@ export async function createProjectAction(
     resolvedMaintenanceLevel = qualification.maintenance;
     ciScore = qualification.ci?.score ?? ciScore;
     ciCategory = qualification.ci?.category ?? ciCategory;
-    ciAxesJson = qualification.ci
-      ? JSON.stringify(qualification.ci.axes)
-      : ciAxesJson;
+    ciAxesPayload = qualification.ci?.axes;
 
     const normalizedModules =
       activeModuleIds.length > 0 ? JSON.stringify(activeModuleIds) : undefined;
     modulesJson = normalizedModules ?? parsed.data.qualification?.modules ?? null;
   }
+  const serializedCiAxesJson = serializeQualificationCiAxesJson({
+    taxonomySignal: explicitTaxonomySignal,
+    ciAxes: ciAxesPayload,
+    previousCiAxesJson: ciAxesJson ?? null,
+  });
 
   const client = await prisma.client.findUnique({
     where: { id: parsed.data.clientId },
@@ -314,6 +328,7 @@ export async function createProjectAction(
     port,
     data: {
       ...parsed.data,
+      taxonomySignal: explicitTaxonomySignal ?? undefined,
       category: resolvedCategory,
       qualification: {
         ...parsed.data.qualification,
@@ -323,7 +338,7 @@ export async function createProjectAction(
         estimatedBudget: estimatedBudget ?? parsed.data.qualification?.estimatedBudget,
         ciScore,
         ciCategory,
-        ciAxesJson,
+        ciAxesJson: serializedCiAxesJson ?? undefined,
       },
     },
   });

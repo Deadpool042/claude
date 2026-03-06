@@ -3,13 +3,13 @@
     "purpose": "Socle technique canonique partagé pour tous les projets + deltas d'implémentation par stack.",
     "version": "1.0.0",
     "consumedBy": [
-      "Docs/10-Socle-Technique/10-socle-technique-canonique.md",
-      "Docs/10-Socle-Technique/socle-wordpress.md",
-      "Docs/10-Socle-Technique/socle-woocommerce.md",
-      "Docs/10-Socle-Technique/socle-prestashop.md",
-      "Docs/10-Socle-Technique/socle-shopify.md",
-      "Docs/10-Socle-Technique/socle-drupal.md",
-      "Docs/10-Socle-Technique/socle-headless-custom.md"
+      "Docs/technique/socle/socle-technique-canonique.md",
+      "Docs/technique/socle/socle-wordpress.md",
+      "Docs/technique/socle/socle-woocommerce.md",
+      "Docs/technique/socle/socle-prestashop.md",
+      "Docs/technique/socle/socle-shopify.md",
+      "Docs/technique/socle/socle-drupal.md",
+      "Docs/technique/socle/socle-headless-custom.md"
     ],
     "shape": {
       "requiredTopLevel": [
@@ -69,6 +69,12 @@
       "domain": "BACKUP",
       "label": "Test de restauration",
       "description": "Restauration testée périodiquement et tracée."
+    },
+    {
+      "id": "SOCLE.ENV.PARITY",
+      "domain": "ENV",
+      "label": "Parité d'environnement",
+      "description": "Versions et extensions alignées entre local, staging et production."
     },
     {
       "id": "SOCLE.DEPLOY.PROCEDURE",
@@ -152,12 +158,13 @@
     },
     "cms.PRESTASHOP": {
       "appliesTo": [
+        "SOCLE.ENV.PARITY",
         "SOCLE.DEPLOY.PROCEDURE",
         "SOCLE.BACKUP.SCOPE",
         "SOCLE.SECURITY.PATCH_POLICY",
         "SOCLE.OBS.INCIDENT_LOG"
       ],
-      "delta": "Déploiement modules/thème; backup DB+médias+modules; patch modules; suivi incidents tunnel d'achat."
+      "delta": "Parité env PHP/extensions; déploiement modules/thème; backup DB+médias+modules; patch modules; suivi incidents tunnel d'achat."
     },
     "cms.SHOPIFY": {
       "appliesTo": [
@@ -179,18 +186,20 @@
     },
     "cms.HEADLESS": {
       "appliesTo": [
+        "SOCLE.ENV.PARITY",
         "SOCLE.DEPLOY.PROCEDURE",
         "SOCLE.BACKUP.SCOPE",
         "SOCLE.OBS.ERROR_LOGS",
         "SOCLE.PERF.KPI"
       ],
-      "delta": "CI/CD multi-composants front/API/data; backup DB/BaaS+config; observabilité centralisée; KPI web+API."
+      "delta": "Parité stricte local/staging/prod; CI/CD multi-composants front/API/data; backup DB/BaaS+config; observabilité centralisée; KPI web+API."
     }
   },
   "commercialReferences": {
-    "deployFeesRef": "commercial.annexCosts.deploySetupFee + commercial.annexCosts.deploySetupFeeRange",
-    "hostingDomainRecurringRef": "commercial.annexCosts.domainYearlyRange + commercial.annexCosts.hostingMonthlyRangeByStack",
+    "deployFeesRef": "commercial.deployFees.*.cost + commercial.deployFees.*.headless.cost",
+    "hostingDomainRecurringRef": "commercial.annexCosts.domainYearlyRange + commercial.hostingCosts.*.range",
     "maintenanceByCatRef": "commercial.maintenanceByCategory",
-    "pluginRecurringRef": "commercial.pluginRecurringCosts + plugins.[].priceMonthlyMin/priceMonthlyMax"
+    "pluginRecurringRef": "commercial.pluginRecurringCosts + plugins.[].priceMonthlyMin/priceMonthlyMax",
+    "infraServicesRef": "infra-services.services.* — briques Docker optionnelles (monitoring, cache, DB tools, search)"
   }
 }

@@ -1,20 +1,26 @@
-import { FieldSelect } from "@/components/shared/FieldSelect";
-import { InlineHint } from "@/components/shared/InlineHint";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FieldSelect } from "@/shared/components/FieldSelect";
+import { InlineHint } from "@/shared/components/InlineHint";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
 import { PROJECT_TYPE_OPTIONS } from "@/lib/referential";
 import { MODULE_CATALOG } from "@/lib/referential";
+import {
+  getTaxonomySignalOptionsForProjectType,
+  parseTaxonomyDisambiguationSignal,
+} from "@/lib/taxonomy";
 import { suggestModuleRecommendationsFromDiscovery } from "../../logic/module-suggestions";
 import { deriveDiscoveryInsights } from "../../logic/discovery-insights";
-import type { WizardContextType } from "../../logic/WizardProvider";
+import type { WizardContextType } from "../../logic/wizard-types";
 
 type ProjectTypeValue = NonNullable<WizardContextType["projectType"]>;
 
 interface DiscoverySectionProps {
   projectType: WizardContextType["projectType"];
   changeProjectType: WizardContextType["changeProjectType"];
+  taxonomySignal: WizardContextType["taxonomySignal"];
+  setTaxonomySignal: WizardContextType["setTaxonomySignal"];
   budgetBand: WizardContextType["budgetBand"];
   setBudgetBand: WizardContextType["setBudgetBand"];
   manualBudgetMax: WizardContextType["manualBudgetMax"];
@@ -36,6 +42,7 @@ interface DiscoverySectionProps {
   editingMode: WizardContextType["editingMode"];
   editorialPushOwner: WizardContextType["editorialPushOwner"];
   qType: number;
+  qTaxonomySignal: number | null;
   qBudget: number | null;
   qKnowledge: number | null;
   qGoal: number | null;
@@ -76,6 +83,8 @@ const goalOptionsByProjectType: Record<
 export function DiscoverySection({
   projectType,
   changeProjectType,
+  taxonomySignal,
+  setTaxonomySignal,
   budgetBand,
   setBudgetBand,
   manualBudgetMax,
@@ -97,6 +106,7 @@ export function DiscoverySection({
   editingMode,
   editorialPushOwner,
   qType,
+  qTaxonomySignal,
   qBudget,
   qKnowledge,
   qGoal,
@@ -108,6 +118,12 @@ export function DiscoverySection({
   const canAskGoal = canAskKnowledge && clientKnowledge !== "TO_CONFIRM";
   const canAskAmbition = canAskGoal && primaryGoal !== "TO_CONFIRM";
   const canAskTimeline = canAskAmbition && ambitionLevel !== "TO_CONFIRM";
+  const taxonomySignalOptions =
+    getTaxonomySignalOptionsForProjectType(projectType);
+  const selectedSignalDescription =
+    taxonomySignalOptions.find((option) => option.value === taxonomySignal)
+      ?.description ??
+    "Ce choix clarifie la famille métier visée pendant la phase transitoire.";
 
   const suggestedRecommendations = suggestModuleRecommendationsFromDiscovery({
     projectType,
@@ -160,6 +176,22 @@ export function DiscoverySection({
         tooltip="Catégorie fonctionnelle utilisée pour cadrer la qualification initiale."
         helpText="Le type sélectionné influence les parcours, contraintes et estimations affichés ensuite."
       />
+
+      {qTaxonomySignal && taxonomySignalOptions.length > 0 && (
+        <FieldSelect
+          label={`Question ${qTaxonomySignal} · Positionnement métier cible`}
+          value={taxonomySignal ?? ""}
+          onChange={(value) => {
+            setTaxonomySignal(parseTaxonomyDisambiguationSignal(value));
+          }}
+          options={taxonomySignalOptions.map((option) => ({
+            value: option.value,
+            label: option.label,
+          }))}
+          tooltip="Précise l’intention métier quand un type legacy couvre plusieurs familles cibles (vitrine vs business, MVP vs application métier)."
+          helpText={selectedSignalDescription}
+        />
+      )}
 
       {canAskBudget && (
         <div className="space-y-3">

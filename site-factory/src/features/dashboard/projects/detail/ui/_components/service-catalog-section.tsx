@@ -1,7 +1,7 @@
 "use client";
 
 import { Star } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import { ENV_LABELS, type CatalogService, type ServiceId } from "@/lib/services";
 import { envBadgeVariant } from "./project-config-panel.helpers";
 

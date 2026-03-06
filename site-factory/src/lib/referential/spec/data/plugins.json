@@ -19,9 +19,23 @@
       ],
       "optionalPricingFields": [
         "pricingMode",
+        "billingCycle",
         "priceMonthlyMin",
         "priceMonthlyMax",
+        "priceAnnual",
+        "renewalDiscountPercent",
+        "amortization",
         "billingNotes"
+      ],
+      "billingCycleEnum": [
+        "MONTHLY",
+        "ANNUAL",
+        "ONE_TIME",
+        "USAGE_BASED"
+      ],
+      "amortizationEnum": [
+        "ONE_SHOT",
+        "MONTHLY_SPREAD"
       ],
       "idConvention": "plugin.*"
     }
@@ -31,19 +45,27 @@
     {
       "id": "plugin.WOOCOMMERCE_DYNAMIC_PRICING",
       "label": "WooCommerce Dynamic Pricing",
+      "description": "Extension officielle de tarification dynamique : remises par volume, rôle client, et règles conditionnelles sur WooCommerce.",
       "featureIds": [
         "feature.ADVANCED_PRICING"
       ],
       "cmsIds": [
+        "cms.WORDPRESS",
         "cms.WOOCOMMERCE"
       ],
       "vendor": "WooCommerce",
       "url": "https://woocommerce.com/products/dynamic-pricing/",
-      "pricingMode": "PAID"
+      "pricingMode": "PAID",
+      "billingCycle": "ANNUAL",
+      "priceAnnual": 129,
+      "renewalDiscountPercent": 20,
+      "amortization": "MONTHLY_SPREAD",
+      "billingNotes": "Licence annuelle WooCommerce.com. Plan 1 an : 129 €/an. Plan 2 ans : ~103 €/an (-20%). Renouvelable chaque année."
     },
     {
       "id": "plugin.SHOPIFY_DISCOUNT_APPS",
       "label": "Shopify Discount Apps",
+      "description": "Écosystème d'apps Shopify pour la gestion des remises avancées : promotions par palier, bundles et réductions automatiques.",
       "featureIds": [
         "feature.ADVANCED_PRICING"
       ],
@@ -60,6 +82,7 @@
     {
       "id": "plugin.PRESTASHOP_PRICING_MODULES",
       "label": "PrestaShop Pricing Modules",
+      "description": "Modules PrestaShop Addons pour la tarification avancée : prix par groupe, remises quantitatives et promotions conditionnelles.",
       "featureIds": [
         "feature.ADVANCED_PRICING"
       ],
@@ -68,11 +91,16 @@
       ],
       "vendor": "PrestaShop Addons Ecosystem",
       "url": "https://addons.prestashop.com/",
-      "pricingMode": "MIXED"
+      "pricingMode": "MIXED",
+      "billingCycle": "ONE_TIME",
+      "priceAnnual": 0,
+      "amortization": "ONE_SHOT",
+      "billingNotes": "Modules PrestaShop Addons : achat unique typique (one-shot) entre 50 et 200 €."
     },
     {
       "id": "plugin.MAILCHIMP",
       "label": "Mailchimp",
+      "description": "Plateforme d'emailing et marketing automation avec formulaires d'inscription, segmentation et campagnes automatisées.",
       "featureIds": [
         "feature.NEWSLETTER_INTEGRATION",
         "feature.MARKETING_AUTOMATION"
@@ -95,11 +123,13 @@
     {
       "id": "plugin.KLAVIYO",
       "label": "Klaviyo",
+      "description": "Plateforme de marketing automation e-commerce : emails transactionnels, segmentation avancée, SMS et flux automatisés.",
       "featureIds": [
         "feature.NEWSLETTER_INTEGRATION",
         "feature.MARKETING_AUTOMATION"
       ],
       "cmsIds": [
+        "cms.WORDPRESS",
         "cms.WOOCOMMERCE",
         "cms.PRESTASHOP",
         "cms.SHOPIFY",
@@ -115,6 +145,7 @@
     {
       "id": "plugin.BREVO",
       "label": "Brevo",
+      "description": "Suite marketing tout-en-un (ex-Sendinblue) : emailing, SMS, chat et CRM avec plan gratuit généreux.",
       "featureIds": [
         "feature.NEWSLETTER_INTEGRATION"
       ],
@@ -136,6 +167,7 @@
     {
       "id": "plugin.YOAST",
       "label": "Yoast SEO",
+      "description": "Plugin SEO de référence pour WordPress : analyse de contenu, sitemap XML, méta-données et suggestions d'optimisation.",
       "featureIds": [
         "feature.SEO_BASIC"
       ],
@@ -145,11 +177,17 @@
       ],
       "vendor": "Yoast",
       "url": "https://yoast.com/wordpress/plugins/seo/",
-      "pricingMode": "MIXED"
+      "pricingMode": "MIXED",
+      "billingCycle": "ANNUAL",
+      "priceAnnual": 99,
+      "renewalDiscountPercent": 0,
+      "amortization": "MONTHLY_SPREAD",
+      "billingNotes": "Version gratuite disponible. Premium : 99 €/an/site. Licence annuelle renouvelable."
     },
     {
       "id": "plugin.RANKMATH",
       "label": "RankMath",
+      "description": "Plugin SEO WordPress avec analyse AI, suivi de mots-clés intégré, schéma JSON-LD automatique et redirection 404.",
       "featureIds": [
         "feature.SEO_BASIC"
       ],
@@ -159,11 +197,17 @@
       ],
       "vendor": "Rank Math",
       "url": "https://rankmath.com/",
-      "pricingMode": "MIXED"
+      "pricingMode": "MIXED",
+      "billingCycle": "ANNUAL",
+      "priceAnnual": 69,
+      "renewalDiscountPercent": 0,
+      "amortization": "MONTHLY_SPREAD",
+      "billingNotes": "Version gratuite complète. Pro : 69 €/an. Business : 499 €/an (multi-sites)."
     },
     {
       "id": "plugin.SHOPIFY_SEO_APPS",
       "label": "Shopify SEO Apps",
+      "description": "Apps Shopify d'optimisation SEO : méta-tags, données structurées, audit de performance et optimisation d'images.",
       "featureIds": [
         "feature.SEO_BASIC"
       ],
@@ -179,6 +223,7 @@
     {
       "id": "plugin.GA4_INTEGRATION",
       "label": "GA4 Integration",
+      "description": "Intégration Google Analytics 4 : suivi des événements, conversions e-commerce améliorées et rapports d'audience.",
       "featureIds": [
         "feature.ANALYTICS_BASIC"
       ],
@@ -197,6 +242,7 @@
     {
       "id": "plugin.JUDGE_ME",
       "label": "Judge.me",
+      "description": "App d'avis clients Shopify : collecte automatique, affichage en étoiles, rich snippets SEO et partage social.",
       "featureIds": [
         "feature.REVIEWS"
       ],
@@ -212,13 +258,15 @@
     {
       "id": "plugin.YOTPO",
       "label": "Yotpo",
+      "description": "Plateforme d'avis et fidélité e-commerce : avis photo/vidéo, Q&A, wishlists et programme de récompenses.",
       "featureIds": [
         "feature.REVIEWS",
         "feature.WISHLIST"
       ],
       "cmsIds": [
-        "cms.SHOPIFY",
-        "cms.WOOCOMMERCE"
+        "cms.WORDPRESS",
+        "cms.WOOCOMMERCE",
+        "cms.SHOPIFY"
       ],
       "vendor": "Yotpo",
       "url": "https://www.yotpo.com/",
@@ -229,32 +277,47 @@
     {
       "id": "plugin.TI_WISHLIST",
       "label": "TI WooCommerce Wishlist",
+      "description": "Plugin de wishlist pour WooCommerce : liste de souhaits partageable, bouton personnalisable et statistiques de popularité.",
       "featureIds": [
         "feature.WISHLIST"
       ],
       "cmsIds": [
+        "cms.WORDPRESS",
         "cms.WOOCOMMERCE"
       ],
       "vendor": "TemplateInvaders",
       "url": "https://wordpress.org/plugins/ti-woocommerce-wishlist/",
-      "pricingMode": "MIXED"
+      "pricingMode": "MIXED",
+      "billingCycle": "ANNUAL",
+      "priceAnnual": 79,
+      "renewalDiscountPercent": 0,
+      "amortization": "MONTHLY_SPREAD",
+      "billingNotes": "Version gratuite fonctionnelle. Premium : ~79 €/an."
     },
     {
       "id": "plugin.WOOCS",
       "label": "WOOCS Multi Currency",
+      "description": "Plugin WooCommerce de conversion multi-devises : sélecteur de devise, taux automatiques et prix par devise.",
       "featureIds": [
         "feature.MULTI_CURRENCY"
       ],
       "cmsIds": [
+        "cms.WORDPRESS",
         "cms.WOOCOMMERCE"
       ],
       "vendor": "RealMag777",
       "url": "https://wordpress.org/plugins/woocommerce-currency-switcher/",
-      "pricingMode": "MIXED"
+      "pricingMode": "MIXED",
+      "billingCycle": "ANNUAL",
+      "priceAnnual": 49,
+      "renewalDiscountPercent": 0,
+      "amortization": "MONTHLY_SPREAD",
+      "billingNotes": "Version gratuite limitée. Premium : ~49 €/an (CodeCanyon/site auteur)."
     },
     {
       "id": "plugin.SHOPIFY_MARKETS",
       "label": "Shopify Markets",
+      "description": "Solution native Shopify pour la vente internationale : multi-devises, multi-langues et prix localisés par marché.",
       "featureIds": [
         "feature.MULTI_CURRENCY"
       ],
@@ -270,19 +333,27 @@
     {
       "id": "plugin.WOOCOMMERCE_SHIPPING_EXTENSIONS",
       "label": "WooCommerce Shipping Extensions",
+      "description": "Extensions officielles de livraison WooCommerce : transporteurs (UPS, FedEx), zones tarifaires et calcul en temps réel.",
       "featureIds": [
         "feature.SHIPPING_RULES_BASIC"
       ],
       "cmsIds": [
+        "cms.WORDPRESS",
         "cms.WOOCOMMERCE"
       ],
       "vendor": "WooCommerce",
       "url": "https://woocommerce.com/product-category/woocommerce-extensions/shipping-extensions/",
-      "pricingMode": "MIXED"
+      "pricingMode": "MIXED",
+      "billingCycle": "ANNUAL",
+      "priceAnnual": 119,
+      "renewalDiscountPercent": 20,
+      "amortization": "MONTHLY_SPREAD",
+      "billingNotes": "Extensions shipping WooCommerce.com : licences annuelles ~59-179 €/an. Plan 2 ans -20%."
     },
     {
       "id": "plugin.SHOPIFY_SHIPPING_APPS",
       "label": "Shopify Shipping Apps",
+      "description": "Apps de livraison Shopify : tarifs en temps réel, étiquettes d'expédition, suivi de colis et gestion des retours.",
       "featureIds": [
         "feature.SHIPPING_RULES_BASIC"
       ],
@@ -298,6 +369,7 @@
     {
       "id": "plugin.OIDC_SSO",
       "label": "OIDC / SSO Plugins",
+      "description": "Plugins d'authentification SSO : connexion via SAML/OAuth/OpenID Connect avec provisioning automatique des comptes.",
       "featureIds": [
         "feature.IDENTITY_SSO"
       ],
@@ -311,9 +383,13 @@
       "vendor": "OIDC SSO Ecosystem",
       "url": "https://openid.net/developers/how-connect-works/",
       "pricingMode": "PAID",
+      "billingCycle": "ANNUAL",
+      "priceAnnual": 180,
       "priceMonthlyMin": 15,
       "priceMonthlyMax": 149,
-      "billingNotes": "Souvent licence éditeur ou plugin premium."
+      "renewalDiscountPercent": 0,
+      "amortization": "MONTHLY_SPREAD",
+      "billingNotes": "Licence annuelle typique. Fourchette large selon éditeur (miniOrange, Auth0, etc.)."
     }
   ]
 }

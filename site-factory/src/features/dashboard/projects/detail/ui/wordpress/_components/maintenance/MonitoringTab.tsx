@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/shared/components/ui/tooltip";
 import { Loader2, Info } from "lucide-react";
 import { resolveMonitoringProfile, evaluateThreshold } from "@/lib/monitoring";
 import { getProfile } from "@/lib/hosting";
@@ -15,10 +15,10 @@ import {
   metricStatusLabel,
   worstStatus,
 } from "./utils/status";
-import { WP_FEATURE_LABELS, type WpInfraFeature } from "@/lib/wp";
+import { WP_FEATURE_LABELS, type WpInfraFeature } from "@/lib/wp/features";
 import type { HostingProfileId } from "../types";
 import type { MaintenanceStatus, MonitoringSnapshot } from "../types";
-import type { WpInfraStatus, WpInfraStatusValue } from "@/lib/wp";
+import type { WpInfraStatus, WpInfraStatusValue } from "@/lib/wp/infra-status";
 
 interface MonitoringTabProps {
   hostingProfileId?: HostingProfileId | null;

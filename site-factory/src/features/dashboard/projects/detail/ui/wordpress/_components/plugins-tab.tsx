@@ -9,9 +9,9 @@ import {
   PowerOff,
   Trash2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Badge } from "@/shared/components/ui/badge";
 import type { WpPlugin } from "./types";
 
 // ── PluginsTab ─────────────────────────────────────────────────────────

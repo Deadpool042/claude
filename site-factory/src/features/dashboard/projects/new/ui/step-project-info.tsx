@@ -3,11 +3,11 @@
 
 import { useWizard } from "../logic/WizardProvider";
 import { ClientSelect } from "./client-select";
-import { InlineHint } from "@/components/shared/InlineHint";
-import { StepCard } from "@/components/shared/StepCard";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { InlineHint } from "@/shared/components/InlineHint";
+import { StepCard } from "@/shared/components/StepCard";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { Textarea } from "@/shared/components/ui/textarea";
 import {
   FolderPlus,
   Globe,
@@ -53,7 +53,12 @@ export function StepProjectInfo() {
   return (
     <div className="space-y-4">
       {/* ── Identité du projet ─────────────────────── */}
-      <StepCard title="Identité du projet" icon={FolderPlus} tone="bg-primary/10 text-primary">
+      <StepCard
+        title="Identité du projet"
+        icon={FolderPlus}
+        tone="bg-primary/10 text-primary"
+        description="Informations de création finales."
+      >
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2 sm:col-span-2">
             <Label htmlFor="name">Nom du projet *</Label>
@@ -116,7 +121,7 @@ export function StepProjectInfo() {
         title="Hébergement"
         icon={Server}
         tone="bg-emerald-500/10 text-emerald-500"
-        description="L’hébergement et le domaine sont à la charge et la propriété du client. Ils seront mentionnés séparément dans le devis."
+        description="Paramètres contractuels et opératoires liés à la recommandation retenue."
       >
         <div>
           <div className="rounded-lg border p-3 text-sm">

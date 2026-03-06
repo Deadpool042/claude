@@ -2,6 +2,11 @@ import type { PrismaClient } from "@/generated/prisma/client";
 import { TechStack } from "@/generated/prisma/client";
 import { updateProjectSchema } from "@/lib/validators";
 import { buildProjectDocIds, buildProjectDocRows } from "@/lib/docs/project-docs";
+import {
+  normalizeTaxonomySignalForProjectType,
+  readPersistedTaxonomySignalDualSource,
+  serializeQualificationCiAxesJson,
+} from "@/lib/taxonomy";
 import { computeLocalHost, computeNextPort, computeNextSlug } from "../domain/update-project.logic";
 import type { TraefikService } from "./traefik-service";
 import type { z } from "zod";
@@ -28,9 +33,27 @@ export class ProjectService {
 
     const existing = await this.prisma.project.findUnique({
       where: { id: projectId },
-      include: { runtime: true },
+      include: { runtime: true, qualification: true },
     });
     if (!existing) return { ok: false, error: "Projet introuvable." };
+
+    const explicitTaxonomySignal = normalizeTaxonomySignalForProjectType(
+      dto.type,
+      dto.taxonomySignal ?? null,
+    );
+    const persistedTaxonomySignal = readPersistedTaxonomySignalDualSource({
+      projectType: dto.type,
+      taxonomySignal: existing.qualification?.taxonomySignal ?? null,
+      ciAxesJson: existing.qualification?.ciAxesJson ?? null,
+    });
+    const stableTaxonomySignal = explicitTaxonomySignal ?? persistedTaxonomySignal;
+    const ciAxesJson = serializeQualificationCiAxesJson({
+      taxonomySignal: stableTaxonomySignal,
+      previousCiAxesJson:
+        dto.qualification?.ciAxesJson ??
+        existing.qualification?.ciAxesJson ??
+        null,
+    });
 
     const slugInfo = await computeNextSlug(existing.slug, dto.name);
 
@@ -99,7 +122,8 @@ export class ProjectService {
             commerceModel: dto.qualification?.commerceModel ?? null,
             ciScore: dto.qualification?.ciScore ?? null,
             ciCategory: dto.qualification?.ciCategory ?? null,
-            ciAxesJson: dto.qualification?.ciAxesJson ?? null,
+            ciAxesJson,
+            taxonomySignal: stableTaxonomySignal,
           },
           update: {
             modules: dto.qualification?.modules ?? null,
@@ -115,7 +139,8 @@ export class ProjectService {
             commerceModel: dto.qualification?.commerceModel ?? null,
             ciScore: dto.qualification?.ciScore ?? null,
             ciCategory: dto.qualification?.ciCategory ?? null,
-            ciAxesJson: dto.qualification?.ciAxesJson ?? null,
+            ciAxesJson,
+            taxonomySignal: stableTaxonomySignal,
           },
         });
 

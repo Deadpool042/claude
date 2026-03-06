@@ -1,0 +1,260 @@
+{
+  "_meta": {
+    "purpose": "Catalogue canonique des briques infrastructure optionnelles (conteneurs Docker, services d'observabilité, cache, outils). Source de vérité pour les coûts setup/récurrents et les contraintes d'hébergement associées.",
+    "version": "1.0.0",
+    "consumedBy": [
+      "site-factory/src/lib/referential/infra-services.ts",
+      "site-factory/src/features/dashboard/spec/ui/renderers/InfraServicesRenderer.tsx"
+    ],
+    "shape": {
+      "requiredTopLevel": [
+        "version",
+        "categories",
+        "services"
+      ],
+      "categoryItemRequired": [
+        "id",
+        "label",
+        "icon"
+      ],
+      "serviceItemRequired": [
+        "id",
+        "label",
+        "category",
+        "description",
+        "containers",
+        "setupCost",
+        "monthlyCost",
+        "requiresDocker",
+        "minMaintenanceCat",
+        "hostingImpact"
+      ],
+      "idConvention": "infra.*"
+    }
+  },
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "MONITORING",
+      "label": "Monitoring & Observabilité",
+      "icon": "Activity"
+    },
+    {
+      "id": "CACHE",
+      "label": "Cache & Performance",
+      "icon": "Zap"
+    },
+    {
+      "id": "DB_TOOLS",
+      "label": "Administration base de données",
+      "icon": "Database"
+    },
+    {
+      "id": "DEV_TOOLS",
+      "label": "Outils de développement",
+      "icon": "Wrench"
+    },
+    {
+      "id": "SEARCH",
+      "label": "Recherche",
+      "icon": "Search"
+    }
+  ],
+  "services": [
+    {
+      "id": "infra.UPTIME_KUMA",
+      "label": "Uptime Kuma",
+      "category": "MONITORING",
+      "description": "Surveillance de disponibilité self-hosted avec alertes (email, Telegram, Slack). Léger, adapté dès CAT0. Alternative self-hosted à UptimeRobot.",
+      "containers": [
+        "uptime-kuma"
+      ],
+      "setupCost": 50,
+      "monthlyCost": 0,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT0",
+      "hostingImpact": {
+        "ramMb": 128,
+        "note": "Empreinte légère, un seul conteneur Node.js"
+      }
+    },
+    {
+      "id": "infra.GRAFANA_STACK",
+      "label": "Grafana + Prometheus + Loki",
+      "category": "MONITORING",
+      "description": "Stack complète d'observabilité : métriques système (Prometheus), logs centralisés (Loki) et tableaux de bord (Grafana). Indispensable pour monitoring avancé / APM sur projets business.",
+      "containers": [
+        "grafana",
+        "prometheus",
+        "loki"
+      ],
+      "setupCost": 290,
+      "monthlyCost": 15,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT3",
+      "hostingImpact": {
+        "ramMb": 768,
+        "note": "+768 Mo RAM minimum — prévoir un VPS avec au moins 4 Go total"
+      }
+    },
+    {
+      "id": "infra.SENTRY",
+      "label": "Sentry (self-hosted)",
+      "category": "MONITORING",
+      "description": "Suivi d'erreurs applicatif en temps réel avec stack traces, breadcrumbs et alertes. Alternative self-hosted au SaaS Sentry.io.",
+      "containers": [
+        "sentry-web",
+        "sentry-worker",
+        "sentry-cron",
+        "redis",
+        "postgres",
+        "kafka",
+        "zookeeper"
+      ],
+      "setupCost": 390,
+      "monthlyCost": 20,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT3",
+      "hostingImpact": {
+        "ramMb": 2048,
+        "note": "Stack lourde (~7 conteneurs). Nécessite un VPS dédié ou 8 Go+ RAM"
+      }
+    },
+    {
+      "id": "infra.REDIS",
+      "label": "Redis (cache applicatif)",
+      "category": "CACHE",
+      "description": "Cache en mémoire pour sessions, object cache WordPress, files d'attente. Améliore significativement les temps de réponse sur sites à fort trafic.",
+      "containers": [
+        "redis"
+      ],
+      "setupCost": 90,
+      "monthlyCost": 0,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT1",
+      "hostingImpact": {
+        "ramMb": 128,
+        "note": "Léger — 128 Mo suffisent pour la plupart des sites"
+      }
+    },
+    {
+      "id": "infra.VARNISH",
+      "label": "Varnish (cache HTTP)",
+      "category": "CACHE",
+      "description": "Reverse proxy cache HTTP haute performance. Intercepte les requêtes répétées et sert le contenu depuis le cache sans solliciter le backend.",
+      "containers": [
+        "varnish"
+      ],
+      "setupCost": 190,
+      "monthlyCost": 0,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT2",
+      "hostingImpact": {
+        "ramMb": 256,
+        "note": "256 Mo RAM en usage courant. Configuration VCL spécifique au projet."
+      }
+    },
+    {
+      "id": "infra.ADMINER",
+      "label": "Adminer",
+      "category": "DB_TOOLS",
+      "description": "Interface web légère d'administration de base de données (MySQL, PostgreSQL, SQLite). Un seul fichier PHP, sécurisée derrière reverse proxy.",
+      "containers": [
+        "adminer"
+      ],
+      "setupCost": 50,
+      "monthlyCost": 0,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT0",
+      "hostingImpact": {
+        "ramMb": 32,
+        "note": "Très léger — ne tourne que quand on y accède"
+      }
+    },
+    {
+      "id": "infra.PHPMYADMIN",
+      "label": "phpMyAdmin",
+      "category": "DB_TOOLS",
+      "description": "Interface web classique d'administration MySQL/MariaDB. Plus riche qu'Adminer mais plus gourmand. Adapté aux équipes habituées à cet outil.",
+      "containers": [
+        "phpmyadmin"
+      ],
+      "setupCost": 50,
+      "monthlyCost": 0,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT0",
+      "hostingImpact": {
+        "ramMb": 64,
+        "note": "Léger — conteneur PHP classique"
+      }
+    },
+    {
+      "id": "infra.MAILPIT",
+      "label": "Mailpit (relais SMTP dev/staging)",
+      "category": "DEV_TOOLS",
+      "description": "Serveur SMTP de test qui capture tous les emails sortants avec interface web de visualisation. Indispensable en environnement de développement et staging pour ne pas envoyer d'emails réels.",
+      "containers": [
+        "mailpit"
+      ],
+      "setupCost": 50,
+      "monthlyCost": 0,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT0",
+      "hostingImpact": {
+        "ramMb": 32,
+        "note": "Très léger — usage dev/staging uniquement"
+      }
+    },
+    {
+      "id": "infra.PORTAINER",
+      "label": "Portainer",
+      "category": "DEV_TOOLS",
+      "description": "Interface web de gestion Docker : visualisation des conteneurs, logs, networks et volumes. Simplifie l'administration pour les équipes non-DevOps.",
+      "containers": [
+        "portainer"
+      ],
+      "setupCost": 90,
+      "monthlyCost": 0,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT1",
+      "hostingImpact": {
+        "ramMb": 64,
+        "note": "Léger — accès au socket Docker nécessaire"
+      }
+    },
+    {
+      "id": "infra.MEILISEARCH",
+      "label": "Meilisearch",
+      "category": "SEARCH",
+      "description": "Moteur de recherche full-text rapide et tolérant aux fautes. Alternative légère à Elasticsearch, idéal pour catalogue produits ou contenu éditorial.",
+      "containers": [
+        "meilisearch"
+      ],
+      "setupCost": 190,
+      "monthlyCost": 5,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT2",
+      "hostingImpact": {
+        "ramMb": 256,
+        "note": "256 Mo RAM min — dépend de la taille de l'index"
+      }
+    },
+    {
+      "id": "infra.ELASTICSEARCH",
+      "label": "Elasticsearch",
+      "category": "SEARCH",
+      "description": "Moteur de recherche et d'analyse distribué. Puissant mais gourmand en ressources. Pour les projets nécessitant recherche avancée, facettes, agrégations ou analyse de logs.",
+      "containers": [
+        "elasticsearch"
+      ],
+      "setupCost": 350,
+      "monthlyCost": 15,
+      "requiresDocker": true,
+      "minMaintenanceCat": "CAT3",
+      "hostingImpact": {
+        "ramMb": 1024,
+        "note": "1 Go RAM minimum — heap JVM à configurer selon volume de données"
+      }
+    }
+  ]
+}

@@ -2,29 +2,17 @@
 "use client";
 
 import {
-  createContext,
-  useContext,
-  useState,
   useCallback,
-  useActionState,
   useEffect,
   useMemo,
   useRef,
-  type Dispatch,
-  type SetStateAction,
-  type ReactNode
+  useState,
+  type ReactNode,
 } from "react";
 import { useSearchParams } from "next/navigation";
-import { createProjectAction } from "@/features/dashboard/projects/server-actions";
-import { useModules, useQualification } from "@/hooks";
-import {
-  getOfferStackForProject,
-} from "@/lib/qualification-runtime";
+import { useModules, useQualification } from "@/features/dashboard/projects/hooks";
 import {
   DEFAULT_CONSTRAINTS,
-  getAllowedDeployTargets,
-  MODULE_CATALOG,
-  normalizeModuleIds,
   type ProjectType,
   type LegacyTechStack as TechStack,
   type DeployTarget,
@@ -32,300 +20,74 @@ import {
   type ProductBucket,
   type DataSensitivity,
   type ScalabilityLevel,
-  type ProjectConstraints,
   type BackendFamily,
-  getBackendMultiplier
 } from "@/lib/referential";
 import {
-  HOSTING_ALLOWED_FAMILIES,
-  getImplementationOptions,
-  isImplementationLiveEligible,
   resolveDefaultFrontend,
-  resolveDeployTargetFromHosting,
-  resolveFamilyFromInputs,
-  resolveImplementationFromFamily,
-  resolveTechStackFromImplementation,
-  PROJECT_FAMILY_OPTIONS,
   type CommerceModel,
   type EditingFrequency,
-  filterFamiliesByProjectType,
-  filterHostingTargetsForProjectType
 } from "@/lib/project-choices";
+import type { BackendMode } from "@/lib/wizard-domain";
 import {
-  deriveOfferProjectType,
-  deriveQualificationProjectType,
-  deriveHostingSelectionMode,
-  isHeadlessArchitecture,
-  resolveDefaultBackHosting,
-  resolveDefaultFrontHosting,
-  type WizardTypeStackState,
-  type BackendMode,
-  type HostingSelectionMode
-} from "@/lib/wizard-domain";
+  normalizeTaxonomySignalForProjectType,
+  resolveDefaultTaxonomySignalForProjectType,
+  type TaxonomyDisambiguationSignal,
+} from "@/lib/taxonomy";
 import type {
   HostingTargetInput,
   ProjectFamilyInput,
   ProjectFrontendImplementationInput,
-  ProjectImplementationInput
+  ProjectImplementationInput,
 } from "@/lib/validators";
+import type { ModuleId } from "@/lib/offers";
+import { WizardContext } from "./wizard-context";
+import { useWizardCapabilitiesState } from "./wizard-capabilities-state";
 import {
-  getMandatoryModules,
-  getIncludedModules,
-  isModuleCompatible,
-  type ModuleId,
-  type OfferCategory,
-  type Stack as OfferStack
-} from "@/lib/offers";
+  computeWizardNextReasons,
+  nextWizardStep,
+  prevWizardStep,
+} from "./wizard-navigation";
 import {
-  getHostingProvidersForDeployTarget,
-  defaultHostingProviderForDeployTarget,
-  type HostingProviderId
-} from "@/lib/hosting";
-
-type BillingMode = "SOLO" | "SOUS_TRAITANT";
-type QualificationResult = NonNullable<ReturnType<typeof useQualification>>;
-
-interface ModuleCatSelection {
-  setupCatId?: string;
-  subCatId?: string;
-}
-
-// ── Types ──────────────────────────────────────────────────────────
-
-export interface FormFields {
-  name: string;
-  clientId: string;
-  description: string;
-  domain: string;
-  port: string;
-  gitRepo: string;
-  hostingProviderId: HostingProviderId;
-}
-
-type EditingMode = "BACKOFFICE" | "GIT_MDX" | "TO_CONFIRM";
-type EditorialPushOwner = "CLIENT" | "AGENCY" | "TO_CONFIRM";
-type ClientAccessPolicy =
-  | "CONTENT_REPO_ONLY"
-  | "CONTENT_REPO_WITH_PR"
-  | "TO_CONFIRM";
-type BudgetBand =
-  | "UNDER_1200"
-  | "UP_TO_1800"
-  | "UP_TO_3500"
-  | "UP_TO_7000"
-  | "OVER_7000"
-  | "TO_CONFIRM";
-
-function deriveBudgetBandFromManualValue(
-  manualBudgetMax: string,
-): BudgetBand | null {
-  const parsed = Number(manualBudgetMax.replace(/\s+/g, ""));
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    return null;
-  }
-  if (parsed < 1200) return "UNDER_1200";
-  if (parsed <= 1800) return "UP_TO_1800";
-  if (parsed <= 3500) return "UP_TO_3500";
-  if (parsed <= 7000) return "UP_TO_7000";
-  return "OVER_7000";
-}
-type ClientKnowledge =
-  | "NONE"
-  | "BASIC"
-  | "INTERMEDIATE"
-  | "ADVANCED"
-  | "TO_CONFIRM";
-type PrimaryGoal =
-  | "PRESENCE"
-  | "GENERATE_LEADS"
-  | "PUBLISH_CONTENT"
-  | "SELL_ONLINE"
-  | "DIGITIZE_PROCESS"
-  | "TO_CONFIRM";
-type AmbitionLevel =
-  | "KEEP_SIMPLE"
-  | "GROW_FEATURES"
-  | "SCALE_TRAFFIC"
-  | "PREPARE_PLATFORM"
-  | "TO_CONFIRM";
-type TargetTimeline =
-  | "UNDER_1_MONTH"
-  | "ONE_TO_TWO_MONTHS"
-  | "TWO_TO_FOUR_MONTHS"
-  | "FLEXIBLE"
-  | "TO_CONFIRM";
-
-export interface WizardContextType {
-  /* Navigation */
-  step: number;
-  setStep: (step: number) => void;
-  next: () => void;
-  prev: () => void;
-  canGoNext: boolean;
-  nextReasons: string[];
-
-  /* Project config */
-  projectType: ProjectType | null;
-  changeProjectType: (type: ProjectType) => void;
-  techStack: TechStack | null;
-  wpHeadless: boolean;
-  deployTarget: DeployTarget;
-  hostingTarget: HostingTargetInput;
-  setHostingTarget: (target: HostingTargetInput) => void;
-  hostingTargetBack: HostingTargetInput | null;
-  setHostingTargetBack: (target: HostingTargetInput | null) => void;
-  hostingTargetFront: HostingTargetInput | null;
-  setHostingTargetFront: (target: HostingTargetInput | null) => void;
-  projectFamily: ProjectFamilyInput | null;
-  setProjectFamily: (value: ProjectFamilyInput) => void;
-  projectImplementation: ProjectImplementationInput | null;
-  setProjectImplementation: (value: ProjectImplementationInput) => void;
-  projectImplementationLabel: string;
-  setProjectImplementationLabel: (value: string) => void;
-  projectFrontendImplementation: ProjectFrontendImplementationInput | null;
-  setProjectFrontendImplementation: (
-    value: ProjectFrontendImplementationInput
-  ) => void;
-  projectFrontendImplementationLabel: string;
-  setProjectFrontendImplementationLabel: (value: string) => void;
-  needsEditing: boolean;
-  setNeedsEditing: (value: boolean) => void;
-  editingMode: EditingMode;
-  setEditingMode: (value: EditingMode) => void;
-  editingFrequency: EditingFrequency;
-  setEditingFrequency: (value: EditingFrequency) => void;
-  editorialPushOwner: EditorialPushOwner;
-  setEditorialPushOwner: (value: EditorialPushOwner) => void;
-  includeOnboardingPack: boolean;
-  setIncludeOnboardingPack: (value: boolean) => void;
-  includeMonthlyEditorialValidation: boolean;
-  setIncludeMonthlyEditorialValidation: (value: boolean) => void;
-  includeUnblockInterventions: boolean;
-  setIncludeUnblockInterventions: (value: boolean) => void;
-  clientAccessPolicy: ClientAccessPolicy;
-  setClientAccessPolicy: (value: ClientAccessPolicy) => void;
-  budgetBand: BudgetBand;
-  setBudgetBand: (value: BudgetBand) => void;
-  manualBudgetMax: string;
-  setManualBudgetMax: (value: string) => void;
-  budgetBandEffective: BudgetBand;
-  clientKnowledge: ClientKnowledge;
-  setClientKnowledge: (value: ClientKnowledge) => void;
-  primaryGoal: PrimaryGoal;
-  setPrimaryGoal: (value: PrimaryGoal) => void;
-  ambitionLevel: AmbitionLevel;
-  setAmbitionLevel: (value: AmbitionLevel) => void;
-  targetTimeline: TargetTimeline;
-  setTargetTimeline: (value: TargetTimeline) => void;
-  commerceModel: CommerceModel;
-  setCommerceModel: (value: CommerceModel) => void;
-  backendMode: BackendMode;
-  setBackendMode: (value: BackendMode) => void;
-  backendFamily: BackendFamily | null;
-  setBackendFamily: (value: BackendFamily | null) => void;
-  backendOpsHeavy: boolean;
-  setBackendOpsHeavy: (value: boolean) => void;
-  headlessRequired: boolean;
-  setHeadlessRequired: (value: boolean) => void;
-  trafficLevel: TrafficLevel;
-  setTrafficLevel: (value: TrafficLevel) => void;
-  productCount: ProductBucket;
-  setProductCount: (value: ProductBucket) => void;
-  dataSensitivity: DataSensitivity;
-  setDataSensitivity: (value: DataSensitivity) => void;
-  scalabilityLevel: ScalabilityLevel;
-  setScalabilityLevel: (value: ScalabilityLevel) => void;
-  billingMode: BillingMode;
-  setBillingMode: (mode: BillingMode) => void;
-
-  /* Modules */
-  selectedModules: Set<ModuleId>;
-  toggleModule: (id: ModuleId) => void;
-  catSelections: Record<string, ModuleCatSelection>;
-  setCatSelections: Dispatch<
-    SetStateAction<Record<string, ModuleCatSelection>>
-  >;
-  mandatoryModuleIds: ModuleId[];
-  includedModuleIds: ModuleId[];
-  compatibleModuleIds: ModuleId[];
-
-  /* Form fields */
-  formFields: FormFields;
-  setFormFields: Dispatch<SetStateAction<FormFields>>;
-
-  /* Derived */
-  qualification: QualificationResult | null;
-  qualificationProjectType: ProjectType | null;
-  offerProjectType: OfferCategory | null;
-  backendMultiplier: number;
-  allowedDeploys: DeployTarget[];
-  isHeadless: boolean;
-  hostingSelectionMode: HostingSelectionMode;
-
-  /* Form submission */
-  formAction: (formData: FormData) => void;
-  isPending: boolean;
-  actionError: string | null;
-}
-
-// ── Context ────────────────────────────────────────────────────────
-
-const WizardContext = createContext<WizardContextType | null>(null);
-
-export function useWizard(): WizardContextType {
-  const ctx = useContext(WizardContext);
-  if (!ctx) throw new Error("useWizard must be used within WizardProvider");
-  return ctx;
-}
-
-// ── Provider ───────────────────────────────────────────────────────
+  buildQualificationConstraints,
+  useWizardOfferDerivations,
+} from "./wizard-offers";
+import { parseWizardQueryPrefill, resolveOfferPrefill } from "./wizard-prefill";
+import {
+  createInitialWizardFormFields,
+  useWizardSubmitAction,
+} from "./wizard-submit";
+import { useWizardTypeStackSync } from "./wizard-type-stack";
+import {
+  deriveBudgetBandFromManualValue,
+  type AmbitionLevel,
+  type BillingMode,
+  type BudgetBand,
+  type ClientAccessPolicy,
+  type ClientKnowledge,
+  type EditingMode,
+  type EditorialPushOwner,
+  type FormFields,
+  type PrimaryGoal,
+  type TargetTimeline,
+} from "./wizard-types";
 
 export function WizardProvider({ children }: { children: ReactNode }) {
   const searchParams = useSearchParams();
-  const defaultClientId = searchParams.get("clientId") ?? "";
-  const offerModulesParam = searchParams.get("offerModules") ?? "";
-  const offerProjectTypeParam = searchParams.get("offerProjectType");
-  const offerStackParam = searchParams.get("offerStack");
-  const offerDeploymentParam = searchParams.get("offerDeployment");
-
-  const offerModules = useMemo(() => {
-    if (!offerModulesParam) return [] as ModuleId[];
-    return normalizeModuleIds(
-      offerModulesParam
-        .split(",")
-        .map(value => value.trim())
-        .filter(Boolean)
-    ) as ModuleId[];
-  }, [offerModulesParam]);
+  const queryPrefill = useMemo(
+    () => parseWizardQueryPrefill(searchParams),
+    [searchParams],
+  );
 
   const offerInitDoneRef = useRef(false);
   const pendingOfferModulesRef = useRef<ModuleId[] | null>(null);
 
-  const OFFER_PROJECT_MAP: Record<OfferCategory, ProjectType> = {
-    VITRINE_BLOG: "VITRINE",
-    ECOMMERCE: "ECOM",
-    APP_CUSTOM: "APP"
-  };
+  const { formAction, isPending, actionError } = useWizardSubmitAction();
 
-  const OFFER_STACKS: OfferStack[] = [
-    "WORDPRESS",
-    "NEXTJS",
-    "NUXT",
-    "ASTRO",
-    "WORDPRESS_HEADLESS",
-    "WOOCOMMERCE",
-    "WOOCOMMERCE_HEADLESS"
-  ];
-
-  const [state, formAction, isPending] = useActionState(createProjectAction, {
-    error: null
-  });
-
-  // ── Navigation ─────────────────────────────────────────────
   const [step, setStep] = useState(0);
 
-  // ── Project config ─────────────────────────────────────────
   const [projectType, setProjectType] = useState<ProjectType | null>(null);
+  const [taxonomySignal, setTaxonomySignalRaw] =
+    useState<TaxonomyDisambiguationSignal | null>(null);
   const [techStack, setTechStackRaw] = useState<TechStack | null>("WORDPRESS");
   const [wpHeadless, setWpHeadless] = useState(false);
   const [deployTarget, setDeployTargetRaw] = useState<DeployTarget>("DOCKER");
@@ -360,22 +122,20 @@ export function WizardProvider({ children }: { children: ReactNode }) {
   const [commerceModel, setCommerceModel] =
     useState<CommerceModel>("SELF_HOSTED");
   const [backendMode, setBackendMode] = useState<BackendMode>("FULLSTACK");
-  const [backendFamily, setBackendFamily] = useState<BackendFamily | null>(
-    null
-  );
+  const [backendFamily, setBackendFamily] = useState<BackendFamily | null>(null);
   const [backendOpsHeavy, setBackendOpsHeavy] = useState(false);
   const [headlessRequired, setHeadlessRequired] = useState(false);
   const [trafficLevel, setTrafficLevel] = useState<TrafficLevel>(
-    DEFAULT_CONSTRAINTS.trafficLevel
+    DEFAULT_CONSTRAINTS.trafficLevel,
   );
   const [productCount, setProductCount] = useState<ProductBucket>(
-    DEFAULT_CONSTRAINTS.productCount
+    DEFAULT_CONSTRAINTS.productCount,
   );
   const [dataSensitivity, setDataSensitivity] = useState<DataSensitivity>(
-    DEFAULT_CONSTRAINTS.dataSensitivity
+    DEFAULT_CONSTRAINTS.dataSensitivity,
   );
   const [scalabilityLevel, setScalabilityLevel] = useState<ScalabilityLevel>(
-    DEFAULT_CONSTRAINTS.scalabilityLevel
+    DEFAULT_CONSTRAINTS.scalabilityLevel,
   );
   const [projectFamily, setProjectFamilyRaw] =
     useState<ProjectFamilyInput | null>(null);
@@ -385,13 +145,32 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     useState("");
   const [projectFrontendImplementation, setProjectFrontendImplementationRaw] =
     useState<ProjectFrontendImplementationInput | null>(null);
-  const [
-    projectFrontendImplementationLabel,
-    setProjectFrontendImplementationLabel
-  ] = useState("");
+  const [projectFrontendImplementationLabel, setProjectFrontendImplementationLabel] =
+    useState("");
   const [familyManual, setFamilyManual] = useState(false);
   const [implementationManual, setImplementationManual] = useState(false);
   const [billingMode, setBillingMode] = useState<BillingMode>("SOLO");
+
+  const {
+    wizardModules,
+    setWizardModules,
+    enableWizardModule,
+    disableWizardModule,
+    configureWizardModule,
+    wizardFeatures,
+    setWizardFeatures,
+    setWizardFeatureStatus,
+    configureWizardFeature,
+    wizardProviders,
+    setWizardProviders,
+    setWizardProviderStatus,
+    configureWizardProvider,
+    resetWizardCapabilities,
+  } = useWizardCapabilitiesState();
+
+  const [formFields, setFormFields] = useState<FormFields>(() =>
+    createInitialWizardFormFields(queryPrefill),
+  );
 
   const budgetBandEffective = useMemo<BudgetBand>(() => {
     const fromManual = deriveBudgetBandFromManualValue(manualBudgetMax);
@@ -399,490 +178,138 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     return budgetBand;
   }, [manualBudgetMax, budgetBand]);
 
-  // ── Modules (shared hook) ──────────────────────────────────
+  const setTaxonomySignal = useCallback(
+    (signal: TaxonomyDisambiguationSignal | null) => {
+      const normalized = normalizeTaxonomySignalForProjectType(projectType, signal);
+      setTaxonomySignalRaw(
+        normalized ?? resolveDefaultTaxonomySignalForProjectType(projectType),
+      );
+    },
+    [projectType],
+  );
+
+  useEffect(() => {
+    setTaxonomySignalRaw((previous) => {
+      const normalized = normalizeTaxonomySignalForProjectType(projectType, previous);
+      return normalized ?? resolveDefaultTaxonomySignalForProjectType(projectType);
+    });
+  }, [projectType]);
+
   const {
     selectedModules,
     catSelections,
     setCatSelections,
     toggleModule,
     syncModules,
-    clearModules
+    clearModules,
   } = useModules();
 
-  // ── Form fields ────────────────────────────────────────────
-  const [formFields, setFormFields] = useState<FormFields>({
-    name: "",
-    clientId: defaultClientId,
-    description: "",
-    domain: "",
-    port: "",
-    gitRepo: "",
-    hostingProviderId: defaultHostingProviderForDeployTarget("DOCKER")
-  });
-
-  // ── Derived values ─────────────────────────────────────────
-  const typeStackState = useMemo<WizardTypeStackState>(
-    () => ({
-      projectType,
-      hostingTarget,
-      hostingTargetBack,
-      hostingTargetFront,
-      needsEditing,
-      editingFrequency,
-      commerceModel,
-      backendMode,
-      backendFamily,
-      backendOpsHeavy,
-      headlessRequired,
-      trafficLevel,
-      productCount,
-      dataSensitivity,
-      scalabilityLevel,
-      projectFamily,
-      projectImplementation,
-      projectImplementationLabel,
-      projectFrontendImplementation,
-      projectFrontendImplementationLabel,
-      techStack,
-      wpHeadless
-    }),
-    [
-      projectType,
-      hostingTarget,
-      hostingTargetBack,
-      hostingTargetFront,
-      needsEditing,
-      editingFrequency,
-      commerceModel,
-      backendMode,
-      backendFamily,
-      backendOpsHeavy,
-      headlessRequired,
-      trafficLevel,
-      productCount,
-      dataSensitivity,
-      scalabilityLevel,
-      projectFamily,
-      projectImplementation,
-      projectImplementationLabel,
-      projectFrontendImplementation,
-      projectFrontendImplementationLabel,
-      techStack,
-      wpHeadless
-    ]
-  );
-
-  const hostingSelectionMode = useMemo(
-    () => deriveHostingSelectionMode(typeStackState),
-    [typeStackState]
-  );
-  const isHeadless = useMemo(
-    () => isHeadlessArchitecture(typeStackState),
-    [typeStackState]
-  );
-
-  const allowedDeploys = useMemo(
-    () =>
-      techStack
-        ? getAllowedDeployTargets(techStack, wpHeadless)
-        : (["DOCKER"] as DeployTarget[]),
-    [techStack, wpHeadless]
-  );
-  const allowedHostingTargets = useMemo(
-    () => filterHostingTargetsForProjectType(projectType ?? "VITRINE"),
-    [projectType]
-  );
-
-  useEffect(() => {
-    if (!allowedHostingTargets.includes(hostingTarget)) {
-      setHostingTarget(allowedHostingTargets[0] ?? "TO_CONFIRM");
-    }
-  }, [allowedHostingTargets, hostingTarget]);
-
-  useEffect(() => {
-    const isLowBudget =
-      budgetBandEffective === "UNDER_1200" || budgetBandEffective === "UP_TO_1800";
-    const isSite = projectType === "VITRINE" || projectType === "BLOG";
-    if (!isLowBudget || !isSite) return;
-    if (hostingSelectionMode !== "SINGLE") return;
-    if (hostingTarget !== "SHARED_PHP") {
-      setHostingTarget("SHARED_PHP");
-    }
-  }, [budgetBandEffective, projectType, hostingSelectionMode, hostingTarget]);
-
-  const allowedFamiliesRaw =
-    hostingSelectionMode === "SINGLE"
-      ? (HOSTING_ALLOWED_FAMILIES[hostingTarget] ??
-        HOSTING_ALLOWED_FAMILIES.TO_CONFIRM)
-      : PROJECT_FAMILY_OPTIONS.map(opt => opt.value);
-  const allowedFamilies = filterFamiliesByProjectType(
-    allowedFamiliesRaw,
-    projectType ?? "VITRINE"
-  );
-  const allowedHostingProviders = getHostingProvidersForDeployTarget(
-    deployTarget
-  ).map(provider => provider.id);
-  const defaultHostingProvider =
-    defaultHostingProviderForDeployTarget(deployTarget);
-
-  const derivedDeployTarget = useMemo(() => {
-    const baseTarget =
-      hostingSelectionMode === "SINGLE"
-        ? hostingTarget
-        : hostingSelectionMode === "NONE"
-          ? "TO_CONFIRM"
-          : (hostingTargetFront ?? hostingTarget);
-    const desiredTarget = resolveDeployTargetFromHosting(
-      baseTarget ?? "TO_CONFIRM"
-    );
-    return allowedDeploys.includes(desiredTarget)
-      ? desiredTarget
-      : (allowedDeploys[0] ?? desiredTarget);
-  }, [hostingSelectionMode, hostingTarget, hostingTargetFront, allowedDeploys]);
-
-  useEffect(() => {
-    if (!projectType) return;
-    let suggestedFamily = resolveFamilyFromInputs({
-      projectType,
-      needsEditing,
-      editingFrequency,
-      commerceModel,
-      headlessRequired
-    });
-    if (!allowedFamilies.includes(suggestedFamily)) {
-      suggestedFamily = allowedFamilies[0] ?? suggestedFamily;
-    }
-    if (
-      !familyManual ||
-      (projectFamily && !allowedFamilies.includes(projectFamily))
-    ) {
-      setProjectFamilyRaw(suggestedFamily);
-      setFamilyManual(false);
-    }
-  }, [
+  const {
+    hostingSelectionMode,
+    isHeadless,
+    allowedDeploys,
+  } = useWizardTypeStackSync({
     projectType,
+    hostingTarget,
+    setHostingTarget,
+    hostingTargetBack,
+    setHostingTargetBack,
+    hostingTargetFront,
+    setHostingTargetFront,
     needsEditing,
     editingFrequency,
     commerceModel,
+    backendMode,
+    backendFamily,
+    backendOpsHeavy,
     headlessRequired,
-    hostingTarget,
-    allowedFamilies,
-    familyManual,
-    projectFamily
-  ]);
-
-  useEffect(() => {
-    if (!projectFamily) return;
-    const allowedOptions = getImplementationOptions(projectFamily, "all");
-    const isStillAllowed = projectImplementation
-      ? allowedOptions.some((opt) =>
-          opt.value === projectImplementation &&
-          (projectImplementation !== "OTHER" || opt.label === projectImplementationLabel)
-        )
-      : false;
-    if (!implementationManual || !isStillAllowed) {
-      const nextImplementation = resolveImplementationFromFamily(
-        projectFamily,
-        "supported"
-      );
-      setProjectImplementationRaw(nextImplementation);
-      setImplementationManual(false);
-    }
-  }, [
-    projectFamily,
-    projectImplementation,
-    projectImplementationLabel,
-    implementationManual,
-  ]);
-
-  useEffect(() => {
-    const needsFrontend = isHeadless;
-
-    if (hostingSelectionMode === "SINGLE" || hostingSelectionMode === "NONE") {
-      setHostingTargetBack(null);
-      setHostingTargetFront(null);
-    } else if (hostingSelectionMode === "FRONT_ONLY") {
-      setHostingTargetBack(null);
-      if (!hostingTargetFront) {
-        setHostingTargetFront(resolveDefaultFrontHosting(typeStackState));
-      }
-    } else {
-      if (!hostingTargetBack) {
-        setHostingTargetBack(resolveDefaultBackHosting(typeStackState));
-      }
-      if (!hostingTargetFront) {
-        setHostingTargetFront(resolveDefaultFrontHosting(typeStackState));
-      }
-    }
-
-    if (!needsFrontend) {
-      setProjectFrontendImplementationRaw(null);
-      setProjectFrontendImplementationLabel("");
-      return;
-    }
-
-    if (!projectFrontendImplementation) {
-      setProjectFrontendImplementationRaw(resolveDefaultFrontend());
-    }
-  }, [
-    hostingSelectionMode,
-    hostingTargetBack,
-    hostingTargetFront,
-    isHeadless,
-    projectFrontendImplementation,
-    typeStackState
-  ]);
-
-  useEffect(() => {
-    const liveEligible = projectImplementation
-      ? isImplementationLiveEligible(projectImplementation)
-      : false;
-    if (!liveEligible) {
-      if (techStack !== null) setTechStackRaw(null);
-      if (wpHeadless) setWpHeadless(false);
-      return;
-    }
-    const { techStack: resolved, wpHeadless: headless } =
-      resolveTechStackFromImplementation(
-        projectImplementation,
-        projectFrontendImplementation
-      );
-    const fallbackByFamily: Record<ProjectFamilyInput, TechStack> = {
-      STATIC_SSG: "ASTRO",
-      CMS_MONO: "WORDPRESS",
-      CMS_HEADLESS: "WORDPRESS",
-      COMMERCE_SAAS: "WORDPRESS",
-      COMMERCE_SELF_HOSTED: "WORDPRESS",
-      COMMERCE_HEADLESS: "NEXTJS",
-      APP_PLATFORM: "NEXTJS"
-    };
-    const nextTechStack =
-      resolved ?? (projectFamily ? fallbackByFamily[projectFamily] : null);
-    if (nextTechStack !== techStack) setTechStackRaw(nextTechStack);
-    if (headless !== wpHeadless) setWpHeadless(headless);
-  }, [
-    projectImplementation,
-    projectFrontendImplementation,
-    projectFamily,
-    techStack,
-    wpHeadless
-  ]);
-
-  useEffect(() => {
-    if (derivedDeployTarget && derivedDeployTarget !== deployTarget) {
-      setDeployTargetRaw(derivedDeployTarget);
-    }
-  }, [derivedDeployTarget, deployTarget]);
-
-  useEffect(() => {
-    if (!allowedHostingProviders.includes(formFields.hostingProviderId)) {
-      setFormFields(prev => ({
-        ...prev,
-        hostingProviderId: defaultHostingProvider
-      }));
-    }
-  }, [
-    allowedHostingProviders,
-    defaultHostingProvider,
-    formFields.hostingProviderId
-  ]);
-
-  const baseOfferInput = useMemo(
-    () => ({
-      projectType,
-      projectFamily,
-      needsEditing,
-      editingFrequency,
-      trafficLevel,
-      productCount,
-      dataSensitivity,
-      scalabilityLevel
-    }),
-    [
-      projectType,
-      projectFamily,
-      needsEditing,
-      editingFrequency,
-      trafficLevel,
-      productCount,
-      dataSensitivity,
-      scalabilityLevel
-    ]
-  );
-
-  const candidateOfferInput = useMemo(
-    () => ({
-      ...baseOfferInput,
-      selectedModulesCount: selectedModules.size
-    }),
-    [baseOfferInput, selectedModules.size]
-  );
-  const candidateQualificationProjectType = useMemo(
-    () => deriveQualificationProjectType(candidateOfferInput),
-    [candidateOfferInput]
-  );
-  const candidateOfferProjectType = useMemo(
-    () => deriveOfferProjectType(candidateOfferInput),
-    [candidateOfferInput]
-  );
-  const candidateOfferStack = useMemo(() => {
-    return candidateQualificationProjectType && techStack
-      ? (getOfferStackForProject(
-          candidateQualificationProjectType,
-          techStack,
-          wpHeadless
-        ) as OfferStack)
-      : null;
-  }, [candidateQualificationProjectType, techStack, wpHeadless]);
-
-  const candidateMandatoryModuleIds = useMemo(() => {
-    if (!candidateOfferProjectType || !candidateOfferStack) return [];
-    return getMandatoryModules(candidateOfferProjectType, candidateOfferStack);
-  }, [candidateOfferProjectType, candidateOfferStack]);
-
-  const candidateIncludedModuleIds = useMemo(() => {
-    if (!candidateOfferProjectType || !candidateOfferStack) return [];
-    return getIncludedModules(candidateOfferProjectType, candidateOfferStack);
-  }, [candidateOfferProjectType, candidateOfferStack]);
-
-  const candidateLockedModuleSet = useMemo(
-    () =>
-      new Set([...candidateMandatoryModuleIds, ...candidateIncludedModuleIds]),
-    [candidateMandatoryModuleIds, candidateIncludedModuleIds]
-  );
-
-  const selectedOptionalCount = useMemo(() => {
-    if (selectedModules.size === 0) return 0;
-    let count = 0;
-    for (const id of selectedModules) {
-      if (!candidateLockedModuleSet.has(id)) {
-        count += 1;
-      }
-    }
-    return count;
-  }, [selectedModules, candidateLockedModuleSet]);
-
-  const offerInput = useMemo(
-    () => ({
-      ...baseOfferInput,
-      selectedModulesCount: selectedOptionalCount
-    }),
-    [baseOfferInput, selectedOptionalCount]
-  );
-  const qualificationProjectType = useMemo(
-    () => deriveQualificationProjectType(offerInput),
-    [offerInput]
-  );
-  const offerProjectType = useMemo(
-    () => deriveOfferProjectType(offerInput),
-    [offerInput]
-  );
-  const offerStack = useMemo(() => {
-    return qualificationProjectType && techStack
-      ? (getOfferStackForProject(
-          qualificationProjectType,
-          techStack,
-          wpHeadless
-        ) as OfferStack)
-      : null;
-  }, [qualificationProjectType, techStack, wpHeadless]);
-
-  const backendMultiplier = useMemo(
-    () => getBackendMultiplier(backendFamily, backendOpsHeavy),
-    [backendFamily, backendOpsHeavy]
-  );
-
-  const compatibleModuleIds = useMemo(() => {
-    if (!offerStack || !offerProjectType) return [];
-    return MODULE_CATALOG.filter(mod =>
-      isModuleCompatible(mod.id as ModuleId, offerStack, offerProjectType)
-    ).map(mod => mod.id);
-  }, [offerStack, offerProjectType]);
-
-  const mandatoryModuleIds = useMemo(() => {
-    if (!offerProjectType || !offerStack) return [];
-    return getMandatoryModules(offerProjectType, offerStack);
-  }, [offerProjectType, offerStack]);
-
-  const includedModuleIds = useMemo(() => {
-    if (!offerProjectType || !offerStack) return [];
-    return getIncludedModules(offerProjectType, offerStack);
-  }, [offerProjectType, offerStack]);
-
-  const lockedModuleSet = useMemo(
-    () => new Set([...mandatoryModuleIds, ...includedModuleIds]),
-    [mandatoryModuleIds, includedModuleIds]
-  );
-
-  useEffect(() => {
-    if (!offerProjectType) return;
-    if (!offerStack) return;
-    const selectedIds = pendingOfferModulesRef.current ?? undefined;
-    const payload: {
-      allowedIds?: ModuleId[];
-      mandatoryIds?: ModuleId[];
-      selectedIds?: ModuleId[];
-    } = {
-      allowedIds: compatibleModuleIds,
-      mandatoryIds: [...mandatoryModuleIds, ...includedModuleIds]
-    };
-    if (selectedIds) {
-      payload.selectedIds = selectedIds;
-    }
-    syncModules(payload);
-    if (pendingOfferModulesRef.current) {
-      pendingOfferModulesRef.current = null;
-    }
-  }, [
-    offerProjectType,
-    offerStack,
-    compatibleModuleIds,
-    mandatoryModuleIds,
-    includedModuleIds,
-    syncModules,
-    clearModules
-  ]);
-
-  const toggleModuleSafe = useCallback(
-    (id: ModuleId) => {
-      if (lockedModuleSet.has(id)) return;
-      toggleModule(id);
-    },
-    [lockedModuleSet, toggleModule]
-  );
-
-  const qualificationConstraints = useMemo<ProjectConstraints>(() => {
-    const headlessContext = isHeadless;
-
-    return {
-      ...DEFAULT_CONSTRAINTS,
-      trafficLevel,
-      productCount: projectType === "ECOM" ? productCount : "NONE",
-      dataSensitivity,
-      scalabilityLevel,
-      needsEditing,
-      editingFrequency,
-      headlessRequired: headlessContext,
-      commerceModel: projectType === "ECOM" ? commerceModel : null,
-      backendFamily: projectType === "APP" ? backendFamily : null,
-      backendOpsHeavy: projectType === "APP" ? backendOpsHeavy : false
-    };
-  }, [
-    projectType,
     trafficLevel,
     productCount,
     dataSensitivity,
     scalabilityLevel,
+    projectFamily,
+    setProjectFamilyRaw,
+    projectImplementation,
+    setProjectImplementationRaw,
+    projectImplementationLabel,
+    projectFrontendImplementation,
+    setProjectFrontendImplementationRaw,
+    projectFrontendImplementationLabel,
+    setProjectFrontendImplementationLabel,
+    techStack,
+    setTechStackRaw,
+    wpHeadless,
+    setWpHeadless,
+    deployTarget,
+    setDeployTargetRaw,
+    budgetBandEffective,
+    familyManual,
+    setFamilyManual,
+    implementationManual,
+    setImplementationManual,
+    formFields,
+    setFormFields,
+  });
+
+  const {
+    qualificationProjectType,
+    offerProjectType,
+    canonicalTaxonomyResolution,
+    backendMultiplier,
+    compatibleModuleIds,
+    mandatoryModuleIds,
+    includedModuleIds,
+    toggleModuleSafe,
+  } = useWizardOfferDerivations({
+    projectType,
+    taxonomySignal,
+    projectFamily,
     needsEditing,
     editingFrequency,
-    headlessRequired,
-    commerceModel,
+    trafficLevel,
+    productCount,
+    dataSensitivity,
+    scalabilityLevel,
+    techStack,
+    wpHeadless,
+    selectedModules,
+    syncModules,
+    toggleModule,
+    pendingOfferModulesRef,
     backendFamily,
     backendOpsHeavy,
-    isHeadless
-  ]);
+  });
 
-  // ── Qualification (shared hook) ────────────────────────────
+  const qualificationConstraints = useMemo(
+    () =>
+      buildQualificationConstraints({
+        projectType,
+        trafficLevel,
+        productCount,
+        dataSensitivity,
+        scalabilityLevel,
+        needsEditing,
+        editingFrequency,
+        commerceModel,
+        backendFamily,
+        backendOpsHeavy,
+        isHeadless,
+      }),
+    [
+      projectType,
+      trafficLevel,
+      productCount,
+      dataSensitivity,
+      scalabilityLevel,
+      needsEditing,
+      editingFrequency,
+      commerceModel,
+      backendFamily,
+      backendOpsHeavy,
+      isHeadless,
+    ],
+  );
+
   const qualification = useQualification({
     projectType: qualificationProjectType,
     techStack,
@@ -891,19 +318,20 @@ export function WizardProvider({ children }: { children: ReactNode }) {
     deployTarget,
     wpHeadless,
     catSelections,
-    constraints: qualificationConstraints
+    constraints: qualificationConstraints,
   });
 
-  // ── Actions ────────────────────────────────────────────────
-
-  /** Change le type de projet — reset modules + auto-corrige le stack */
   const changeProjectType = useCallback(
     (type: ProjectType) => {
       setProjectType(type);
+      setTaxonomySignalRaw(resolveDefaultTaxonomySignalForProjectType(type));
       clearModules();
+      resetWizardCapabilities();
+
       if (type === "BLOG") {
         setHeadlessRequired(false);
       }
+
       setEditingMode("TO_CONFIRM");
       setEditorialPushOwner("TO_CONFIRM");
       setIncludeOnboardingPack(false);
@@ -916,22 +344,26 @@ export function WizardProvider({ children }: { children: ReactNode }) {
       setPrimaryGoal("TO_CONFIRM");
       setAmbitionLevel("TO_CONFIRM");
       setTargetTimeline("TO_CONFIRM");
+
       if (type === "VITRINE") {
         setCommerceModel("SELF_HOSTED");
       }
+
       if (type !== "APP") {
         setBackendMode("FULLSTACK");
         setBackendFamily(null);
         setBackendOpsHeavy(false);
       }
+
       if (type !== "ECOM") {
         setCommerceModel("SELF_HOSTED");
         setProductCount("NONE");
       }
+
       setFamilyManual(false);
       setImplementationManual(false);
     },
-    [clearModules]
+    [clearModules, resetWizardCapabilities],
   );
 
   const setProjectFamily = useCallback((value: ProjectFamilyInput) => {
@@ -944,251 +376,114 @@ export function WizardProvider({ children }: { children: ReactNode }) {
       setProjectImplementationRaw(value);
       setImplementationManual(true);
     },
-    []
+    [],
   );
 
   const setProjectFrontendImplementation = useCallback(
     (value: ProjectFrontendImplementationInput) => {
       setProjectFrontendImplementationRaw(value);
     },
-    []
+    [],
   );
 
   useEffect(() => {
     if (offerInitDoneRef.current) return;
 
-    const offerProjectType =
-      offerProjectTypeParam &&
-      Object.prototype.hasOwnProperty.call(
-        OFFER_PROJECT_MAP,
-        offerProjectTypeParam
-      )
-        ? (offerProjectTypeParam as OfferCategory)
-        : null;
-    const offerStack =
-      offerStackParam && OFFER_STACKS.includes(offerStackParam as OfferStack)
-        ? (offerStackParam as OfferStack)
-        : null;
-
-    if (!offerProjectType || !offerStack) {
+    const prefill = resolveOfferPrefill(queryPrefill);
+    if (!prefill) {
       offerInitDoneRef.current = true;
       return;
     }
 
-    const mappedProjectType = OFFER_PROJECT_MAP[offerProjectType];
-    changeProjectType(mappedProjectType);
-    const OFFER_STACK_MAP: Record<
-      OfferStack,
-      { family: ProjectFamilyInput; implementation: ProjectImplementationInput }
-    > = {
-      WORDPRESS: { family: "CMS_MONO", implementation: "WORDPRESS" },
-      WORDPRESS_HEADLESS: {
-        family: "CMS_HEADLESS",
-        implementation: "WORDPRESS_HEADLESS"
-      },
-      WOOCOMMERCE: {
-        family: "COMMERCE_SELF_HOSTED",
-        implementation: "WOOCOMMERCE"
-      },
-      WOOCOMMERCE_HEADLESS: {
-        family: "COMMERCE_HEADLESS",
-        implementation: "WOOCOMMERCE_HEADLESS"
-      },
-      NEXTJS: { family: "APP_PLATFORM", implementation: "NEXTJS" },
-      NUXT: { family: "APP_PLATFORM", implementation: "NUXT" },
-      ASTRO: { family: "STATIC_SSG", implementation: "ASTRO" }
-    };
-    const mapped = OFFER_STACK_MAP[offerStack];
-    if (mapped) {
-      setProjectFamilyRaw(mapped.family);
-      setProjectImplementationRaw(mapped.implementation);
-      setFamilyManual(false);
-      setImplementationManual(false);
-      if (
-        mapped.family === "CMS_HEADLESS" ||
-        mapped.family === "COMMERCE_HEADLESS"
-      ) {
-        setProjectFrontendImplementationRaw(resolveDefaultFrontend());
-      }
+    changeProjectType(prefill.projectType);
+
+    if (prefill.taxonomySignal) {
+      setTaxonomySignalRaw(prefill.taxonomySignal);
     }
 
-    const OFFER_HOSTING_TARGET: Record<string, HostingTargetInput> = {
-      shared: "SHARED_PHP",
-      vercel: "CLOUD_SSR",
-      docker_vps: "VPS_DOCKER",
-      headless_unified: "VPS_DOCKER"
-    };
-    const mappedHosting = offerDeploymentParam
-      ? OFFER_HOSTING_TARGET[offerDeploymentParam]
-      : null;
-    if (mappedHosting) {
-      setHostingTarget(mappedHosting);
-    }
-    if (offerDeploymentParam === "headless_split") {
-      setHostingTarget("TO_CONFIRM");
-      setHostingTargetBack("SHARED_PHP");
-      setHostingTargetFront("CLOUD_SSR");
+    setProjectFamilyRaw(prefill.projectFamily);
+    setProjectImplementationRaw(prefill.projectImplementation);
+    setFamilyManual(false);
+    setImplementationManual(false);
+
+    if (prefill.shouldPrefillFrontendImplementation) {
+      setProjectFrontendImplementationRaw(resolveDefaultFrontend());
     }
 
-    if (offerModules.length > 0) {
-      pendingOfferModulesRef.current = offerModules;
+    if (prefill.hostingTarget) {
+      setHostingTarget(prefill.hostingTarget);
+    }
+
+    if (prefill.hostingTargetBack || prefill.hostingTargetFront) {
+      setHostingTargetBack(prefill.hostingTargetBack);
+      setHostingTargetFront(prefill.hostingTargetFront);
+    }
+
+    if (prefill.offerModules.length > 0) {
+      pendingOfferModulesRef.current = prefill.offerModules;
     }
 
     offerInitDoneRef.current = true;
-  }, [
-    offerProjectTypeParam,
-    offerStackParam,
-    offerDeploymentParam,
-    offerModules,
-    changeProjectType,
-    setProjectFamily,
-    setProjectImplementation,
-    setProjectFrontendImplementation
-  ]);
+  }, [queryPrefill, changeProjectType]);
 
-  // ── Navigation helpers ─────────────────────────────────────!
-
-  const nextReasons = useMemo(() => {
-    const reasons: string[] = [];
-    // Step 0 = Questionnaire
-    if (step === 0) {
-      if (!projectType)
-        reasons.push("Sélectionnez un type de projet pour continuer.");
-      if (projectType && budgetBandEffective === "TO_CONFIRM") {
-        reasons.push("Précisez le budget maximum du client.");
-      }
-      if (projectType && budgetBandEffective !== "TO_CONFIRM" && clientKnowledge === "TO_CONFIRM") {
-        reasons.push("Précisez le niveau de connaissance numérique du client.");
-      }
-      if (
-        projectType &&
-        budgetBandEffective !== "TO_CONFIRM" &&
-        clientKnowledge !== "TO_CONFIRM" &&
-        primaryGoal === "TO_CONFIRM"
-      ) {
-        reasons.push("Précisez l’objectif principal du projet.");
-      }
-      if (
-        projectType &&
-        budgetBandEffective !== "TO_CONFIRM" &&
-        clientKnowledge !== "TO_CONFIRM" &&
-        primaryGoal !== "TO_CONFIRM" &&
-        ambitionLevel === "TO_CONFIRM"
-      ) {
-        reasons.push("Précisez l’ambition du client à 12 mois.");
-      }
-      if (
-        projectType &&
-        budgetBandEffective !== "TO_CONFIRM" &&
-        clientKnowledge !== "TO_CONFIRM" &&
-        primaryGoal !== "TO_CONFIRM" &&
-        ambitionLevel !== "TO_CONFIRM" &&
-        targetTimeline === "TO_CONFIRM"
-      ) {
-        reasons.push("Précisez le délai cible.");
-      }
-      if (
-        needsEditing &&
-        editingMode === "GIT_MDX" &&
-        editorialPushOwner === "TO_CONFIRM"
-      ) {
-        reasons.push(
-          "Précisez qui publie en mode Git/MDX (équipe client ou agence)."
-        );
-      }
-      if (
-        needsEditing &&
-        editingMode === "GIT_MDX" &&
-        editorialPushOwner === "CLIENT" &&
-        clientAccessPolicy === "TO_CONFIRM"
-      ) {
-        reasons.push(
-          "Précisez la limite d’accès client en mode push client."
-        );
-      }
-      if (projectType === "APP" && budgetBandEffective === "UNDER_1200") {
-        reasons.push(
-          "Avec un budget < 1 200 €, une App n’est pas réaliste : requalifiez vers Vitrine/Blog avec CMS monolithique."
-        );
-      }
-      if (projectType === "ECOM" && budgetBandEffective === "UNDER_1200") {
-        reasons.push(
-          "Avec un budget < 1 200 €, un e-commerce n’est pas réaliste : requalifiez vers vitrine/catalogue sans paiement ou augmentez le budget."
-        );
-      }
-    }
-
-    if (step === 1) {
-      if (projectType === "APP" && budgetBandEffective === "UNDER_1200") {
-        reasons.push(
-          "Budget < 1 200 € incompatible avec une App : revenez sur le type projet (Vitrine/Blog + CMS monolithique)."
-        );
-      }
-      if (projectType === "ECOM" && budgetBandEffective === "UNDER_1200") {
-        reasons.push(
-          "Budget < 1 200 € incompatible avec un e-commerce : revenez sur le type projet (vitrine/catalogue sans paiement) ou augmentez le budget."
-        );
-      }
-      if (isHeadless && !projectFrontendImplementation) {
-        reasons.push(
-          "Sélectionnez une implémentation frontend (architecture headless)."
-        );
-      }
-      if (hostingSelectionMode === "SPLIT" && !hostingTargetBack) {
-        reasons.push(
-          "Sélectionnez un hébergement back (architecture découplée)."
-        );
-      }
-      if (
-        (hostingSelectionMode === "SPLIT" ||
-          hostingSelectionMode === "FRONT_ONLY") &&
-        !hostingTargetFront
-      ) {
-        reasons.push("Sélectionnez un hébergement front.");
-      }
-    }
-    if (step === 3) {
-      if (formFields.name.trim().length < 2) {
-        reasons.push("Le nom du projet doit faire au moins 2 caractères.");
-      }
-      if (!formFields.clientId.trim()) {
-        reasons.push("Sélectionnez un client.");
-      }
-    }
-    return reasons;
-  }, [
-    step,
-    projectType,
-    budgetBandEffective,
-    clientKnowledge,
-    primaryGoal,
-    ambitionLevel,
-    targetTimeline,
-    needsEditing,
-    editingMode,
-    editorialPushOwner,
-    clientAccessPolicy,
-    isHeadless,
-    projectFrontendImplementation,
-    hostingSelectionMode,
-    hostingTargetBack,
-    hostingTargetFront,
-    formFields.name,
-    formFields.clientId
-  ]);
+  const nextReasons = useMemo(
+    () =>
+      computeWizardNextReasons({
+        step,
+        projectType,
+        budgetBandEffective,
+        clientKnowledge,
+        primaryGoal,
+        ambitionLevel,
+        targetTimeline,
+        needsEditing,
+        editingMode,
+        editorialPushOwner,
+        clientAccessPolicy,
+        isHeadless,
+        projectFrontendImplementation,
+        hostingSelectionMode,
+        hostingTargetBack,
+        hostingTargetFront,
+        selectedModules,
+        wizardModules,
+        formName: formFields.name,
+        formClientId: formFields.clientId,
+      }),
+    [
+      step,
+      projectType,
+      budgetBandEffective,
+      clientKnowledge,
+      primaryGoal,
+      ambitionLevel,
+      targetTimeline,
+      needsEditing,
+      editingMode,
+      editorialPushOwner,
+      clientAccessPolicy,
+      isHeadless,
+      projectFrontendImplementation,
+      hostingSelectionMode,
+      hostingTargetBack,
+      hostingTargetFront,
+      selectedModules,
+      wizardModules,
+      formFields.name,
+      formFields.clientId,
+    ],
+  );
 
   const canGoNext = nextReasons.length === 0;
 
   const next = useCallback(() => {
     if (!canGoNext) return;
-    setStep(s => Math.min(s + 1, 4));
+    setStep((current) => nextWizardStep(current));
   }, [canGoNext]);
 
   const prev = useCallback(() => {
-    setStep(s => Math.max(s - 1, 0));
+    setStep((current) => prevWizardStep(current));
   }, []);
-
-  // ── Render ─────────────────────────────────────────────────
 
   return (
     <WizardContext.Provider
@@ -1201,6 +496,8 @@ export function WizardProvider({ children }: { children: ReactNode }) {
         nextReasons,
         projectType,
         changeProjectType,
+        taxonomySignal,
+        setTaxonomySignal,
         techStack,
         wpHeadless,
         deployTarget,
@@ -1276,20 +573,37 @@ export function WizardProvider({ children }: { children: ReactNode }) {
         mandatoryModuleIds,
         includedModuleIds,
         compatibleModuleIds,
+        wizardModules,
+        setWizardModules,
+        enableWizardModule,
+        disableWizardModule,
+        configureWizardModule,
+        wizardFeatures,
+        setWizardFeatures,
+        setWizardFeatureStatus,
+        configureWizardFeature,
+        wizardProviders,
+        setWizardProviders,
+        setWizardProviderStatus,
+        configureWizardProvider,
         formFields,
         setFormFields,
         qualification,
         qualificationProjectType,
         offerProjectType,
+        canonicalTaxonomyResolution,
         backendMultiplier,
         allowedDeploys,
         isHeadless,
         hostingSelectionMode,
         formAction,
         isPending,
-        actionError: state.error
-      }}>
+        actionError,
+      }}
+    >
       {children}
     </WizardContext.Provider>
   );
 }
+
+export { useWizard } from "./wizard-context";

@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { TooltipProvider } from "@/shared/components/ui/tooltip";
 import { SummaryBadge, type SummaryStatus, type SummaryItem } from "./maintenance/utils/SummaryBadge";
 import OverviewTab from "./maintenance/OverviewTab";
 import MuTab from "./maintenance/MuTab";
@@ -33,10 +33,9 @@ import type {
   HoneypotCheck,
   HoneypotTest,
 } from "./types";
-import type { WpInfraFeature } from "@/lib/wp";
-import type { WpInfraStatusValue } from "@/lib/wp";
-import { cn } from "@/lib/utils";
-import { INFRA_FEATURES } from "@/lib/wp";
+import { INFRA_FEATURES, type WpInfraFeature } from "@/lib/wp/features";
+import type { WpInfraStatusValue } from "@/lib/wp/infra-status";
+import { cn } from "@/shared/lib/utils";
 
 export function MaintenanceTab({
   devMode,

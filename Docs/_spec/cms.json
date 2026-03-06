@@ -8,7 +8,7 @@
     ],
     "shape": {
       "requiredTopLevel": ["version", "cms"],
-      "cmsItemRequired": ["id", "label", "kind"],
+      "cmsItemRequired": ["id", "label", "kind", "description"],
       "idConvention": "cms.*"
     }
   },
@@ -21,7 +21,8 @@
       "kind": "CONTENT_CMS",
       "type": "CMS",
       "editorialModel": "NATIVE",
-      "extensionModel": "PLUGIN"
+      "extensionModel": "PLUGIN",
+      "description": "CMS open source le plus répandu. Idéal pour les sites vitrine et blogs avec un écosystème de plugins massif."
     },
     {
       "id": "cms.WOOCOMMERCE",
@@ -30,7 +31,8 @@
       "kind": "ECOMMERCE_CMS",
       "type": "COMMERCE_CMS",
       "editorialModel": "NATIVE",
-      "extensionModel": "PLUGIN"
+      "extensionModel": "PLUGIN",
+      "description": "Extension e-commerce de WordPress. Solution flexible pour les boutiques en ligne avec contrôle total sur l'hébergement."
     },
     {
       "id": "cms.PRESTASHOP",
@@ -39,7 +41,8 @@
       "kind": "ECOMMERCE_CMS",
       "type": "COMMERCE_CMS",
       "editorialModel": "NATIVE",
-      "extensionModel": "PLUGIN"
+      "extensionModel": "PLUGIN",
+      "description": "CMS e-commerce open source français. Adapté aux marchands de taille moyenne avec des besoins de catalogue avancés."
     },
     {
       "id": "cms.SHOPIFY",
@@ -48,7 +51,8 @@
       "kind": "ECOMMERCE_SAAS",
       "type": "COMMERCE_CMS",
       "editorialModel": "NATIVE",
-      "extensionModel": "APP"
+      "extensionModel": "APP",
+      "description": "Plateforme e-commerce SaaS clé en main. Hébergement inclus, scalabilité native et écosystème d'apps riche."
     },
     {
       "id": "cms.DRUPAL",
@@ -57,7 +61,8 @@
       "kind": "CONTENT_CMS",
       "type": "CMS",
       "editorialModel": "NATIVE",
-      "extensionModel": "MODULE"
+      "extensionModel": "MODULE",
+      "description": "CMS open source robuste pour les projets complexes. Modélisation de contenu avancée et gestion fine des permissions."
     },
     {
       "id": "cms.HEADLESS",
@@ -67,6 +72,7 @@
       "type": "HEADLESS",
       "editorialModel": "CONFIGURABLE",
       "extensionModel": "MODULE_OR_CUSTOM",
+      "description": "Architecture découplée API-first. Frontend libre (Next.js, Nuxt, Astro…) avec CMS headless ou contenu en fichiers.",
       "supportedFrontends": [
         "Next.js",
         "Nuxt",

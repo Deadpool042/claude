@@ -1,9 +1,11 @@
 {
   "_meta": {
-    "purpose": "Paramètres commerciaux canoniques: fourchettes pricing, frais one-shot, coûts récurrents et garde-fous.",
-    "version": "1.0.0",
+    "purpose": "Paramètres commerciaux canoniques: fourchettes pricing, frais one-shot, coûts récurrents, hébergement, SaaS et garde-fous. Source de vérité unique — pas de duplication entre sections.",
+    "version": "3.0.0",
     "consumedBy": [
       "site-factory/src/lib/referential/engine/estimate-quote.ts",
+      "site-factory/src/lib/referential/maintenance-cat.ts",
+      "site-factory/src/lib/referential/deploy.ts",
       "site-factory/src/features/dashboard/projects/new/ui/QualificationSidebar.tsx"
     ],
     "shape": {
@@ -12,18 +14,22 @@
         "region",
         "basePackageBandsByCategory",
         "maintenanceByCategory",
+        "deployFees",
+        "hostingCosts",
+        "saasCosts",
+        "stackDeployCompat",
         "annexCosts",
         "rules"
       ],
-      "commercialCoverage": [
-        "pricingRanges",
-        "oneTimeFees",
-        "recurringCosts",
-        "ownershipHostingFees"
+      "canonicalPrinciples": [
+        "deployFees = source unique pour tous les frais de déploiement (standard + headless)",
+        "hostingCosts = source unique pour tous les coûts d'hébergement (standard + headless)",
+        "annexCosts = uniquement les coûts annexes propres (domaine, email, stockage)",
+        "Les coûts varient selon la complexité du déploiement (LOW → HIGH)"
       ]
     }
   },
-  "version": "1.0.0",
+  "version": "3.0.0",
   "region": {
     "label": "Saint-Étienne / Loire",
     "currency": "EUR"
@@ -31,74 +37,271 @@
   "basePackageBandsByCategory": {
     "CAT0": {
       "from": 1290,
-      "to": 1800
+      "to": 1800,
+      "description": "Site one-page ou vitrine minimaliste. Thème standard, contenu statique, formulaire de contact."
     },
     "CAT1": {
       "from": 1800,
-      "to": 3500
+      "to": 3500,
+      "description": "Site vitrine multi-pages avec blog, SEO avancé et quelques intégrations (analytics, newsletter)."
     },
     "CAT2": {
       "from": 3500,
-      "to": 5200
+      "to": 5200,
+      "description": "Site enrichi avec e-commerce léger, espace membre, multilingue ou intégrations métier."
     },
     "CAT3": {
       "from": 4500,
-      "to": 8000
+      "to": 8000,
+      "description": "Plateforme métier complexe : e-commerce avancé, workflows B2B, API tierces ou fonctionnalités sur mesure."
     },
     "CAT4": {
       "from": 7000,
-      "to": 15000
+      "to": 15000,
+      "description": "Projet enterprise : marketplace, SaaS, multi-sites, architecture headless ou contraintes réglementaires fortes."
     }
   },
   "maintenanceByCategory": {
     "CAT0": {
+      "id": "MINIMAL",
       "label": "Minimal",
-      "monthly": 29
+      "shortLabel": "Cat 0",
+      "description": "Maintenance de base pour sites vitrines simples : monitoring uptime, sauvegardes hebdomadaires et mises à jour trimestrielles. Idéal pour un site one-page ou un blog personnel sans trafic critique.",
+      "monthly": 29,
+      "splitPrestataire": 70,
+      "scope": [
+        "Monitoring uptime",
+        "Sauvegardes automatiques (hebdomadaire)",
+        "Mises à jour core (trimestriel)",
+        "Support email (48h)"
+      ]
     },
     "CAT1": {
+      "id": "STANDARD",
       "label": "Standard",
-      "monthly": 59
+      "shortLabel": "Cat 1",
+      "description": "Maintenance standard pour sites vitrines enrichis : mises à jour mensuelles core + plugins, sauvegardes quotidiennes et rapport mensuel. Convient aux TPE/PME avec un site institutionnel ou un blog actif.",
+      "monthly": 59,
+      "splitPrestataire": 70,
+      "scope": [
+        "Tout Cat 0",
+        "Mises à jour core + plugins (mensuel)",
+        "Sauvegardes automatiques (quotidien)",
+        "Rapport mensuel",
+        "Support email (24h)"
+      ]
     },
     "CAT2": {
+      "id": "ADVANCED",
       "label": "Avancée",
-      "monthly": 129
+      "shortLabel": "Cat 2",
+      "description": "Maintenance avancée pour sites à enjeux métier : audit sécurité trimestriel, monitoring performance, support prioritaire 12h et intervention corrective mensuelle. Adapté aux sites e-commerce ou portails avec trafic significatif.",
+      "monthly": 129,
+      "splitPrestataire": 70,
+      "scope": [
+        "Tout Cat 1",
+        "Mises à jour bimensuelles",
+        "Audit sécurité (trimestriel)",
+        "Monitoring performance",
+        "Support email prioritaire (12h)",
+        "1 intervention corrective/mois"
+      ]
     },
     "CAT3": {
+      "id": "BUSINESS",
       "label": "Métier renforcée",
-      "monthly": 249
+      "shortLabel": "Cat 3",
+      "description": "Maintenance métier renforcée pour plateformes business : mises à jour hebdomadaires, audit sécurité mensuel, APM, support 4h et interventions correctives bimensuelles. Pour les sites e-commerce avec catalogue étendu ou les applications métier critiques.",
+      "monthly": 249,
+      "splitPrestataire": 70,
+      "scope": [
+        "Tout Cat 2",
+        "Mises à jour hebdomadaires",
+        "Audit sécurité (mensuel)",
+        "Monitoring avancé (APM)",
+        "Support prioritaire (4h)",
+        "2 interventions correctives/mois",
+        "Rapport détaillé mensuel"
+      ]
     },
     "CAT4": {
+      "id": "PREMIUM",
       "label": "Premium",
-      "monthly": 490
+      "shortLabel": "Cat 4",
+      "description": "Maintenance premium avec SLA garanti pour plateformes enterprise : mises à jour en continu, pentest, support dédié 2h, interventions illimitées et comité technique mensuel. Réservé aux projets à fort enjeu business (marketplace, SaaS, multi-sites).",
+      "monthly": 490,
+      "splitPrestataire": 60,
+      "scope": [
+        "Tout Cat 3",
+        "Mises à jour en continu",
+        "Audit sécurité + pentest",
+        "SLA garanti",
+        "Support dédié (2h)",
+        "Interventions illimitées",
+        "Comité technique mensuel"
+      ]
     }
   },
-  "annexCosts": {
-    "deploySetupFee": {
-      "DOCKER": 390,
-      "VERCEL": 390,
-      "SHARED_HOSTING": 390
+  "deployFees": {
+    "SHARED_HOSTING": {
+      "id": "SHARED_HOSTING",
+      "label": "Mutualisé (o2switch, OVH...)",
+      "description": "Déploiement sur hébergement mutualisé classique via FTP/cPanel. Solution économique et simple pour WordPress ou sites PHP standards. Pas de scalabilité automatique.",
+      "cost": 250,
+      "complexity": "LOW",
+      "baseContainers": [],
+      "scope": [
+        "Upload FTP / cPanel",
+        "Configuration DNS",
+        "SSL Let's Encrypt",
+        "Configuration PHP"
+      ],
+      "headless": {
+        "label": "Split : mutualisé (WP) + Vercel (frontend)",
+        "description": "Architecture découplée : WordPress sur mutualisé comme CMS headless + frontend Next.js/Nuxt déployé sur Vercel. Deux environnements à configurer et synchroniser.",
+        "cost": 590,
+        "complexity": "HIGH",
+        "scope": [
+          "Upload FTP / cPanel (backend WP)",
+          "Configuration DNS multi-domaine",
+          "SSL Let's Encrypt (backend + frontend)",
+          "Configuration projet Vercel (frontend)",
+          "Variables d'environnement (2 environnements)",
+          "Configuration headless WP (REST/GraphQL)",
+          "CI/CD multi-environnements"
+        ]
+      }
     },
+    "VERCEL": {
+      "id": "VERCEL",
+      "label": "Vercel / Cloud",
+      "description": "Déploiement sur plateforme cloud serverless (Vercel). Idéal pour Next.js, Nuxt.js ou Astro avec preview branches automatiques et CDN mondial intégré.",
+      "cost": 350,
+      "complexity": "MEDIUM",
+      "baseContainers": [],
+      "scope": [
+        "Configuration projet Vercel",
+        "Variables d'environnement",
+        "Custom domain",
+        "Preview branches"
+      ]
+    },
+    "DOCKER": {
+      "id": "DOCKER",
+      "label": "Docker / VPS",
+      "description": "Déploiement conteneurisé sur VPS avec reverse proxy et CI/CD. Maximum de contrôle et de flexibilité, adapté aux stacks complexes ou aux projets nécessitant des ressources dédiées.",
+      "cost": 490,
+      "complexity": "HIGH",
+      "baseContainers": [
+        "nginx",
+        "app",
+        "mariadb"
+      ],
+      "scope": [
+        "Dockerfile + docker-compose",
+        "Reverse proxy (Traefik / Nginx)",
+        "CI/CD pipeline",
+        "Sauvegardes automatiques",
+        "Monitoring basique"
+      ],
+      "headless": {
+        "label": "Docker unifié (WP + frontend)",
+        "description": "Architecture unifiée : WordPress + frontend dans un même environnement Docker. Orchestration multi-conteneurs, simplicité opérationnelle mais nécessite un VPS suffisamment dimensionné.",
+        "cost": 550,
+        "complexity": "HIGH",
+        "scope": [
+          "Dockerfile + docker-compose multi-services",
+          "Reverse proxy (Traefik / Nginx)",
+          "CI/CD pipeline",
+          "Sauvegardes automatiques",
+          "Monitoring basique",
+          "Configuration headless WP (REST/GraphQL)",
+          "Orchestration multi-conteneurs (WP + Node.js)"
+        ]
+      }
+    }
+  },
+  "hostingCosts": {
+    "SHARED_HOSTING": {
+      "label": "Mutualisé (o2switch, OVH...)",
+      "description": "Hébergement partagé classique. Coût très bas, performances suffisantes pour sites à trafic modéré (< 10k visites/mois).",
+      "range": {
+        "min": 3,
+        "max": 15
+      },
+      "headless": {
+        "label": "Split : mutualisé (WP) + Vercel (frontend)",
+        "description": "Backend WordPress sur mutualisé + frontend sur Vercel. Double coût d'hébergement mais optimisé pour la performance front.",
+        "range": {
+          "min": 3,
+          "max": 30
+        }
+      }
+    },
+    "VERCEL": {
+      "label": "Vercel / Cloud",
+      "description": "Plateforme cloud avec plan gratuit généreux. Scaling automatique et CDN intégré, coût variable selon le trafic.",
+      "range": {
+        "min": 0,
+        "max": 25
+      }
+    },
+    "DOCKER": {
+      "label": "VPS géré",
+      "description": "Serveur virtuel privé avec Docker. Performances garanties et ressources dédiées, nécessite une administration système.",
+      "range": {
+        "min": 15,
+        "max": 50
+      },
+      "headless": {
+        "label": "Unifié : VPS (WP + frontend)",
+        "description": "Tout-en-un Docker sur VPS. Un seul point d'hébergement à gérer, dimensionnement selon la charge.",
+        "range": {
+          "min": 15,
+          "max": 50
+        }
+      }
+    }
+  },
+  "saasCosts": {
+    "SHOPIFY": {
+      "label": "Shopify",
+      "description": "Plateforme e-commerce SaaS leader mondial. Hébergement, paiement et sécurité intégrés. Écosystème d'apps mature mais vendor lock-in.",
+      "range": "29–299 $/mois"
+    },
+    "BIGCOMMERCE": {
+      "label": "BigCommerce",
+      "description": "Plateforme e-commerce SaaS orientée B2B et catalogues complexes. Bon headless support, mais écosystème plus restreint que Shopify.",
+      "range": "29–299 $/mois"
+    },
+    "WEBFLOW_COMMERCE": {
+      "label": "Webflow Commerce",
+      "description": "Solution e-commerce intégrée à Webflow. Idéal pour les designers, catalogue limité (< 10k produits), pas de B2B natif.",
+      "range": "29–212 $/mois"
+    }
+  },
+  "stackDeployCompat": {
+    "WORDPRESS": [
+      "DOCKER",
+      "SHARED_HOSTING"
+    ],
+    "NEXTJS": [
+      "DOCKER",
+      "VERCEL"
+    ],
+    "NUXT": [
+      "DOCKER",
+      "VERCEL"
+    ],
+    "ASTRO": [
+      "DOCKER",
+      "VERCEL"
+    ]
+  },
+  "annexCosts": {
     "domainYearlyRange": {
       "min": 12,
       "max": 60
-    },
-    "hostingMonthlyRangeByStack": {
-      "WORDPRESS_SHARED": {
-        "min": 3,
-        "max": 10
-      },
-      "WORDPRESS_VPS": {
-        "min": 20,
-        "max": 120
-      },
-      "NEXT_SSR": {
-        "min": 18,
-        "max": 220
-      },
-      "ASTRO_STATIC": {
-        "min": 0,
-        "max": 30
-      }
     },
     "emailMonthlyRange": {
       "min": 0,
@@ -107,10 +310,6 @@
     "storageMonthlyRange": {
       "min": 0,
       "max": 120
-    },
-    "deploySetupFeeRange": {
-      "min": 390,
-      "max": 390
     }
   },
   "rules": {

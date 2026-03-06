@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { PageLayout } from "@/components/shell/page-layout";
+import { PageLayout } from "@/shared/components/shell/page-layout";
 import { WizardProvider } from "@/features/dashboard/projects/new";
 
 /**

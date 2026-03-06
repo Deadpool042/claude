@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 
 interface TestServiceButtonProps {
   service: string;

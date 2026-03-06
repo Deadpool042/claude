@@ -1,6 +1,6 @@
 "use client";
 // MU-plugins Tab extrait de maintenance-tab
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { StatusLine } from "./utils/StatusLine";
 
 interface MuTabProps {

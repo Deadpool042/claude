@@ -1,11 +1,11 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/shared/components/ui/card";
 import { Euro, ShieldCheck, Layers, Receipt, Bot, CalendarClock } from "lucide-react";
 import {
   CATEGORY_LABELS,
@@ -23,10 +23,18 @@ import {
   type QuoteEstimate,
 } from "@/lib/referential";
 import type { Category as SpecCategory } from "@/lib/referential/spec/types";
-import { MODULE_ICONS, GROUP_ICONS } from "@/lib/ui/module-icons";
-import { formatEur } from "@/lib/currency";
+import { MODULE_ICONS, GROUP_ICONS } from "@/shared/lib/ui/module-icons";
+import { formatEur } from "@/shared/lib/currency";
 import { Wrench } from "lucide-react";
 import { QuoteActions } from "./quote-actions";
+import {
+  CANONICAL_TAXONOMY_LABELS,
+  TAXONOMY_SIGNAL_SOURCE_LABELS,
+  TAXONOMY_SIGNAL_LABELS,
+  type CanonicalProjectTaxonomy,
+  type TaxonomyDisambiguationSignal,
+  type TaxonomySignalResolutionSource,
+} from "@/lib/taxonomy";
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -54,11 +62,16 @@ interface TabCommercialProps {
     maintenanceLevel: string | null;
     estimatedBudget: number | null;
   } | null;
+  taxonomy?: {
+    signal: TaxonomyDisambiguationSignal | null;
+    signalSource: TaxonomySignalResolutionSource;
+    canonicalTaxonomy: CanonicalProjectTaxonomy | null;
+  };
 }
 
 // ── Component ──────────────────────────────────────────────────────
 
-export function TabCommercial({ project, config }: TabCommercialProps) {
+export function TabCommercial({ project, config, taxonomy }: TabCommercialProps) {
   const moduleIds: string[] = config?.modules
     ? normalizeModuleIds(JSON.parse(config.modules) as string[])
     : [];
@@ -145,8 +158,9 @@ export function TabCommercial({ project, config }: TabCommercialProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {project.category ? (
-              <div className="space-y-1">
+            <div className="space-y-1">
+              {project.category ? (
+                <>
                 <Badge
                   className={`text-sm ${CATEGORY_COLORS[project.category as Category]}`}
                 >
@@ -155,10 +169,26 @@ export function TabCommercial({ project, config }: TabCommercialProps) {
                 <p className="text-xs text-muted-foreground">
                   {CATEGORY_SHORT[project.category as Category]}
                 </p>
-              </div>
-            ) : (
-              <span className="text-muted-foreground">Non qualifié</span>
-            )}
+                </>
+              ) : (
+                <span className="text-muted-foreground">Non qualifié</span>
+              )}
+              {(taxonomy?.canonicalTaxonomy || taxonomy?.signal) && (
+                <div className="space-y-1 pt-1">
+                  {taxonomy?.canonicalTaxonomy && (
+                    <Badge variant="secondary" className="text-[10px]">
+                      {CANONICAL_TAXONOMY_LABELS[taxonomy.canonicalTaxonomy]}
+                    </Badge>
+                  )}
+                  {taxonomy?.signal && (
+                    <p className="text-[11px] text-muted-foreground">
+                      {TAXONOMY_SIGNAL_LABELS[taxonomy.signal]} (
+                      {TAXONOMY_SIGNAL_SOURCE_LABELS[taxonomy.signalSource]})
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
 

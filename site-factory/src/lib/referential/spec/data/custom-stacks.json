@@ -15,7 +15,8 @@
         "id",
         "label",
         "allowedIf",
-        "implies"
+        "implies",
+        "description"
       ],
       "idConvention": "CUSTOM_STACK_*"
     }
@@ -25,6 +26,7 @@
     {
       "id": "CUSTOM_STACK_LIGHT",
       "label": "Custom Stack Light",
+      "description": "Stack personnalisée légère pour les projets nécessitant un framework spécifique tout en restant maintenable par une petite équipe.",
       "allowedIf": {
         "hasInHouseDev": true,
         "complexityAtLeast": "CAT2"
@@ -45,6 +47,7 @@
     {
       "id": "CUSTOM_STACK_ENTERPRISE",
       "label": "Custom Stack Enterprise",
+      "description": "Stack sur mesure enterprise pour les projets complexes avec forte intégration SI, multi-services et gouvernance technique dédiée.",
       "allowedIf": {
         "hasInHouseDev": true,
         "complexityAtLeast": "CAT3"

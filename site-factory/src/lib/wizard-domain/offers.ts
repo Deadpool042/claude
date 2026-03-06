@@ -2,6 +2,15 @@
 import type { ProjectType } from "@/lib/referential";
 import type { OfferCategory } from "@/lib/offers";
 import type { ProjectFamilyInput } from "@/lib/validators";
+import {
+  mapCanonicalTaxonomyToLegacyOfferCategory,
+  mapCanonicalTaxonomyToLegacyProjectType,
+  mapLegacyProjectTypeToCanonicalTaxonomy,
+  normalizeTaxonomySignalForProjectType,
+  resolveLegacyOfferCategoryFromProjectType,
+  type CanonicalProjectTaxonomy,
+  type TaxonomyDisambiguationSignal,
+} from "@/lib/taxonomy";
 import type {
   DataSensitivity,
   EditingFrequency,
@@ -20,6 +29,7 @@ export interface OfferResolutionInput {
   dataSensitivity: DataSensitivity;
   scalabilityLevel: ScalabilityLevel;
   selectedModulesCount: number;
+  taxonomySignal?: TaxonomyDisambiguationSignal | null;
 }
 
 export function isStarterEligible(input: OfferResolutionInput): boolean {
@@ -35,18 +45,64 @@ export function isStarterEligible(input: OfferResolutionInput): boolean {
   return true;
 }
 
+export type CanonicalTaxonomyResolution = ReturnType<
+  typeof mapLegacyProjectTypeToCanonicalTaxonomy
+>;
+
+export function resolveCanonicalTaxonomyFromOfferInput(
+  input: OfferResolutionInput,
+): CanonicalTaxonomyResolution | null {
+  if (!input.projectType) return null;
+
+  const normalizedSignal = normalizeTaxonomySignalForProjectType(
+    input.projectType,
+    input.taxonomySignal ?? null,
+  );
+  const mapping = mapLegacyProjectTypeToCanonicalTaxonomy(
+    input.projectType,
+    normalizedSignal,
+  );
+  return mapping;
+}
+
+function mapCanonicalToQualificationProjectType(
+  taxonomy: CanonicalProjectTaxonomy,
+): ProjectType | null {
+  const mapped = mapCanonicalTaxonomyToLegacyProjectType(taxonomy).target;
+  if (mapped === "BLOG" || mapped === "VITRINE" || mapped === "ECOM" || mapped === "APP") {
+    return mapped;
+  }
+  return null;
+}
+
 export function deriveOfferProjectType(
   input: OfferResolutionInput,
 ): OfferCategory | null {
   if (!input.projectType) return null;
-  if (input.projectType === "BLOG" || input.projectType === "VITRINE") return "VITRINE_BLOG";
-  if (input.projectType === "ECOM") return "ECOMMERCE";
-  return "APP_CUSTOM";
+  const canonicalResolution = resolveCanonicalTaxonomyFromOfferInput(input);
+  if (canonicalResolution?.target) {
+    const mappedOffer = mapCanonicalTaxonomyToLegacyOfferCategory(
+      canonicalResolution.target,
+    ).target;
+    if (mappedOffer) {
+      return mappedOffer;
+    }
+  }
+  return resolveLegacyOfferCategoryFromProjectType(input.projectType);
 }
 
 export function deriveQualificationProjectType(
   input: OfferResolutionInput,
 ): ProjectType | null {
-  // Placeholder until the new qualification flow lands: keep the original project type.
+  if (!input.projectType) return null;
+  const canonicalResolution = resolveCanonicalTaxonomyFromOfferInput(input);
+  if (canonicalResolution?.target) {
+    const mappedType = mapCanonicalToQualificationProjectType(
+      canonicalResolution.target,
+    );
+    if (mappedType) {
+      return mappedType;
+    }
+  }
   return input.projectType;
 }

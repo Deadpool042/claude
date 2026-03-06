@@ -1,8 +1,8 @@
 // src/app/dashboard/projects/new/_components/step-questionnaire.tsx
 "use client";
 
-import { InlineHint } from "@/components/shared/InlineHint";
-import { StepCard } from "@/components/shared/StepCard";
+import { InlineHint } from "@/shared/components/InlineHint";
+import { StepCard } from "@/shared/components/StepCard";
 import { ClipboardList } from "lucide-react";
 import { useWizard } from "../logic/WizardProvider";
 import { ContextSection } from "./questionnaire/context-section";
@@ -13,6 +13,8 @@ export function StepQuestionnaire() {
   const {
     projectType,
     changeProjectType,
+    taxonomySignal,
+    setTaxonomySignal,
     needsEditing,
     setNeedsEditing,
     editingMode,
@@ -62,6 +64,10 @@ export function StepQuestionnaire() {
 
   let questionIndex = 1;
   const qType = questionIndex++;
+  const qTaxonomySignal =
+    projectType === "VITRINE" || projectType === "BLOG" || projectType === "APP"
+      ? questionIndex++
+      : null;
   const qBudget = canAskBudget ? questionIndex++ : null;
   const qKnowledge = canAskKnowledge ? questionIndex++ : null;
   const qGoal = canAskGoal ? questionIndex++ : null;
@@ -81,22 +87,24 @@ export function StepQuestionnaire() {
   return (
     <div className="space-y-4">
       <StepCard
-        title="Questionnaire client ↔ agence"
+        title="Besoin client"
         icon={ClipboardList}
         tone="bg-primary/10 text-primary"
-        description="Qualification des besoins avant proposition technique."
+        description="Qualification métier avant recommandation puis mise en œuvre."
       >
         <div className="space-y-6">
           <InlineHint>
-            Format conversationnel client/agence : réponses métier en priorité, traduction technique ensuite.
+            Format conversationnel client/agence : on capture d’abord le besoin, puis on déroule la recommandation.
           </InlineHint>
           <InlineHint>
-            Le cadrage technique et les modules sont pré-remplis automatiquement à partir de ces réponses, avec ajustements possibles à l’étape suivante.
+            Les réponses alimentent automatiquement la recommandation, la mise en œuvre et une présélection modules.
           </InlineHint>
 
           <DiscoverySection
             projectType={projectType}
             changeProjectType={changeProjectType}
+            taxonomySignal={taxonomySignal}
+            setTaxonomySignal={setTaxonomySignal}
             budgetBand={budgetBand}
             setBudgetBand={setBudgetBand}
             manualBudgetMax={manualBudgetMax}
@@ -118,6 +126,7 @@ export function StepQuestionnaire() {
             editingMode={editingMode}
             editorialPushOwner={editorialPushOwner}
             qType={qType}
+            qTaxonomySignal={qTaxonomySignal}
             qBudget={qBudget}
             qKnowledge={qKnowledge}
             qGoal={qGoal}

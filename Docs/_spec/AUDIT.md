@@ -67,8 +67,8 @@ Invariants vérifiés:
 
 ### Commercial completeness
 - File: `Docs/_spec/commercial.json`
-  - Node: `annexCosts.deploySetupFeeRange`
-  - New value: `{ "min": 390, "max": 390 }`
+  - Node: `deployFees`
+  - New value: catalogue complet des frais de déploiement (standard + headless).
 - File: `Docs/_spec/commercial.json`
   - Node: `pluginRecurringCosts`
   - New value: `{ "monthlyMin": 0, "monthlyMax": 350, "source": "Derived from plugins pricingMode/priceMonthlyMin/priceMonthlyMax" }`
@@ -81,5 +81,6 @@ Invariants vérifiés:
 ## 6) Validation
 
 - Audit machine: `Docs/_spec/audit-step2.raw.json` => `errors: []`, `warnings: []`.
+  - Note: ce fichier est un artefact généré (non canonique) et peut être supprimé puis régénéré.
 - Synchronisation miroir: `pnpm spec:sync`.
 - Vérification anti-dérive: `pnpm spec:check`.

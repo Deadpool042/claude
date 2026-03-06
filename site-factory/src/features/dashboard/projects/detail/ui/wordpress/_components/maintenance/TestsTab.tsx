@@ -1,7 +1,7 @@
 // Tests Tab extrait de maintenance-tab
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/shared/components/ui/tooltip";
 import { Loader2, Info } from "lucide-react";
 import { StatusLine } from "./utils/StatusLine";
 import { formatDate } from "./utils/helpers";

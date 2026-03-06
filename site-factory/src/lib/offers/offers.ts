@@ -15,7 +15,6 @@
 
 import {
   type MaintenanceCat,
-  type ProjectType as ReferentialProjectType,
   type LegacyTechStack as ReferentialTechStack,
   type ModuleDef as RefModuleDef,
   CATEGORY_LABELS as REF_CATEGORY_LABELS,
@@ -29,6 +28,7 @@ import {
   categoryIndex,
 } from "@/lib/referential";
 import { qualifyProject } from "@/lib/qualification-runtime";
+import { resolveLegacyProjectTypeFromOfferCategory } from "@/lib/taxonomy";
 
 // ══════════════════════════════════════════════════════════════════════
 // TYPES (rétro-compatibles)
@@ -500,12 +500,6 @@ export function getModuleById(id: ModuleId): ModuleDef {
   return mod;
 }
 
-const OFFER_TO_QUALIFICATION_TYPE: Record<OfferCategory, ReferentialProjectType> = {
-  VITRINE_BLOG: "VITRINE",
-  ECOMMERCE: "ECOM",
-  APP_CUSTOM: "APP",
-};
-
 function resolveQualificationStack(
   stack: Stack,
 ): { techStack: ReferentialTechStack; wpHeadless: boolean } {
@@ -526,7 +520,7 @@ function computeCategoryWithQualification(
   stack: Stack,
   moduleIds: ModuleId[],
 ): ProjectCategory {
-  const mappedType = OFFER_TO_QUALIFICATION_TYPE[projectType];
+  const mappedType = resolveLegacyProjectTypeFromOfferCategory(projectType);
   const { techStack, wpHeadless } = resolveQualificationStack(stack);
   const result = qualifyProject({
     projectType: mappedType,

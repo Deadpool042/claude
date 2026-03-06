@@ -1,6 +1,6 @@
 import { Area, AreaChart } from "recharts";
-import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
+import { ChartContainer, type ChartConfig } from "@/shared/components/ui/chart";
+import { cn } from "@/shared/lib/utils";
 
 export function SparklineChart({
   values,

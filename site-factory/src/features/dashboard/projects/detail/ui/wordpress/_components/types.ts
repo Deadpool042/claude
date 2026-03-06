@@ -1,8 +1,8 @@
 // ── WordPress Toolbox — shared types & constants ──────────────────────
 
 import type { HostingProfileId } from "@/lib/hosting";
-import type { PluginCategory, WpFeature } from "@/lib/wp";
-import type { WpInfraStatus } from "@/lib/wp";
+import type { PluginCategory, WpFeature } from "@/lib/wp/features";
+import type { WpInfraStatus } from "@/lib/wp/infra-status";
 import type { DevMode } from "@/generated/prisma/client";
 
 export type { DevMode, HostingProfileId };

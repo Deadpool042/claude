@@ -5,21 +5,21 @@ import {
   updateProjectAction,
   deleteProjectAction,
 } from "@/features/dashboard/projects/server-actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { FieldSelect } from "@/components/shared/FieldSelect";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { Badge } from "@/shared/components/ui/badge";
+import { FieldSelect } from "@/shared/components/FieldSelect";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { DeleteButton } from "@/components/shared/delete-button";
-import { ModuleCard } from "@/components/qualification/module-card";
-import { BudgetBreakdown } from "@/components/qualification/budget-breakdown";
+} from "@/shared/components/ui/card";
+import { DeleteButton } from "@/shared/components/delete-button";
+import { ModuleCard } from "@/features/dashboard/projects/components/module-card";
+import { BudgetBreakdown } from "@/features/dashboard/projects/components/budget-breakdown";
 import {
   FolderOpen,
   Layers,
@@ -35,14 +35,14 @@ import {
   ShieldCheck,
   Euro,
 } from "lucide-react";
-import { useModules, useQualification } from "@/hooks";
+import { useModules, useQualification } from "@/features/dashboard/projects/hooks";
 import {
   TECH_STACK_OPTIONS,
   DEPLOY_TARGET_OPTIONS,
   getAllowedTechStacksForProjectType,
-} from "@/lib/ui/project-options";
-import { GROUP_ICONS } from "@/lib/ui/module-icons";
-import { formatEur } from "@/lib/currency";
+} from "@/shared/lib/ui/project-options";
+import { GROUP_ICONS } from "@/shared/lib/ui/module-icons";
+import { formatEur } from "@/shared/lib/currency";
 import {
   MODULE_CATALOG,
   MODULE_GROUPS,
@@ -82,6 +82,12 @@ import {
   defaultHostingProviderForDeployTarget,
   type HostingProviderId,
 } from "@/lib/hosting";
+import {
+  TAXONOMY_SIGNAL_SOURCE_LABELS,
+  TAXONOMY_SIGNAL_LABELS,
+  type TaxonomyDisambiguationSignal,
+  type TaxonomySignalResolutionSource,
+} from "@/lib/taxonomy";
 
 import { Wrench } from "lucide-react";
 
@@ -123,6 +129,8 @@ interface ProjectEditFormProps {
     modules: string | null;
     maintenanceLevel: string | null;
     estimatedBudget: number | null;
+    taxonomySignal: TaxonomyDisambiguationSignal | null;
+    taxonomySignalSource: TaxonomySignalResolutionSource;
   };
 }
 
@@ -213,6 +221,7 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
 
   const offerProjectType = (deriveOfferProjectType({
     projectType: normalizedProjectType,
+    taxonomySignal: project.taxonomySignal,
     projectFamily: null,
     needsEditing: false,
     editingFrequency: "RARE",
@@ -222,6 +231,10 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
     scalabilityLevel: "FIXED",
     selectedModulesCount: 0,
   }) ?? "VITRINE_BLOG") as OfferProjectType;
+  const taxonomySignalForUpdate =
+    project.taxonomySignalSource === "persisted"
+      ? (project.taxonomySignal ?? "")
+      : "";
   const offerStack = getOfferStackForProject(
     normalizedProjectType,
     resolvedTechStack,
@@ -303,6 +316,7 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
         <input type="hidden" name="type" value={projectType} />
         <input type="hidden" name="status" value={projectStatus} />
         <input type="hidden" name="hostingProviderId" value={hostingProviderId} />
+        <input type="hidden" name="taxonomySignal" value={taxonomySignalForUpdate} />
 
         {/* ── 1. Identité ──────────────────────────────────────── */}
         <Card>
@@ -354,6 +368,18 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
                 }}
                 options={PROJECT_TYPES.map((t) => ({ value: t.value, label: t.label }))}
               />
+              <p className="text-xs text-muted-foreground">
+                Signal taxonomique:{" "}
+                {project.taxonomySignal
+                  ? TAXONOMY_SIGNAL_LABELS[project.taxonomySignal]
+                  : "non renseigné"}{" "}
+                ({TAXONOMY_SIGNAL_SOURCE_LABELS[project.taxonomySignalSource]}).
+              </p>
+              {project.taxonomySignalSource !== "persisted" && (
+                <p className="text-xs text-muted-foreground">
+                  Signal informatif: il n&apos;est pas persisté automatiquement depuis cet écran.
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -544,7 +570,10 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
               ).map((target) => {
                 const Icon = target.icon;
                 const isWpH = wpHeadless && techStack === "WORDPRESS";
-                const hostCost = isWpH ? HOSTING_COSTS_HEADLESS[target.value] : HOSTING_COSTS[target.value];
+                const hostCostHL = isWpH ? HOSTING_COSTS_HEADLESS[target.value] : null;
+                const hostCostStd = HOSTING_COSTS[target.value];
+                const hostLabel = hostCostHL ? hostCostHL.label : target.label;
+                const hostRange = hostCostHL ? hostCostHL.range : hostCostStd.rangeLabel;
                 return (
                   <button
                     key={target.value}
@@ -557,9 +586,9 @@ export function ProjectEditForm({ project }: ProjectEditFormProps) {
                     }`}
                   >
                     <Icon className={`size-6 ${deployTarget === target.value ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="text-sm font-medium">{isWpH ? hostCost.label : target.label}</span>
+                    <span className="text-sm font-medium">{hostLabel}</span>
                     <span className="text-[10px] text-muted-foreground">{!isWpH && target.desc}</span>
-                    <span className="text-[10px] text-muted-foreground/70">{hostCost.range}</span>
+                    <span className="text-[10px] text-muted-foreground/70">{hostRange}</span>
                   </button>
                 );
               })}

@@ -5,6 +5,8 @@ import {
   allowedFamiliesForTypeAndHosting,
   normalizeTypeStackState,
   deriveOfferProjectType,
+  deriveQualificationProjectType,
+  resolveCanonicalTaxonomyFromOfferInput,
   isStarterEligible,
 } from "@/lib/wizard-domain";
 import type { WizardTypeStackState } from "@/lib/wizard-domain";
@@ -180,5 +182,67 @@ describe("wizard-domain offers", () => {
     } as const;
     expect(isStarterEligible(input)).toBe(true);
     expect(deriveOfferProjectType(input)).toBe("VITRINE_BLOG");
+  });
+
+  it("resolves SITE_BUSINESS when a site signal is set", () => {
+    const input = {
+      projectType: "VITRINE",
+      taxonomySignal: "SITE_BUSINESS",
+      projectFamily: "CMS_MONO",
+      needsEditing: true,
+      editingFrequency: "REGULAR",
+      trafficLevel: "MEDIUM",
+      productCount: "NONE",
+      dataSensitivity: "STANDARD",
+      scalabilityLevel: "GROWING",
+      selectedModulesCount: 1,
+    } as const;
+
+    const canonical = resolveCanonicalTaxonomyFromOfferInput(input);
+    expect(canonical?.target).toBe("SITE_BUSINESS");
+    expect(canonical?.needsSignal).toBe(false);
+    expect(deriveQualificationProjectType(input)).toBe("VITRINE");
+    expect(deriveOfferProjectType(input)).toBe("VITRINE_BLOG");
+  });
+
+  it("resolves APP_METIER when an app signal is set", () => {
+    const input = {
+      projectType: "APP",
+      taxonomySignal: "APP_METIER",
+      projectFamily: "APP_PLATFORM",
+      needsEditing: true,
+      editingFrequency: "DAILY",
+      trafficLevel: "HIGH",
+      productCount: "NONE",
+      dataSensitivity: "REGULATED",
+      scalabilityLevel: "ELASTIC",
+      selectedModulesCount: 2,
+    } as const;
+
+    const canonical = resolveCanonicalTaxonomyFromOfferInput(input);
+    expect(canonical?.target).toBe("APP_METIER");
+    expect(canonical?.needsSignal).toBe(false);
+    expect(deriveQualificationProjectType(input)).toBe("APP");
+    expect(deriveOfferProjectType(input)).toBe("APP_CUSTOM");
+  });
+
+  it("keeps legacy fallback when no app signal is provided", () => {
+    const input = {
+      projectType: "APP",
+      projectFamily: "APP_PLATFORM",
+      needsEditing: false,
+      editingFrequency: "RARE",
+      trafficLevel: "LOW",
+      productCount: "NONE",
+      dataSensitivity: "STANDARD",
+      scalabilityLevel: "FIXED",
+      selectedModulesCount: 0,
+    } as const;
+
+    const canonical = resolveCanonicalTaxonomyFromOfferInput(input);
+    expect(canonical?.target).toBeNull();
+    expect(canonical?.needsSignal).toBe(true);
+    expect(deriveQualificationProjectType(input)).toBe("APP");
+    expect(deriveOfferProjectType(input)).toBe("APP_CUSTOM");
   });
 });

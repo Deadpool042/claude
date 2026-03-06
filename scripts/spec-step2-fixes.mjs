@@ -47,11 +47,6 @@ modules.modules = modules.modules.map((moduleItem) => {
   return updated;
 });
 
-commercial.annexCosts = {
-  ...commercial.annexCosts,
-  deploySetupFeeRange: commercial.annexCosts.deploySetupFeeRange ?? { min: 390, max: 390 },
-};
-
 commercial.pluginRecurringCosts = commercial.pluginRecurringCosts ?? {
   monthlyMin: 0,
   monthlyMax: 350,

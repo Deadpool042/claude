@@ -1,9 +1,13 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { PageLayout } from "@/components/shell/page-layout";
-import { BreadcrumbOverride } from "@/components/shell/breadcrumb-context";
+import { PageLayout } from "@/shared/components/shell/page-layout";
+import { BreadcrumbOverride } from "@/shared/providers/breadcrumb-context";
 import { ProjectEditForm } from "@/features/dashboard/projects/edit";
 import type { HostingProviderId } from "@/lib/hosting";
+import {
+  readPersistedTaxonomySignalDualSource,
+  resolveTaxonomySignalFromRuntimeContext,
+} from "@/lib/taxonomy";
 
 interface EditProjectPageProps {
   params: Promise<{ projectId: string }>;
@@ -22,6 +26,22 @@ export default async function EditProjectPage({
   if (!project) {
     notFound();
   }
+  const taxonomySignalResolution = resolveTaxonomySignalFromRuntimeContext({
+    projectType: project.type,
+    persistedSignal: readPersistedTaxonomySignalDualSource({
+      projectType: project.type,
+      taxonomySignal: project.qualification?.taxonomySignal ?? null,
+      ciAxesJson: project.qualification?.ciAxesJson ?? null,
+    }),
+    category: project.category,
+    modulesJson: project.qualification?.modules ?? null,
+    trafficLevel: project.qualification?.trafficLevel ?? null,
+    needsEditing: project.qualification?.needsEditing ?? null,
+    dataSensitivity: project.qualification?.dataSensitivity ?? null,
+    scalabilityLevel: project.qualification?.scalabilityLevel ?? null,
+    backendFamily: project.qualification?.backendFamily ?? null,
+    backendOpsHeavy: project.qualification?.backendOpsHeavy ?? null,
+  });
 
   return (
     <>
@@ -50,6 +70,8 @@ export default async function EditProjectPage({
             modules: project.qualification?.modules ?? null,
             maintenanceLevel: project.qualification?.maintenanceLevel ?? null,
             estimatedBudget: project.qualification?.estimatedBudget ?? null,
+            taxonomySignal: taxonomySignalResolution.signal,
+            taxonomySignalSource: taxonomySignalResolution.source,
           }}
         />
       </PageLayout>
