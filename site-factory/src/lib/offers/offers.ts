@@ -181,7 +181,7 @@ export const OFFER_CATEGORY_ORDER: OfferCategory[] = [
 export const OFFER_CATEGORY_LABELS: Record<OfferCategory, string> = {
   VITRINE_BLOG: "Vitrine / Blog",
   ECOMMERCE: "E-commerce",
-  APP_CUSTOM: "App custom",
+  APP_CUSTOM: "Application sur mesure",
 };
 
 export const STACK_LABELS: Record<Stack, string> = {

@@ -86,7 +86,9 @@ export function ServiceCatalogSection(props: {
                     ) : null}
 
                     {excludedInProdLike ? (
-                      <p className="mt-1 text-xs text-amber-500">Exclu du docker-compose.prod-like.yml</p>
+                      <p className="mt-1 text-xs text-amber-500">
+                        Exclu de la vue simulation prod
+                      </p>
                     ) : null}
                   </div>
 

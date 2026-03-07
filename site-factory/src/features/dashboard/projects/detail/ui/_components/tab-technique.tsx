@@ -53,12 +53,12 @@ export function TabTechnique({ project, config }: TabTechniqueProps) {
   const localHosts = [
     {
       id: "dev",
-      label: "Local dev",
+      label: "Local",
       host: localHostForMode(project.clientSlug, project.slug, "dev"),
     },
     {
       id: "prod-like",
-      label: "Prod-like",
+      label: "Simulation prod",
       host: localHostForMode(project.clientSlug, project.slug, "prod-like"),
     },
   ] as const;
@@ -131,15 +131,15 @@ export function TabTechnique({ project, config }: TabTechniqueProps) {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Globe className="size-4 text-muted-foreground" />
-            Accès & Routing
+            Accès et routage
           </CardTitle>
-          <CardDescription>Configuration Traefik</CardDescription>
+          <CardDescription>Accès locaux et routage</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-3">
               <div>
-                <p className="text-xs text-muted-foreground">Hosts locaux</p>
+                <p className="text-xs text-muted-foreground">Hôtes locaux</p>
                 <div className="space-y-1 text-xs">
                   {localHosts.map((entry) => (
                     <code key={entry.id} className="block">

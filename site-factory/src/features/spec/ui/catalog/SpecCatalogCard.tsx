@@ -39,7 +39,7 @@ export function SpecCatalogCard({ file }: SpecCatalogCardProps) {
           </Badge>
           {file.itemCount !== null && (
             <Badge variant="outline" className="text-[10px]">
-              {file.itemCount} elements
+              {file.itemCount} éléments
             </Badge>
           )}
           {file.version && (
@@ -52,12 +52,12 @@ export function SpecCatalogCard({ file }: SpecCatalogCardProps) {
 
       <CardContent className="space-y-4">
         <div className="space-y-1.5">
-          <p className="text-xs font-medium text-foreground/80">Role</p>
+          <p className="text-xs font-medium text-foreground/80">Rôle</p>
           <p className="text-sm leading-relaxed text-muted-foreground">{file.role}</p>
         </div>
 
         <div className="space-y-1.5">
-          <p className="text-xs font-medium text-foreground/80">Vue d'ensemble</p>
+          <p className="text-xs font-medium text-foreground/80">Vue d’ensemble</p>
           <p className="text-sm leading-relaxed text-muted-foreground">{file.summary}</p>
         </div>
 
@@ -93,16 +93,16 @@ export function SpecCatalogCard({ file }: SpecCatalogCardProps) {
             Parcours
           </p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Catalogue {"->"} detail lisible {"->"} edition, sans changer de route.
+            Catalogue {"->"} vue détaillée {"->"} édition, sans changer de route.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Button asChild size="sm" variant="outline">
-              <Link href={buildSpecViewHref(file.name, "overview")}>Lire</Link>
+              <Link href={buildSpecViewHref(file.name, "overview")}>Vue détaillée</Link>
             </Button>
             <Button asChild size="sm">
               <Link href={buildSpecViewHref(file.name, "edit")}>
                 <PencilLine className="h-3.5 w-3.5" />
-                Editer
+                Édition
               </Link>
             </Button>
           </div>

@@ -52,7 +52,7 @@ export function SpecOverviewPanel({
                 )}
               </div>
               <div className="space-y-1">
-                <h2 className="text-base font-semibold text-foreground">Resume humain</h2>
+                <h2 className="text-base font-semibold text-foreground">Résumé</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   {overview.summary}
                 </p>
@@ -61,7 +61,7 @@ export function SpecOverviewPanel({
 
             <div className="rounded-lg border border-border/40 bg-muted/20 p-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Role de cette spec
+                Rôle de ce fichier
               </p>
               <p className="mt-2 text-sm leading-relaxed text-foreground/85">
                 {overview.role}
@@ -72,7 +72,7 @@ export function SpecOverviewPanel({
 
         <Card className="border-border/60">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">Reperes techniques</CardTitle>
+            <CardTitle className="text-sm font-semibold">Repères techniques</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <div className="flex items-center justify-between gap-3 rounded-md border border-border/40 px-3 py-2">
@@ -85,7 +85,7 @@ export function SpecOverviewPanel({
             <div className="flex items-center justify-between gap-3 rounded-md border border-border/40 px-3 py-2">
               <span className="flex items-center gap-2">
                 <Settings2 className="h-4 w-4 text-primary/60" />
-                Cles JSON
+                Clés JSON
               </span>
               <span className="font-medium text-foreground">{stats.keys}</span>
             </div>
@@ -99,7 +99,7 @@ export function SpecOverviewPanel({
             {overview.requiredTopLevelKeys.length > 0 && (
               <div className="space-y-2 rounded-md border border-border/40 px-3 py-3">
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Top-level requis
+                  Clés principales requises
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {overview.requiredTopLevelKeys.map((key) => (
@@ -118,7 +118,7 @@ export function SpecOverviewPanel({
 
       <Card className="border-border/60">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">Structure lisible</CardTitle>
+          <CardTitle className="text-sm font-semibold">Structure détaillée</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {overview.sections.map((section) => (
@@ -134,8 +134,8 @@ export function SpecOverviewPanel({
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 {section.count !== null
-                  ? `${section.count} element${section.count > 1 ? "s" : ""}`
-                  : "Section scalaire"}
+                  ? `${section.count} élément${section.count > 1 ? "s" : ""}`
+                  : "Valeur simple"}
               </p>
               {section.sampleKeys.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">

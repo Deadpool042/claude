@@ -185,7 +185,7 @@ export function SummaryDecisionCard({
             </div>
             {offerLabel ? (
               <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                <span>Offre détectée</span>
+                <span>Offre retenue</span>
                 <span className="font-medium text-foreground">{offerLabel}</span>
               </div>
             ) : null}

@@ -493,7 +493,7 @@ export function StepTypeStack() {
             <p className="mt-1 text-[11px] text-muted-foreground">
               Hébergement :{" "}
               {hostingSelectionMode === "NONE"
-                ? "Géré par le provider"
+                ? "Géré par l’hébergeur"
                 : hostingSelectionMode === "SINGLE"
                   ? HOSTING_TARGET_LABELS[hostingTarget]
                   : hostingSelectionMode === "FRONT_ONLY"

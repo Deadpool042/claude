@@ -73,7 +73,7 @@ export function ContextSection({
       <div className="space-y-3 rounded-lg border p-3">
         <Label>Questions de contexte</Label>
         <InlineHint>
-          Ces paramètres alimentent le Complexity Index et les recommandations techniques.
+          Ces paramètres alimentent l’indice de complexité et les recommandations techniques.
         </InlineHint>
 
         <div className="grid gap-3 sm:grid-cols-3">

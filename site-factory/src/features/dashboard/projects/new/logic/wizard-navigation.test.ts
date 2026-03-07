@@ -6,6 +6,7 @@ import {
   computeWizardNextReasons,
   nextWizardStep,
   prevWizardStep,
+  resetWizardStepForProjectTypeChange,
   type WizardNextReasonsInput,
 } from "./wizard-navigation";
 
@@ -98,5 +99,11 @@ describe("wizard-navigation", () => {
     expect(nextWizardStep(3)).toBe(4);
     expect(prevWizardStep(0)).toBe(0);
     expect(prevWizardStep(2)).toBe(1);
+  });
+
+  it("rewinds the wizard to the questionnaire after a project type change", () => {
+    expect(resetWizardStepForProjectTypeChange(0)).toBe(0);
+    expect(resetWizardStepForProjectTypeChange(2)).toBe(0);
+    expect(resetWizardStepForProjectTypeChange(4)).toBe(0);
   });
 });

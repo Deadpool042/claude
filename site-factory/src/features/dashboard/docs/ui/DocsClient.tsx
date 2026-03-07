@@ -135,6 +135,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
+  const [loadedDocId, setLoadedDocId] = useState<string | null>(null);
   const [projectDocsOverride, setProjectDocsOverride] = useState<Record<string, string[]>>({});
   const [favoriteMap, setFavoriteMap] = useState<Record<string, string[]>>(() => {
     const map: Record<string, string[]> = {
@@ -188,7 +189,9 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
       setContent(data.doc.content);
       setSelectedDoc(data.doc);
       setIsDirty(false);
+      setLoadedDocId(data.doc.id);
     } catch (err) {
+      setLoadedDocId(null);
       setError(err instanceof Error ? err.message : "Erreur inconnue.");
     } finally {
       setLoadingDoc(false);
@@ -199,7 +202,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
     async (doc: DocMeta) => {
       if (isDirty) {
         const confirmSwitch = window.confirm(
-          "Des modifications non enregistrees sont en cours. Continuer ?",
+          "Des modifications non enregistrées sont en cours. Continuer ?",
         );
         if (!confirmSwitch) return;
       }
@@ -218,7 +221,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
       });
-      if (!res.ok) throw new Error("Sauvegarde impossible.");
+      if (!res.ok) throw new Error("Enregistrement impossible.");
       const data = (await res.json()) as { doc: DocMeta };
       setSelectedDoc(data.doc);
       setDocs((prev) =>
@@ -252,12 +255,10 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
   }, [globalFavorites, projects]);
 
   useEffect(() => {
-    if (loadingDoc) return;
-    if (selectedDoc && content) return;
-    if (selectedDoc) {
-      void loadDocContent(selectedDoc);
-    }
-  }, [selectedDoc, content, loadDocContent, loadingDoc]);
+    if (loadingDoc || isDirty || !selectedDoc) return;
+    if (loadedDocId === selectedDoc.id) return;
+    void loadDocContent(selectedDoc);
+  }, [isDirty, loadDocContent, loadedDocId, loadingDoc, selectedDoc]);
 
   useEffect(() => {
     if (scope === "project") {
@@ -324,7 +325,9 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
         ...prev,
         [selectedProject.id]: docIds,
       }));
-      setSyncStatus(`${String(count)} doc${count > 1 ? "s" : ""} synchronisee${count > 1 ? "s" : ""}.`);
+      setSyncStatus(
+        `${String(count)} document${count > 1 ? "s" : ""} synchronisé${count > 1 ? "s" : ""}.`,
+      );
       router.refresh();
     } catch (err) {
       setSyncStatus(err instanceof Error ? err.message : "Erreur inconnue.");
@@ -358,7 +361,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
           }),
         });
         if (!res.ok) {
-          throw new Error("Impossible de mettre a jour les favoris.");
+          throw new Error("Impossible de mettre à jour les favoris.");
         }
       } catch (err) {
         setFavoriteMap((prev) => {
@@ -516,7 +519,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
               Documentation
             </div>
             <Badge variant="outline" className="text-xs">
-              {docs.length} docs
+              {docs.length} documents
             </Badge>
           </div>
 
@@ -525,7 +528,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Rechercher..."
+              placeholder="Rechercher un document..."
               className="pl-9"
             />
           </div>
@@ -536,7 +539,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
               variant={scope === "global" ? "default" : "outline"}
               onClick={() => handleScopeChange("global")}
             >
-              Global
+              Référentiel
             </Button>
             <Button
               size="sm"
@@ -561,7 +564,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                   variant={!showAllDocs ? "default" : "outline"}
                   onClick={() => setShowAllDocs(false)}
                 >
-                  Recommandés
+                  Sélection projet
                 </Button>
                 <Button
                   size="sm"
@@ -623,11 +626,11 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                   ) : (
                     <RefreshCcw className="size-3" />
                   )}
-                  Synchroniser docs
+                  Synchroniser la sélection
                 </Button>
                 {selectedProject && projectDocIds.size === 0 ? (
                   <span className="text-amber-300">
-                    Docs projet non synchronisées. Lancez la synchronisation.
+                    Documentation projet non synchronisée. Lancez la synchronisation.
                   </span>
                 ) : null}
                 {syncStatus ? (
@@ -663,7 +666,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
               {scope === "project" && !showAllDocs && !hasProjectDocs ? (
                 <>
                   <div>
-                    Aucun document projet disponible. Synchronisez pour générer la
+                    Aucune documentation projet disponible. Synchronisez pour générer la
                     sélection.
                   </div>
                   <Button
@@ -677,7 +680,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                     ) : (
                       <RefreshCcw className="size-4" />
                     )}
-                    Synchroniser docs
+                    Synchroniser la sélection
                   </Button>
                 </>
               ) : (
@@ -736,6 +739,11 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                                     size="icon-xs"
                                     variant="ghost"
                                     className={`transition-opacity ${actionVisibility}`}
+                                    aria-label={
+                                      isFavorite
+                                        ? "Retirer des favoris"
+                                        : "Ajouter aux favoris"
+                                    }
                                     aria-pressed={isFavorite}
                                     onClick={(event) => {
                                       event.stopPropagation();
@@ -760,6 +768,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                                   <Button
                                     size="icon-xs"
                                     variant="ghost"
+                                    aria-label="Copier l'ID"
                                     className={`transition-opacity opacity-0 group-hover:opacity-100 group-focus-within:opacity-100`}
                                     onClick={(event) => {
                                       event.stopPropagation();
@@ -770,7 +779,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                                   </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                  {copiedDocId === doc.id ? "Copie" : "Copier l'ID"}
+                                  {copiedDocId === doc.id ? "Copié" : "Copier l'ID"}
                                 </TooltipContent>
                               </Tooltip>
                             </div>
@@ -822,6 +831,11 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                     <Button
                       size="icon-sm"
                       variant="ghost"
+                      aria-label={
+                        favoriteIds.has(selectedDoc.id)
+                          ? "Retirer des favoris"
+                          : "Ajouter aux favoris"
+                      }
                       aria-pressed={favoriteIds.has(selectedDoc.id)}
                       onClick={() => toggleFavorite(selectedDoc.id)}
                     >
@@ -845,13 +859,14 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                     <Button
                       size="icon-sm"
                       variant="ghost"
+                      aria-label="Copier l'ID"
                       onClick={() => handleCopyDocId(selectedDoc.id)}
                     >
                       <Copy className="size-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {copiedDocId === selectedDoc.id ? "Copie" : "Copier l'ID"}
+                    {copiedDocId === selectedDoc.id ? "Copié" : "Copier l'ID"}
                   </TooltipContent>
                 </Tooltip>
                 <Button
@@ -861,7 +876,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                   disabled={loadingDoc}
                 >
                   <RefreshCcw className="size-4" />
-                  Rafraîchir
+                  Actualiser
                 </Button>
                 <Button
                   size="sm"
@@ -873,7 +888,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                   ) : (
                     <Save className="size-4" />
                   )}
-                  Sauvegarder
+                  Enregistrer
                 </Button>
               </div>
             </div>
@@ -897,7 +912,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                 </TabsTrigger>
                 <TabsTrigger value="info">
                   <Layers className="size-4" />
-                  Infos
+                  Informations
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="preview" className="mt-4 min-h-0 overflow-hidden">
@@ -926,7 +941,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                 </div>
               </TabsContent>
               <TabsContent value="info" className="mt-4 space-y-3">
-                <div className="text-sm font-medium">Meta</div>
+                <div className="text-sm font-medium">Informations</div>
                 <div className="flex flex-wrap gap-2 text-xs">
                   <Badge
                     variant="outline"
@@ -941,7 +956,7 @@ export function DocsClient({ projects, globalFavorites }: DocsClientProps) {
                   ))}
                 </div>
                 <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-xs text-muted-foreground">
-                  Documentation locale. Les changements sont écrits directement
+                  Documentation locale. Les changements sont enregistrés directement
                   dans le dossier Docs.
                 </div>
               </TabsContent>

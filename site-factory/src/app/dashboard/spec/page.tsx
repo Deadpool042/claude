@@ -5,7 +5,7 @@ export default function SpecPage() {
   return (
     <PageLayout
       title="Catalogue des specs"
-      description="Vue d’ensemble du référentiel JSON avant lecture détaillée et édition."
+      description="Vue d’ensemble du référentiel de spécification avant consultation détaillée et édition."
     >
       <SpecListClient />
     </PageLayout>

@@ -24,24 +24,24 @@ const SSL_RULES: Record<DeployTargetLiteral, { label: string; modes: Array<{ env
     label: "Docker / VPS",
     modes: [
       { env: "Dev", mode: "local-ca" },
-      { env: "Prod-like", mode: "local-ca" },
-      { env: "Prod", mode: "letsencrypt" },
+      { env: "Simulation prod", mode: "local-ca" },
+      { env: "Production", mode: "letsencrypt" },
     ],
   },
   SHARED_HOSTING: {
-    label: "Mutualise",
+    label: "Mutualisé",
     modes: [
       { env: "Dev", mode: "local-ca" },
-      { env: "Prod-like", mode: "local-ca" },
-      { env: "Prod", mode: "provider" },
+      { env: "Simulation prod", mode: "local-ca" },
+      { env: "Production", mode: "provider" },
     ],
   },
   VERCEL: {
     label: "Vercel / Cloud",
     modes: [
       { env: "Dev", mode: "local-ca" },
-      { env: "Prod-like", mode: "local-ca" },
-      { env: "Prod", mode: "provider" },
+      { env: "Simulation prod", mode: "local-ca" },
+      { env: "Production", mode: "provider" },
     ],
   },
 };
@@ -87,7 +87,7 @@ export function TabDeployment(props: TabDeploymentProps) {
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-muted-foreground">Cible :</span>
+            <span className="text-muted-foreground">Cible de déploiement :</span>
             <Badge variant="secondary">{DEPLOY_TARGET_LABELS[deployTargetLiteral]}</Badge>
             <span className="text-xs text-muted-foreground">({sslRule.label})</span>
           </div>
@@ -142,7 +142,9 @@ export function TabDeployment(props: TabDeploymentProps) {
                 <p className="text-xs text-muted-foreground">{selectedProvider.notes}</p>
               ) : null}
               {profileLabel ? (
-                <p className="text-[11px] text-muted-foreground">Profil technique: {profileLabel}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Profil d’hébergement : {profileLabel}
+                </p>
               ) : null}
               {techStack === "WORDPRESS" ? (
                 <p className="text-[11px] text-muted-foreground">

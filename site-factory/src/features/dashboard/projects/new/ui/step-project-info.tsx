@@ -57,7 +57,7 @@ export function StepProjectInfo() {
         title="Identité du projet"
         icon={FolderPlus}
         tone="bg-primary/10 text-primary"
-        description="Informations de création finales."
+        description="Informations finales avant création."
       >
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2 sm:col-span-2">
@@ -128,7 +128,7 @@ export function StepProjectInfo() {
             <p className="text-muted-foreground">Hébergement cible</p>
             <p className="font-medium">
               {hostingSelectionMode === "NONE"
-                ? "Géré par le provider"
+                ? "Géré par l’hébergeur"
                 : hostingSelectionMode === "SINGLE"
                   ? HOSTING_TARGET_LABELS[hostingTarget]
                   : hostingSelectionMode === "FRONT_ONLY"
@@ -175,7 +175,7 @@ export function StepProjectInfo() {
             {hostingProfileNotes ? <InlineHint>{hostingProfileNotes}</InlineHint> : null}
             {hostingProfileLabel ? (
               <p className="text-[11px] text-muted-foreground">
-                Profil technique: {hostingProfileLabel}
+                Profil d’hébergement : {hostingProfileLabel}
               </p>
             ) : null}
             {isWp ? (

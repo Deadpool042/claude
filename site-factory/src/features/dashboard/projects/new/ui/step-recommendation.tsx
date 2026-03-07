@@ -21,7 +21,7 @@ import { RecommendationWhyPanel } from "./recommendation/recommendation-why-pane
 const OFFER_LABELS = {
   VITRINE_BLOG: "Vitrine / Blog",
   ECOMMERCE: "E-commerce",
-  APP_CUSTOM: "App custom",
+  APP_CUSTOM: "Application sur mesure",
 } as const;
 
 export function StepRecommendation() {
@@ -246,7 +246,7 @@ export function StepRecommendation() {
         {qualification?.ci ? (
           <div className="rounded-lg border p-3 text-sm">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Complexity Index</span>
+              <span className="text-muted-foreground">Indice de complexité</span>
               <span className="font-medium">
                 {qualification.ci.score} ({CATEGORY_SHORT[qualification.ci.category]})
               </span>

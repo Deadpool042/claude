@@ -55,7 +55,7 @@ export default async function DocsPage() {
   return (
     <PageLayout
       title="Documentation"
-      description="Docs internes et commerciales, editables en local."
+      description="Documentation produit, qualification, recommandation et technique, éditable en local."
     >
       <DocsClient
         projects={mappedProjects}

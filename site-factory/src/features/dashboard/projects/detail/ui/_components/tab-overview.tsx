@@ -100,12 +100,12 @@ export function TabOverview({
   const localHosts = [
     {
       id: "dev",
-      label: "Local dev",
+      label: "Local",
       host: localHostForMode(project.clientSlug, project.slug, "dev"),
     },
     {
       id: "prod-like",
-      label: "Prod-like",
+      label: "Simulation prod",
       host: localHostForMode(project.clientSlug, project.slug, "prod-like"),
     },
   ] as const;
@@ -278,7 +278,7 @@ export function TabOverview({
                 {socleStatus.status === "configured" ? "Configuré" : "À appliquer"}
               </Badge>
               <span className="text-xs text-muted-foreground">
-                Features : {String(socleStatus.featuresCount)}
+                Fonctionnalités : {String(socleStatus.featuresCount)}
               </span>
               {themeLabel ? (
                 <Badge variant="outline" className="text-[10px]">
@@ -304,7 +304,7 @@ export function TabOverview({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Accès</CardTitle>
-          <CardDescription>Routing Traefik</CardDescription>
+          <CardDescription>Accès locaux et services</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex flex-wrap items-start justify-between gap-6">

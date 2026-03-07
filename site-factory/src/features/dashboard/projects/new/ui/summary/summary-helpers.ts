@@ -16,7 +16,7 @@ export const BILLING_MODE_LABELS = {
 const OFFER_LABELS = {
   VITRINE_BLOG: "Vitrine / Blog",
   ECOMMERCE: "E-commerce",
-  APP_CUSTOM: "App custom",
+  APP_CUSTOM: "Application sur mesure",
 } as const;
 
 export function formatSummaryRange(min: number, max: number, suffix = ""): string {

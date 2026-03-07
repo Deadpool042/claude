@@ -46,6 +46,7 @@ import {
   computeWizardNextReasons,
   nextWizardStep,
   prevWizardStep,
+  resetWizardStepForProjectTypeChange,
 } from "./wizard-navigation";
 import {
   buildQualificationConstraints,
@@ -323,6 +324,11 @@ export function WizardProvider({ children }: { children: ReactNode }) {
 
   const changeProjectType = useCallback(
     (type: ProjectType) => {
+      if (type === projectType) {
+        return;
+      }
+
+      setStep((current) => resetWizardStepForProjectTypeChange(current));
       setProjectType(type);
       setTaxonomySignalRaw(resolveDefaultTaxonomySignalForProjectType(type));
       clearModules();
@@ -363,7 +369,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
       setFamilyManual(false);
       setImplementationManual(false);
     },
-    [clearModules, resetWizardCapabilities],
+    [clearModules, projectType, resetWizardCapabilities],
   );
 
   const setProjectFamily = useCallback((value: ProjectFamilyInput) => {

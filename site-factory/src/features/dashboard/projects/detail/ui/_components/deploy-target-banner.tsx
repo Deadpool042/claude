@@ -24,7 +24,7 @@ export function DeployTargetBanner(props: {
       <Info className="mt-0.5 size-4 shrink-0 text-amber-500" />
       <div className="text-sm">
         <p className="font-medium text-amber-600 dark:text-amber-400">
-          Cible : {DEPLOY_TARGET_LABELS[deployTarget as keyof typeof DEPLOY_TARGET_LABELS]}
+          Cible de déploiement : {DEPLOY_TARGET_LABELS[deployTarget as keyof typeof DEPLOY_TARGET_LABELS]}
         </p>
         <p className="mt-0.5 text-muted-foreground">
           {deployTarget === "SHARED_HOSTING"

@@ -167,6 +167,8 @@ export function SpecEditorProvider({
 
   const loadFile = useCallback(async () => {
     setLoading(true);
+    setErrorMsg("");
+    setSaveState("idle");
     try {
       const res = await fetch(`/api/spec/${encodeURIComponent(specFile)}`);
       if (!res.ok) throw new Error("Erreur chargement");
@@ -177,6 +179,7 @@ export function SpecEditorProvider({
       setOriginal(formatted);
       setStats(computeStats(formatted));
       setJsonError(null);
+      setErrorMsg("");
       runValidation(data.content as JsonValue);
     } catch {
       setErrorMsg("Impossible de charger le fichier");
@@ -220,11 +223,16 @@ export function SpecEditorProvider({
       const obj = JSON.parse(raw);
       const formatted = JSON.stringify(obj, null, 2);
       setRaw(formatted);
+      setParsed(obj as JsonValue);
+      setStats(computeStats(formatted));
       setJsonError(null);
+      setErrorMsg("");
+      setSaveState("idle");
+      runValidation(obj as JsonValue);
     } catch {
       // can't format invalid JSON
     }
-  }, [raw]);
+  }, [raw, runValidation]);
 
   const handleSave = useCallback(async () => {
     if (jsonError || validationIssuesRef.current.length > 0) return;

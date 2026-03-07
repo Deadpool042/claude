@@ -3,7 +3,8 @@ import path from "path";
 
 export default defineConfig({
   test: {
-    include: ["src/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    setupFiles: ["src/tests/ui/setup.ts"],
     coverage: {
       provider: "v8",
       include: [
@@ -13,7 +14,7 @@ export default defineConfig({
         "src/lib/service-defaults.ts",
         "src/lib/generators/compose/**/*.ts",
       ],
-      exclude: ["src/**/*.test.ts"],
+      exclude: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     },
   },
   resolve: {

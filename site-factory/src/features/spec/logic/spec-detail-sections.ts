@@ -64,7 +64,7 @@ function metric(
 }
 
 function formatEuroRange(min: number, max: number): string {
-  return `${min}EUR -> ${max}EUR`;
+  return `${min} € à ${max} €`;
 }
 
 function buildCmsDetails(content: unknown): SpecDetailSection[] {
@@ -85,12 +85,13 @@ function buildCmsDetails(content: unknown): SpecDetailSection[] {
   return [
     {
       title: "Panorama CMS",
-      description: "Vue rapide des plateformes, de leur positionnement et des modes d'extension declares.",
+      description:
+        "Vue rapide des plateformes, de leur positionnement et des modes d’extension déclarés.",
       metrics: [
-        metric("CMS declares", cms.length, "accent"),
-        metric("Kinds distincts", Object.keys(kinds).length),
-        metric("Modeles d'extension", extensionModels.size),
-        metric("Entrees headless", headlessCount),
+        metric("CMS déclarés", cms.length, "accent"),
+        metric("Familles distinctes", Object.keys(kinds).length),
+        metric("Modèles d’extension", extensionModels.size),
+        metric("Entrées headless", headlessCount),
       ],
       tags: formatTags(kinds),
     },
@@ -113,11 +114,12 @@ function buildFeaturesDetails(content: unknown): SpecDetailSection[] {
   return [
     {
       title: "Catalogue fonctionnel",
-      description: "Resume la composition du catalogue et les zones fonctionnelles effectivement couvertes.",
+      description:
+        "Résume la composition du catalogue et les zones fonctionnelles effectivement couvertes.",
       metrics: [
-        metric("Features", features.length, "accent"),
+        metric("Fonctionnalités", features.length, "accent"),
         metric("Domaines", Object.keys(domains).length),
-        metric("UI-only", uiOnlyCount),
+        metric("Interface seule", uiOnlyCount),
         metric("Types distincts", Object.keys(types).length),
       ],
       tags: formatTags(domains),
@@ -143,9 +145,10 @@ function buildCapabilityMatrixDetails(content: unknown): SpecDetailSection[] {
   return [
     {
       title: "Couverture de la matrice",
-      description: "Indique l'etendue de la matrice et la repartition des classifications exploitees par le moteur.",
+      description:
+        "Indique l’étendue de la matrice et la répartition des classifications exploitées par le moteur.",
       metrics: [
-        metric("Features mappees", matrixEntries.length, "accent"),
+        metric("Fonctionnalités mappées", matrixEntries.length, "accent"),
         metric("Cellules CMS", rows.length),
         metric("CMS distincts", cmsIds.size),
         metric("Classifications", Object.keys(classifications).length),
@@ -172,11 +175,12 @@ function buildPluginsDetails(content: unknown): SpecDetailSection[] {
 
   return [
     {
-      title: "Portefeuille plugins",
-      description: "Mesure la couverture CMS et la structure des couts recurrents du catalogue plugin.",
+      title: "Catalogue de plugins",
+      description:
+        "Mesure la couverture CMS et la structure des coûts récurrents du catalogue de plugins.",
       metrics: [
         metric("Plugins", plugins.length, "accent"),
-        metric("Modes pricing", Object.keys(pricingModes).length),
+        metric("Modes tarifaires", Object.keys(pricingModes).length),
         metric("Cycles de facturation", Object.keys(billingCycles).length),
         metric("CMS couverts", coveredCms.size),
       ],
@@ -201,12 +205,13 @@ function buildModulesDetails(content: unknown): SpecDetailSection[] {
   return [
     {
       title: "Briques sur-mesure",
-      description: "Met en avant les modules structurants et leur repartition par groupe et categorie cible.",
+      description:
+        "Met en avant les modules structurants et leur répartition par groupe et catégorie cible.",
       metrics: [
         metric("Modules", modules.length, "accent"),
         metric("Structurants", structuringCount, structuringCount > 0 ? "warning" : "default"),
         metric("Groupes", Object.keys(groups).length),
-        metric("Categories cibles", Object.keys(categories).length),
+        metric("Catégories cibles", Object.keys(categories).length),
       ],
       tags: formatTags(groups),
     },
@@ -223,10 +228,11 @@ function buildDecisionRulesDetails(content: unknown): SpecDetailSection[] {
 
   return [
     {
-      title: "Cerveau du moteur",
-      description: "Resume les briques qui gouvernent la qualification, les garde-fous et les familles backend.",
+      title: "Moteur de décision",
+      description:
+        "Résume les briques qui gouvernent la qualification, les garde-fous et les familles backend.",
       metrics: [
-        metric("Regles de matrice", matrixEntries.length, "accent"),
+        metric("Règles de matrice", matrixEntries.length, "accent"),
         metric("Contraintes", constraints),
         metric("Invariants", invariants, invariants > 0 ? "warning" : "default"),
         metric("Familles backend", backendFamilies),
@@ -257,12 +263,13 @@ function buildCommercialDetails(content: unknown): SpecDetailSection[] {
   return [
     {
       title: "Grilles commerciales",
-      description: "Cadre les plans de prix, de maintenance et les options infra exploitees par le devis.",
+      description:
+        "Cadre les plans de prix, de maintenance et les options d’infrastructure exploitées par le devis.",
       metrics: [
-        metric("Categories pricees", countEntries(baseBands), "accent"),
-        metric("Plans maintenance", countEntries(maintenance)),
-        metric("Cibles deploy", countEntries(deploy)),
-        metric("Entrees hosting", countEntries(hosting)),
+        metric("Catégories tarifées", countEntries(baseBands), "accent"),
+        metric("Plans de maintenance", countEntries(maintenance)),
+        metric("Cibles de déploiement", countEntries(deploy)),
+        metric("Entrées d’hébergement", countEntries(hosting)),
       ],
       tags:
         setupFloor > 0 || setupCeil > 0
@@ -290,12 +297,13 @@ function buildCustomStacksDetails(content: unknown): SpecDetailSection[] {
 
   return [
     {
-      title: "Escalade custom",
-      description: "Montre quand une stack custom devient admissible et le niveau d'engagement qu'elle implique.",
+      title: "Escalade sur mesure",
+      description:
+        "Montre quand une stack sur mesure devient admissible et le niveau d’engagement qu’elle implique.",
       metrics: [
-        metric("Profils custom", profiles.length, "accent"),
-        metric("Seuils complexite", Object.keys(complexities).length),
-        metric("Maintenances imposees", maintenanceCats.size),
+        metric("Profils sur mesure", profiles.length, "accent"),
+        metric("Seuils de complexité", Object.keys(complexities).length),
+        metric("Maintenances imposées", maintenanceCats.size),
         metric("Profils avec budget", profiles.filter((profile) => asRecord(profile.budgetHint)).length),
       ],
       tags: formatTags(complexities),
@@ -317,12 +325,13 @@ function buildStackProfilesDetails(content: unknown): SpecDetailSection[] {
   return [
     {
       title: "Profils de stack",
-      description: "Relie les familles de stack, leurs profils concrets et les planchers de maintenance declares.",
+      description:
+        "Relie les familles de stack, leurs profils concrets et les planchers de maintenance déclarés.",
       metrics: [
         metric("Familles", families.length, "accent"),
         metric("Profils", profiles.length),
-        metric("Mappings CMS", countEntries(root?.implementationMapping)),
-        metric("Mappings projet", countEntries(root?.projectFamilyMapping)),
+        metric("Correspondances CMS", countEntries(root?.implementationMapping)),
+        metric("Correspondances projet", countEntries(root?.projectFamilyMapping)),
       ],
       tags: formatTags(maintenanceFloors),
     },
@@ -336,10 +345,10 @@ function buildSharedSocleDetails(content: unknown): SpecDetailSection[] {
       title: "Socle commun",
       description: "Expose le volume des exigences transverses et des exceptions par stack.",
       metrics: [
-        metric("Baseline", countEntries(root?.baselineRequirements), "accent"),
-        metric("Deltas stack", countEntries(root?.stackDeltas)),
-        metric("Refs commerciales", countEntries(root?.commercialReferences)),
-        metric("Top-level", Object.keys(root ?? {}).filter((key) => key !== "_meta").length),
+        metric("Socle de base", countEntries(root?.baselineRequirements), "accent"),
+        metric("Écarts par stack", countEntries(root?.stackDeltas)),
+        metric("Références commerciales", countEntries(root?.commercialReferences)),
+        metric("Clés racines", Object.keys(root ?? {}).filter((key) => key !== "_meta").length),
       ],
       tags: Object.keys(asRecord(root?.stackDeltas) ?? {}).slice(0, 4),
     },
@@ -362,13 +371,14 @@ function buildInfraServicesDetails(content: unknown): SpecDetailSection[] {
 
   return [
     {
-      title: "Services infra",
-      description: "Mesure la largeur du catalogue infra et les contraintes d'hebergement les plus structurantes.",
+      title: "Services d’infrastructure",
+      description:
+        "Mesure l’étendue du catalogue d’infrastructure et les contraintes d’hébergement les plus structurantes.",
       metrics: [
-        metric("Categories", categories.length, "accent"),
+        metric("Catégories", categories.length, "accent"),
         metric("Services", services.length),
         metric("Docker requis", dockerRequired, dockerRequired > 0 ? "warning" : "default"),
-        metric("Services recurrents", recurringServices),
+        metric("Services récurrents", recurringServices),
       ],
       tags: formatTags(byCategory),
     },
@@ -381,10 +391,11 @@ function buildGenericDetails(content: unknown): SpecDetailSection[] {
 
   return [
     {
-      title: "Structure generale",
-      description: "Fallback de lecture rapide quand aucune vue detaillee specifique n'est definie.",
+      title: "Structure générale",
+      description:
+        "Vue de lecture rapide quand aucune synthèse spécifique n’est définie.",
       metrics: [
-        metric("Sections top-level", topLevelKeys.length, "accent"),
+        metric("Sections principales", topLevelKeys.length, "accent"),
         metric("Collections", topLevelKeys.filter((key) => Array.isArray(root?.[key])).length),
         metric("Objets", topLevelKeys.filter((key) => asRecord(root?.[key]) !== null).length),
         metric("Version", asString(root?.version) ?? "n/a"),

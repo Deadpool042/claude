@@ -171,7 +171,7 @@ export function SummaryImplementationCard() {
                 <span>Cible</span>
                 <span className="font-medium text-foreground">
                   {hostingSelectionMode === "NONE"
-                    ? "Géré par le provider"
+                    ? "Géré par l’hébergeur"
                     : hostingSelectionMode === "SINGLE"
                       ? HOSTING_TARGET_LABELS[hostingTarget]
                       : hostingSelectionMode === "FRONT_ONLY"

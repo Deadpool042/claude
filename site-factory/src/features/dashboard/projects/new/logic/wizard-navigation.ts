@@ -185,3 +185,9 @@ export function nextWizardStep(currentStep: number): number {
 export function prevWizardStep(currentStep: number): number {
   return Math.max(currentStep - 1, WIZARD_MIN_STEP);
 }
+
+export function resetWizardStepForProjectTypeChange(
+  currentStep: number,
+): number {
+  return currentStep > WIZARD_MIN_STEP ? WIZARD_MIN_STEP : currentStep;
+}

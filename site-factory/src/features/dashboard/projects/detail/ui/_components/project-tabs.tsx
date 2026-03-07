@@ -29,7 +29,7 @@ interface ProjectTabsProps {
 const BASE_TABS = [
   {
     value: "overview",
-    label: "Vue d'ensemble",
+    label: "Vue d’ensemble",
     icon: LayoutDashboard,
   },
   {

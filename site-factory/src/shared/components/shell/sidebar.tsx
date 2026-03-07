@@ -24,8 +24,8 @@ const navigation = [
   { name: "Projets", href: "/dashboard/projects", icon: FolderKanban },
   { name: "Offres", href: "/dashboard/offres", icon: BadgePercent },
   { name: "Modules", href: "/dashboard/modules", icon: Boxes },
-  { name: "Spec Editor", href: "/dashboard/spec", icon: FileJson },
-  { name: "Docs", href: "/dashboard/docs", icon: BookOpen },
+  { name: "Spécifications", href: "/dashboard/spec", icon: FileJson },
+  { name: "Documentation", href: "/dashboard/docs", icon: BookOpen },
   { name: "Configs", href: "/dashboard/configs", icon: Settings },
   { name: "Infra / Traefik", href: "/dashboard/infra", icon: Network },
 ] as const;
@@ -82,7 +82,7 @@ export function Sidebar() {
             "ml-auto inline-flex size-8 items-center justify-center rounded-md border border-border/60 text-muted-foreground transition hover:bg-sidebar-accent/50 hover:text-foreground",
             collapsed ? "ml-auto" : "ml-auto",
           )}
-          aria-label={collapsed ? "Etendre le menu" : "Reduire le menu"}
+          aria-label={collapsed ? "Étendre le menu" : "Réduire le menu"}
         >
           {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
         </button>

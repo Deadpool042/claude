@@ -20,7 +20,7 @@ import type { WizardContextType } from "./wizard-types";
 const OFFER_LABELS = {
   VITRINE_BLOG: "Vitrine / Blog",
   ECOMMERCE: "E-commerce",
-  APP_CUSTOM: "App custom",
+  APP_CUSTOM: "Application sur mesure",
 } as const;
 
 const STEP_LABELS = [
@@ -108,7 +108,7 @@ export function resolveProductionModeLabel(params: {
 
 function resolveHostingSummary(input: WizardFlowInput): string {
   if (input.hostingSelectionMode === "NONE") {
-    return "Hosting géré par le provider";
+    return "Hébergement géré par l’hébergeur";
   }
   if (input.hostingSelectionMode === "SINGLE") {
     return HOSTING_TARGET_LABELS[input.hostingTarget];

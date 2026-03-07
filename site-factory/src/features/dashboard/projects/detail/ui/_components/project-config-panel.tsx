@@ -32,9 +32,9 @@ function renderIcon(name: string) {
 }
 
 const DEV_MODE_OPTIONS: Array<{ id: DevMode; label: string }> = [
-  { id: "DEV_COMFORT", label: "Dev local" },
-  { id: "DEV_PROD_LIKE", label: "Dev prod-like" },
-  { id: "PROD", label: "Prod" },
+  { id: "DEV_COMFORT", label: "Local" },
+  { id: "DEV_PROD_LIKE", label: "Simulation prod" },
+  { id: "PROD", label: "Production" },
 ];
 
 export function ProjectConfigPanel(props: ProjectConfigPanelProps) {
@@ -73,7 +73,7 @@ export function ProjectConfigPanel(props: ProjectConfigPanelProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CardTitle className="text-lg">Configuration Docker</CardTitle>
+              <CardTitle className="text-lg">Configuration d’environnement</CardTitle>
               {techStack ? (
                 <Badge variant="secondary">
                   {TECH_STACK_LABELS[techStack as keyof typeof TECH_STACK_LABELS] ?? techStack}
@@ -89,7 +89,7 @@ export function ProjectConfigPanel(props: ProjectConfigPanelProps) {
                   size="sm"
                   onClick={() => vm.setActiveProfile(vm.activeProfile === "dev" ? null : "dev")}
                 >
-                  Vue Local
+                  Vue locale
                 </Button>
                 <Button
                   type="button"
@@ -97,7 +97,7 @@ export function ProjectConfigPanel(props: ProjectConfigPanelProps) {
                   size="sm"
                   onClick={() => vm.setActiveProfile(vm.activeProfile === "prod-like" ? null : "prod-like")}
                 >
-                  Vue Prod-like
+                  Vue simulation prod
                 </Button>
               </div>
             ) : null}
@@ -105,9 +105,9 @@ export function ProjectConfigPanel(props: ProjectConfigPanelProps) {
 
           <CardDescription>
             {vm.activeProfile === "dev"
-              ? "Prévisualisation local — services inclus dans docker-compose.local.yml. L'enregistrement régénère ce fichier."
+              ? "Prévisualisation locale — services inclus dans docker-compose.local.yml. L'enregistrement régénère ce fichier."
               : vm.activeProfile === "prod-like"
-                ? "Prévisualisation prod-like — services inclus dans docker-compose.prod-like.yml. L'enregistrement régénère ce fichier."
+                ? "Prévisualisation simulation prod — services inclus dans docker-compose.prod-like.yml. L'enregistrement régénère ce fichier."
                 : `Sélectionnez un mode pour prévisualiser. Par défaut, l'enregistrement régénère le ${defaultComposeLabel}.`}
           </CardDescription>
         </CardHeader>
@@ -174,7 +174,9 @@ export function ProjectConfigPanel(props: ProjectConfigPanelProps) {
 
           {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
           {state.success ? (
-            <p className="text-sm text-green-600">Configuration sauvegardée. Le docker-compose.yml a été régénéré.</p>
+            <p className="text-sm text-green-600">
+              Configuration enregistrée. Le fichier compose cible a été régénéré.
+            </p>
           ) : null}
         </CardContent>
 

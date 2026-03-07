@@ -61,8 +61,8 @@ export function SpecEditPanel({
   return (
     <div className="space-y-4">
       <div className="rounded-lg border border-border/50 bg-muted/15 px-4 py-3 text-sm text-muted-foreground">
-        L’édition visuelle couvre les cas lisibles. Bascule sur le JSON brut pour les structures
-        avancées ou les cas non pris en charge par les renderers.
+        L’édition visuelle couvre les cas les plus lisibles. Bascule sur le JSON pour les
+        structures avancées ou les cas non pris en charge par les renderers.
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -74,7 +74,7 @@ export function SpecEditPanel({
             </TabsTrigger>
             <TabsTrigger value="raw" className="gap-1.5">
               <FileCode2 className="h-3.5 w-3.5" />
-              JSON brut
+              JSON
             </TabsTrigger>
           </TabsList>
           <span className="text-[10px] text-muted-foreground/50">{specFile}</span>

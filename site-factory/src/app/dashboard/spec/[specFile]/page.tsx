@@ -12,7 +12,7 @@ export default async function SpecFilePage({
   return (
     <PageLayout
       title={label}
-      description={`Lecture et édition progressive du fichier spec : ${decodeURIComponent(specFile)}`}
+      description={`Consultation détaillée et édition progressive du fichier de spécification : ${decodeURIComponent(specFile)}`}
     >
       <SpecFileEditorClient specFile={decodeURIComponent(specFile)} />
     </PageLayout>

@@ -211,7 +211,7 @@ export function StepModules() {
       </InlineHint>
 
       <StepCard
-        title="Priorisation modules"
+        title="Priorisation des modules"
         icon={Wrench}
         tone="bg-amber-500/10 text-amber-500"
         description="Lecture métier avant arbitrage détaillé des cartes modules."

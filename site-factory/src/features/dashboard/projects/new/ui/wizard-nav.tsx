@@ -75,8 +75,8 @@ export function WizardNav() {
           <div className="flex items-center gap-2 font-medium">
             <AlertTriangle className="size-4" />
             {step === 4
-              ? "Informations manquantes avant création"
-              : "Informations manquantes"}
+              ? "Éléments à compléter avant création"
+              : "Éléments à compléter"}
           </div>
           <ul className="mt-2 list-disc pl-4 space-y-1">
             {nextReasons.map((reason) => (
