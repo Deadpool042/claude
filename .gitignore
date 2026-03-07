@@ -108,4 +108,4 @@ docker-data/
 site-factory/.env
 site-factory/.env.local
 site-factory/.next/
-site-factory/node_modules/
+site-factory/node_modules/Archive.zip
