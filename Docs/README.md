@@ -12,23 +12,23 @@ Cette arborescence suit une seule logique de navigation: partir du produit, pass
 
 ## Arborescence cible
 
-| Dossier | Rôle |
-|---|---|
-| `produit/` | Vision, positionnement, taxonomie, glossaire métier. |
-| `qualification/` | Logique de qualification, cadrage, règles d'entrée. |
-| `recommandation/` | Moteur de recommandation, lecture des capacités, orientation de solution. |
-| `technique/` | Implémentation, architecture spec-first, modules, intégrations, socles. |
-| `interne/` | Gouvernance, QA, roadmap, audits, archives, prompts internes. |
-| `_spec/` | Source canonique machine-readable. |
+| Dossier           | Rôle                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------ |
+| `produit/`        | Vision, positionnement, taxonomie, glossaire métier.                                 |
+| `qualification/`  | Logique de qualification, cadrage, règles d'entrée.                                  |
+| `recommandation/` | Moteur de recommandation, lecture des capacités, orientation de solution.            |
+| `technique/`      | Implémentation, architecture spec-first, modules, intégrations, socles.              |
+| `interne/`        | Gouvernance, fondations de domaine, QA, roadmap, audits, archives, prompts internes. |
+| `_spec/`          | Source canonique machine-readable.                                                   |
 
 ## Source de vérité et responsabilités
 
-| Niveau | Chemin | Rôle |
-|---|---|---|
-| Canonique métier | `Docs/_spec/*` | Vérité exécutable: règles, catalogues, pricing, matrices, arbitrages. |
-| Miroir runtime dérivé | `site-factory/src/lib/referential/spec/data/*` | Copie générée depuis `_spec`, consommée par l'application. |
-| Couche applicative dérivée | `site-factory/src/lib/offers/*` | Adaptation UI/runtime pour l'app. |
-| Documentation lisible | `Docs/produit/*`, `Docs/qualification/*`, `Docs/recommandation/*`, `Docs/technique/*`, `Docs/interne/*` | Guides de lecture et documentation d'exploitation. |
+| Niveau                     | Chemin                                                                                                  | Rôle                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Canonique métier           | `Docs/_spec/*`                                                                                          | Vérité exécutable: règles, catalogues, pricing, matrices, arbitrages. |
+| Miroir runtime dérivé      | `site-factory/src/lib/referential/spec/data/*`                                                          | Copie générée depuis `_spec`, consommée par l'application.            |
+| Couche applicative dérivée | `site-factory/src/lib/offers/*`                                                                         | Adaptation UI/runtime pour l'app.                                     |
+| Documentation lisible      | `Docs/produit/*`, `Docs/qualification/*`, `Docs/recommandation/*`, `Docs/technique/*`, `Docs/interne/*` | Guides de lecture et documentation d'exploitation.                    |
 
 ## Parcours de lecture recommandé
 
@@ -57,13 +57,18 @@ Cette arborescence suit une seule logique de navigation: partir du produit, pass
 
 ### Modifier la vérité canonique
 
-- [_spec/README.md](./_spec/README.md)
-- [_spec/GENERATION.md](./_spec/GENERATION.md)
-- [_spec/AUDIT.md](./_spec/AUDIT.md)
+- [\_spec/README.md](./_spec/README.md)
+- [\_spec/GENERATION.md](./_spec/GENERATION.md)
+- [\_spec/AUDIT.md](./_spec/AUDIT.md)
 
 ### Pilotage interne
 
 - [interne/README.md](./interne/README.md)
+- [interne/fondations/DOMAIN_PRINCIPLES.md](./interne/fondations/DOMAIN_PRINCIPLES.md)
+- [interne/fondations/CANONICAL_MODEL.md](./interne/fondations/CANONICAL_MODEL.md)
+- [interne/fondations/DECISION_ENGINE.md](./interne/fondations/DECISION_ENGINE.md)
+- [interne/fondations/IMPLEMENTATION_CATALOG.md](./interne/fondations/IMPLEMENTATION_CATALOG.md)
+- [interne/fondations/ROADMAP_SITE_FACTORY.md](./interne/fondations/ROADMAP_SITE_FACTORY.md)
 - [interne/archives/2026-03-06-migration-arborescence-documentaire.md](./interne/archives/2026-03-06-migration-arborescence-documentaire.md)
 
 ## Règles de navigation
@@ -71,4 +76,5 @@ Cette arborescence suit une seule logique de navigation: partir du produit, pass
 - Il n'y a plus de série numérotée active au niveau racine de `Docs/`.
 - Les fichiers historiques ont été reclassés par rôle métier et technique.
 - Les documents datés vivent dans `Docs/interne/roadmap`, `Docs/interne/audits` ou `Docs/interne/archives`.
+- Les documents evergreen de cadrage de domaine vivent dans `Docs/interne/fondations`.
 - `_spec` n'est pas un guide de lecture produit: c'est la couche canonique.
