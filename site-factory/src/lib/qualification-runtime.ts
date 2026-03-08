@@ -15,12 +15,19 @@ import {
   type CIAxes,
   type CIResult,
   type Category,
+  type CommercialProfile,
   type DeployTarget,
+  type DeliveryModel,
+  type CanonicalDecisionOutput,
+  type ImplementationStrategy,
   type LegacyTechStack as TechStack,
   type MaintenanceCat,
   type ModuleDef,
+  type MutualizationLevel,
   type ProjectConstraints,
   type ProjectType,
+  type SolutionFamily,
+  type TechnicalProfile,
 } from "@/lib/referential";
 import {
   resolveModuleMonthly,
@@ -65,12 +72,15 @@ export interface QualificationResult {
     grandTotal: number;
   };
   billingMode: BillingMode;
-  splits: {
-    baseSplitPrestataire: number;
-    baseSplitAgence: number;
-    modulesSplitPrestataire: number;
-    modulesSplitAgence: number;
-  } | null;
+  splits:
+    | {
+        baseSplitPrestataire: number;
+        baseSplitAgence: number;
+        modulesSplitPrestataire: number;
+        modulesSplitAgence: number;
+      }
+    | null;
+  decision: CanonicalDecisionOutput;
 }
 
 const INITIAL_CATEGORY: Record<ProjectType, Category> = {
@@ -91,6 +101,164 @@ const SPLIT_SOUS_TRAITANT: Record<
   CAT4: { prestataire: 60, agence: 40 },
 };
 
+function mapSolutionFamily(input: QualificationInput): SolutionFamily {
+  switch (input.projectType) {
+    case "BLOG":
+      return "CONTENT_PLATFORM";
+    case "VITRINE":
+      return "BUSINESS_SITE";
+    case "ECOM":
+      return "ECOMMERCE";
+    case "APP":
+      return "BUSINESS_APP";
+    default: {
+      const _exhaustive: never = input.projectType;
+      return _exhaustive;
+    }
+  }
+}
+
+function mapDeliveryModel(input: QualificationInput): DeliveryModel {
+  if (input.billingMode === "SOUS_TRAITANT") {
+    return "MANAGED_CUSTOM";
+  }
+
+  if (input.deployTarget === "VERCEL") {
+    return "MANAGED_CUSTOM";
+  }
+
+  return "DELIVERED_CUSTOM";
+}
+
+function mapMutualizationLevel(
+  input: QualificationInput,
+  finalCategory: Category,
+): MutualizationLevel {
+  if (input.billingMode === "SOUS_TRAITANT") {
+    return "SHARED_SOCLE";
+  }
+
+  if (input.techStack === "WORDPRESS" && !input.wpHeadless && finalCategory !== "CAT4") {
+    return "SHARED_SOCLE";
+  }
+
+  return "DEDICATED";
+}
+
+function mapImplementationStrategy(input: QualificationInput): ImplementationStrategy {
+  if (input.projectType === "APP") {
+    return "CUSTOM_WEB_APP";
+  }
+
+  if (input.techStack === "WORDPRESS" && input.wpHeadless) {
+    return "HEADLESS_CONTENT_SITE";
+  }
+
+  if (input.projectType === "ECOM" && input.techStack === "WORDPRESS") {
+    return "CMS_EXTENDED";
+  }
+
+  if (input.techStack === "WORDPRESS") {
+    return "CMS_CONFIGURED";
+  }
+
+  if (input.techStack === "NEXTJS" || input.techStack === "ASTRO" || input.techStack === "NUXT") {
+    return "HEADLESS_CONTENT_SITE";
+  }
+
+  return "HYBRID_STACK";
+}
+
+function mapTechnicalProfile(input: QualificationInput): TechnicalProfile {
+  if (input.projectType === "APP") {
+    return "CUSTOM_APP_MANAGED";
+  }
+
+  if (input.projectType === "ECOM" && input.techStack === "WORDPRESS" && !input.wpHeadless) {
+    return "WOOCOMMERCE_STANDARD";
+  }
+
+  if (input.techStack === "WORDPRESS" && input.wpHeadless) {
+    return "HEADLESS_WP";
+  }
+
+  if (input.techStack === "WORDPRESS") {
+    return input.projectType === "VITRINE"
+      ? "WP_BUSINESS_EXTENDED"
+      : "WP_EDITORIAL_STANDARD";
+  }
+
+  if (input.techStack === "NEXTJS") {
+    return "NEXT_MDX_EDITORIAL";
+  }
+
+  return "JAMSTACK_CONTENT_SITE";
+}
+
+function mapCommercialProfile(
+  input: QualificationInput,
+  deliveryModel: DeliveryModel,
+): CommercialProfile {
+  if (deliveryModel === "OPERATED_PRODUCT") {
+    return "OPERATED_SUBSCRIPTION";
+  }
+
+  if (deliveryModel === "MANAGED_STANDARDIZED") {
+    return "STANDARDIZED_MONTHLY_PLAN";
+  }
+
+  if (deliveryModel === "MANAGED_CUSTOM") {
+    return "SETUP_PLUS_MANAGED_RETAINER";
+  }
+
+  return input.billingMode === "SOUS_TRAITANT"
+    ? "SETUP_PLUS_MANAGED_RETAINER"
+    : "ONE_SHOT_DELIVERY";
+}
+
+function buildDecisionOutput(
+  input: QualificationInput,
+  finalCategory: Category,
+): CanonicalDecisionOutput {
+  const solutionFamily = mapSolutionFamily(input);
+  const deliveryModel = mapDeliveryModel(input);
+  const mutualizationLevel = mapMutualizationLevel(input, finalCategory);
+  const implementationStrategy = mapImplementationStrategy(input);
+  const technicalProfile = mapTechnicalProfile(input);
+  const commercialProfile = mapCommercialProfile(input, deliveryModel);
+
+  const notes: string[] = [];
+
+  if (input.techStack === "WORDPRESS" && input.wpHeadless) {
+    notes.push("Legacy mapping: WordPress headless currently biases the decision toward HEADLESS_CONTENT_SITE.");
+  }
+
+  if (input.billingMode === "SOUS_TRAITANT") {
+    notes.push("Legacy mapping: billing mode SOUS_TRAITANT currently biases the decision toward MANAGED_CUSTOM.");
+  }
+
+  if (input.projectType === "APP") {
+    notes.push("Legacy mapping: projectType APP currently biases the decision toward CUSTOM_WEB_APP.");
+  }
+
+  return {
+    solutionFamily,
+    deliveryModel,
+    mutualizationLevel,
+    implementationStrategy,
+    technicalProfile,
+    commercialProfile,
+    notes,
+    legacyMapping: {
+      projectType: input.projectType,
+      finalCategory,
+      techStack: input.techStack,
+      deployTarget: input.deployTarget,
+      wpHeadless: input.wpHeadless,
+    },
+  };
+}
+
 export function qualifyProject(input: QualificationInput): QualificationResult {
   let initialCategory = INITIAL_CATEGORY[input.projectType];
 
@@ -100,13 +268,16 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
 
   const normalizedIds = normalizeModuleIds(input.selectedModuleIds);
   const catSelections = input.catSelections ?? {};
+
   const ciAxes =
     input.ciAxes ??
     estimateCIAxes({
       projectType: input.projectType,
       moduleIds: normalizedIds,
     });
+
   const ci = computeCI(ciAxes);
+
   const backendMultiplier =
     input.projectType === "APP"
       ? getBackendMultiplier(
@@ -125,6 +296,7 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
   if (input.projectType === "ECOM") {
     finalCategory = maxCategory(finalCategory, "CAT2");
   }
+
   if (input.projectType === "APP") {
     finalCategory = maxCategory(finalCategory, "CAT2");
   }
@@ -163,7 +335,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     }
 
     if (constraints.scalabilityLevel) {
-      const minTier = CONSTRAINT_MIN_CATEGORY_INDEX.scalabilityLevel[constraints.scalabilityLevel];
+      const minTier =
+        CONSTRAINT_MIN_CATEGORY_INDEX.scalabilityLevel[constraints.scalabilityLevel];
       const minCat = indexToCategory(minTier);
       if (categoryIndex(minCat) > categoryIndex(finalCategory)) {
         finalCategory = minCat;
@@ -176,19 +349,22 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     input.projectType,
     input.wpHeadless,
   );
-  const stackFloorCat =
-    (["CAT0", "CAT1", "CAT2", "CAT3", "CAT4"] as Category[])[
-      Math.min(stackProfile.maintenanceFloorIndex, 4)
-    ];
+
+  const stackFloorCat = (["CAT0", "CAT1", "CAT2", "CAT3", "CAT4"] as Category[])[
+    Math.min(stackProfile.maintenanceFloorIndex, 4)
+  ];
+
   if (categoryIndex(stackFloorCat) > categoryIndex(finalCategory)) {
     finalCategory = stackFloorCat;
   }
 
   for (const mod of modules) {
     if (!mod.isStructurant) continue;
+
     const tierSel = catSelections[mod.id];
     const requalTo = resolveModuleRequalification(mod, tierSel);
     if (!requalTo) continue;
+
     const newCat = maxCategory(finalCategory, requalTo);
     if (newCat !== finalCategory) {
       requalifyingModules.push(mod);
@@ -198,10 +374,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
 
   const wasRequalified = finalCategory !== initialCategory;
   const maintenance = CATEGORY_MAINTENANCE[finalCategory];
-
   const familyBasePrice = FAMILY_BASE_PRICING[stackProfile.family]?.from ?? 1800;
   const base = Math.round(familyBasePrice * stackProfile.complexityFactor);
-
   const isWpHeadless = input.techStack === "WORDPRESS" && input.wpHeadless;
   const deployCost = getDeployCost(input.deployTarget, isWpHeadless);
 
@@ -223,6 +397,7 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
   }
 
   let splits: QualificationResult["splits"] = null;
+
   if (input.billingMode === "SOUS_TRAITANT") {
     const baseSplit = SPLIT_SOUS_TRAITANT[finalCategory];
     let modulesSplitPrestataire = 0;
@@ -238,10 +413,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
         tierSel,
         backendMultiplier,
       );
-      modulesSplitPrestataire +=
-        resolved.setup * (mod.splitPrestataireSetup / 100);
-      modulesSplitAgence +=
-        resolved.setup * ((100 - mod.splitPrestataireSetup) / 100);
+      modulesSplitPrestataire += resolved.setup * (mod.splitPrestataireSetup / 100);
+      modulesSplitAgence += resolved.setup * ((100 - mod.splitPrestataireSetup) / 100);
     }
 
     splits = {
@@ -251,6 +424,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
       modulesSplitAgence,
     };
   }
+
+  const decision = buildDecisionOutput(input, finalCategory);
 
   return {
     initialCategory,
@@ -269,6 +444,7 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
       grandTotal: base + modulesTotal + deployCost,
     },
     splits,
+    decision,
   };
 }
 
@@ -279,11 +455,10 @@ export function getOfferStackForProject(
 ): string {
   if (techStack === "WORDPRESS") {
     if (wpHeadless) {
-      return projectType === "ECOM"
-        ? "WOOCOMMERCE_HEADLESS"
-        : "WORDPRESS_HEADLESS";
+      return projectType === "ECOM" ? "WOOCOMMERCE_HEADLESS" : "WORDPRESS_HEADLESS";
     }
     return projectType === "ECOM" ? "WOOCOMMERCE" : "WORDPRESS";
   }
+
   return techStack;
 }
