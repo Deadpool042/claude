@@ -8,6 +8,8 @@ export type GeneratorKey =
 
 export interface GenerationPlan {
   profile: ProjectManifestDraft["solution"]["technicalProfile"];
+  deliveryModel: ProjectManifestDraft["solution"]["deliveryModel"];
+  mutualizationLevel: ProjectManifestDraft["solution"]["mutualizationLevel"];
   generatorKey: GeneratorKey;
   modules: string[];
   deployTarget: ProjectManifestDraft["technicalContext"]["deployTarget"];
@@ -87,6 +89,8 @@ export function buildGenerationPlanFromManifest(
 
   return {
     profile: manifest.solution.technicalProfile,
+    deliveryModel: manifest.solution.deliveryModel,
+    mutualizationLevel: manifest.solution.mutualizationLevel,
     generatorKey,
     modules: manifest.functionalScope.selectedModuleIds,
     deployTarget: manifest.technicalContext.deployTarget,

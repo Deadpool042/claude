@@ -3,6 +3,48 @@ import type { GenerationArtifactDraft } from "./types";
 import { buildNextContentSiteDraft } from "./next-content-site";
 import { buildWordpressSiteDraft } from "./wordpress-site";
 
+function buildPlaceholderArtifactDraft(
+  plan: GenerationPlan,
+  args: {
+    projectKind: string;
+    rootPaths: string[];
+    extraNote: string;
+    extraFiles: {
+      path: string;
+      kind: "json" | "yaml" | "ts" | "md" | "env" | "text";
+      purpose: string;
+    }[];
+  }
+): GenerationArtifactDraft {
+  const files = [
+    {
+      path: "project.manifest.json",
+      kind: "json" as const,
+      purpose: "Manifest projet exporté"
+    },
+    ...args.extraFiles
+  ];
+
+  return {
+    generatorKey: plan.generatorKey,
+    projectKind: args.projectKind,
+    identity: {
+      manifestVersion: "draft-v1",
+      technicalProfile: plan.profile,
+      deliveryModel: plan.deliveryModel,
+      mutualizationLevel: plan.mutualizationLevel
+    },
+    structure: {
+      rootPaths: args.rootPaths,
+      fileCount: files.length
+    },
+    files,
+    modules: plan.modules,
+    deployTarget: plan.deployTarget,
+    notes: [...plan.notes, args.extraNote]
+  };
+}
+
 export function buildGenerationArtifactDraft(
   plan: GenerationPlan
 ): GenerationArtifactDraft {
@@ -14,47 +56,32 @@ export function buildGenerationArtifactDraft(
       return buildNextContentSiteDraft(plan);
 
     case "custom-app":
-      return {
-        generatorKey: plan.generatorKey,
+      return buildPlaceholderArtifactDraft(plan, {
         projectKind: "custom-app",
-        files: [
-          {
-            path: "project.manifest.json",
-            kind: "json",
-            purpose: "Manifest projet exporté"
-          },
+        rootPaths: ["src/"],
+        extraNote: "Draft generator: custom app placeholder.",
+        extraFiles: [
           {
             path: "src/",
             kind: "text",
             purpose: "Entrée application custom"
           }
-        ],
-        modules: plan.modules,
-        notes: [...plan.notes, "Draft generator: custom app placeholder."]
-      };
+        ]
+      });
 
     case "operated-template":
-      return {
-        generatorKey: plan.generatorKey,
+      return buildPlaceholderArtifactDraft(plan, {
         projectKind: "operated-template",
-        files: [
-          {
-            path: "project.manifest.json",
-            kind: "json",
-            purpose: "Manifest projet exporté"
-          },
+        rootPaths: ["template/"],
+        extraNote: "Draft generator: operated template placeholder.",
+        extraFiles: [
           {
             path: "template/",
             kind: "text",
             purpose: "Base opérée mutualisable"
           }
-        ],
-        modules: plan.modules,
-        notes: [
-          ...plan.notes,
-          "Draft generator: operated template placeholder."
         ]
-      };
+      });
 
     default: {
       const _never: never = plan.generatorKey;
