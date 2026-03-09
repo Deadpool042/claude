@@ -31,15 +31,15 @@ import { resolveBaseCategoryRules } from "@/lib/services/qualification/category-
 import {
   buildProjectManifestDraft,
   type ProjectManifestDraft
-} from "./domain/project-manifest";
+} from "@/lib/domain/project-manifest";
 import {
   assessStandardization,
   type StandardizationAssessment
-} from "./domain/standardization-engine";
+} from "@/lib/domain/standardization-engine";
 import {
   buildStandardizationExplanation,
   type StandardizationExplanation
-} from "./domain/standardization-explanation";
+} from "@/lib/domain/standardization-explanation";
 
 export type { DeployTarget, TechStack };
 
