@@ -32,7 +32,11 @@ export function mapSolutionFamilyFromCanonical(
 export function mapDeliveryModelFromCanonical(
   canonicalInput: CanonicalProjectInputDraft
 ): DeliveryModel {
-  if (canonicalInput.operatingModel.operatingIntent === "MANAGED_FOR_CLIENT") {
+  if (canonicalInput.signals.operatedProductCandidate) {
+    return "MANAGED_STANDARDIZED";
+  }
+
+  if (canonicalInput.signals.managedServiceCandidate) {
     return "MANAGED_CUSTOM";
   }
 
@@ -43,15 +47,18 @@ export function mapMutualizationLevelFromCanonical(
   canonicalInput: CanonicalProjectInputDraft,
   finalCategory: Category
 ): MutualizationLevel {
-  if (canonicalInput.operatingModel.operatingIntent === "MANAGED_FOR_CLIENT") {
-    return "SHARED_SOCLE";
+  if (canonicalInput.signals.operatedProductCandidate) {
+    return "MUTUALIZED_SINGLE_TENANT";
   }
 
   if (
-    canonicalInput.operatingModel.standardizationIntent ===
-      "STANDARDIZATION_POSSIBLE" &&
+    canonicalInput.signals.mutualizationCandidate &&
     finalCategory !== "CAT4"
   ) {
+    return "SHARED_SOCLE";
+  }
+
+  if (canonicalInput.signals.managedServiceCandidate) {
     return "SHARED_SOCLE";
   }
 
@@ -63,6 +70,10 @@ export function mapImplementationStrategyFromCanonical(
 ): ImplementationStrategy {
   if (canonicalInput.businessIntent.needKind === "BUSINESS_TOOL") {
     return "CUSTOM_WEB_APP";
+  }
+
+  if (canonicalInput.signals.operatedProductCandidate) {
+    return "OPERATED_TEMPLATE_PRODUCT";
   }
 
   if (
@@ -99,6 +110,10 @@ export function mapTechnicalProfileFromCanonical(
 ): TechnicalProfile {
   if (canonicalInput.businessIntent.needKind === "BUSINESS_TOOL") {
     return "CUSTOM_APP_MANAGED";
+  }
+
+  if (canonicalInput.signals.operatedProductCandidate) {
+    return "OPERATED_CONTENT_PRODUCT";
   }
 
   if (
@@ -183,7 +198,13 @@ export function buildCanonicalDecisionOutputFromDraft(args: {
 
   if (canonicalInput.technicalContext.billingMode === "SOUS_TRAITANT") {
     notes.push(
-      "Legacy mapping: billing mode SOUS_TRAITANT currently biases the decision toward MANAGED_CUSTOM."
+      "Legacy mapping: billing mode SOUS_TRAITANT currently biases the decision toward managed service logic."
+    );
+  }
+
+  if (canonicalInput.signals.mutualizationCandidate) {
+    notes.push(
+      "Canonical signal: current input suggests a shared socle or standardized trajectory."
     );
   }
 

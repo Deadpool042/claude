@@ -31,19 +31,33 @@ describe("canonical decision mapping", () => {
     expect(mapSolutionFamilyFromCanonical(canonicalInput)).toBe("ECOMMERCE");
   });
 
-  it("maps delivery model from canonical operating intent", () => {
+  it("maps delivery model to managed standardized when operated-product signal is active", () => {
     const canonicalInput = buildCanonicalProjectInputDraft({
       ...baseInput,
       billingMode: "SOUS_TRAITANT"
     });
 
     expect(mapDeliveryModelFromCanonical(canonicalInput)).toBe(
-      "MANAGED_CUSTOM"
+      "MANAGED_STANDARDIZED"
     );
   });
 
-  it("maps mutualization from canonical standardization intent", () => {
-    const canonicalInput = buildCanonicalProjectInputDraft(baseInput);
+  it("maps delivery model to managed standardized when operated-product signal is active", () => {
+  const canonicalInput = buildCanonicalProjectInputDraft({
+    ...baseInput,
+    billingMode: "SOUS_TRAITANT",
+  });
+
+  expect(mapDeliveryModelFromCanonical(canonicalInput)).toBe(
+    "MANAGED_STANDARDIZED"
+  );
+});
+
+  it("maps mutualization from canonical mutualization signal", () => {
+    const canonicalInput = buildCanonicalProjectInputDraft({
+      ...baseInput,
+      selectedModuleIds: ["seo", "forms"]
+    });
 
     expect(mapMutualizationLevelFromCanonical(canonicalInput, "CAT2")).toBe(
       "SHARED_SOCLE"

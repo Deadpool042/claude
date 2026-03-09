@@ -47,6 +47,12 @@ export interface CanonicalProjectInputDraft {
     operatingIntent: CanonicalOperatingIntent;
     standardizationIntent: CanonicalStandardizationIntent;
   };
+  signals: {
+    managedServiceCandidate: boolean;
+    standardizationCandidate: boolean;
+    mutualizationCandidate: boolean;
+    operatedProductCandidate: boolean;
+  };
   technicalContext: {
     legacyTechStack: LegacyTechStack;
     wpHeadless: boolean;
@@ -107,6 +113,31 @@ function mapStandardizationIntent(
   return "CUSTOM_FIRST";
 }
 
+function buildSignals(input: QualificationInput) {
+  const managedServiceCandidate =
+    input.billingMode === "SOUS_TRAITANT" || input.deployTarget === "VERCEL";
+
+  const standardizationCandidate =
+    input.techStack === "WORDPRESS" &&
+    !input.wpHeadless &&
+    input.projectType !== "APP";
+
+  const mutualizationCandidate =
+    standardizationCandidate && input.selectedModuleIds.length <= 3;
+
+  const operatedProductCandidate =
+    mutualizationCandidate &&
+    input.projectType !== "APP" &&
+    input.billingMode === "SOUS_TRAITANT";
+
+  return {
+    managedServiceCandidate,
+    standardizationCandidate,
+    mutualizationCandidate,
+    operatedProductCandidate
+  };
+}
+
 export function buildCanonicalProjectInputDraft(
   input: QualificationInput
 ): CanonicalProjectInputDraft {
@@ -128,6 +159,7 @@ export function buildCanonicalProjectInputDraft(
       operatingIntent: mapOperatingIntent(input),
       standardizationIntent: mapStandardizationIntent(input)
     },
+    signals: buildSignals(input),
     technicalContext: {
       legacyTechStack: input.techStack,
       wpHeadless: input.wpHeadless,
