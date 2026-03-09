@@ -25,6 +25,7 @@ import { buildRecommendationWhy } from "../../logic/wizard-flow";
 import { RecommendationWhyPanel } from "../recommendation/recommendation-why-panel";
 import { resolveOfferLabel } from "./summary-helpers";
 import { DecisionSummaryCard } from "../../components/decision-summary-card";
+import { buildQualificationSummary } from "@/lib/domain/qualification-summary";
 
 interface SummaryDecisionCardProps {
   showProjectIdentity: boolean;
@@ -71,6 +72,10 @@ export function SummaryDecisionCard({
   if (!projectType) {
     return null;
   }
+
+  const qualificationSummary = qualification
+    ? buildQualificationSummary(qualification)
+    : null;
 
   const {
     editingModeLabel,
@@ -235,6 +240,88 @@ export function SummaryDecisionCard({
             ) : null}
           </div>
         </div>
+
+        {qualificationSummary ? (
+          <div className="rounded-lg border border-dashed p-3 text-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="font-medium">Lecture domaine</p>
+              <Badge variant="outline">
+                {qualificationSummary.standardizationSnapshot.status}
+              </Badge>
+            </div>
+
+            <div className="space-y-2 text-xs text-muted-foreground">
+              <div className="flex items-center justify-between">
+                <span>Profil technique</span>
+                <span className="font-medium text-foreground">
+                  {qualificationSummary.projectIdentity.technicalProfile}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span>Delivery model</span>
+                <span className="font-medium text-foreground">
+                  {qualificationSummary.projectIdentity.deliveryModel}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span>Mutualisation</span>
+                <span className="font-medium text-foreground">
+                  {qualificationSummary.projectIdentity.mutualizationLevel}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span>Déploiement</span>
+                <span className="font-medium text-foreground">
+                  {qualificationSummary.projectIdentity.deployTarget}
+                </span>
+              </div>
+
+              <p className="pt-1">
+                {qualificationSummary.standardizationSnapshot.headline}
+              </p>
+
+              {qualificationSummary.standardizationSnapshot
+                .recommendedDeliveryShift ? (
+                <div className="flex items-center justify-between">
+                  <span>Shift recommandé</span>
+                  <span className="font-medium text-foreground">
+                    {
+                      qualificationSummary.standardizationSnapshot
+                        .recommendedDeliveryShift
+                    }
+                  </span>
+                </div>
+              ) : null}
+
+              {qualificationSummary.standardizationSnapshot
+                .recommendedMutualizationShift ? (
+                <div className="flex items-center justify-between">
+                  <span>Mutualisation recommandée</span>
+                  <span className="font-medium text-foreground">
+                    {
+                      qualificationSummary.standardizationSnapshot
+                        .recommendedMutualizationShift
+                    }
+                  </span>
+                </div>
+              ) : null}
+
+              {qualificationSummary.standardizationExplanation.warnings.length >
+              0 ? (
+                <div className="space-y-1 pt-1 text-amber-600 dark:text-amber-400">
+                  {qualificationSummary.standardizationExplanation.warnings.map(
+                    warning => (
+                      <p key={warning}>• {warning}</p>
+                    )
+                  )}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
 
         {canonicalTaxonomyResolution ? (
           <div className="space-y-1 rounded-lg border border-dashed p-3 text-xs">

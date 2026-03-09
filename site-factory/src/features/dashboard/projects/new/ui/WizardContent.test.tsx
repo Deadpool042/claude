@@ -1,16 +1,19 @@
 // @vitest-environment jsdom
-
+import { within } from "@testing-library/react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { defaultHostingProviderForDeployTarget } from "@/lib/hosting";
 import type { ModuleId } from "@/lib/offers";
 import { DEFAULT_CONSTRAINTS } from "@/lib/referential";
-import { qualifyProject, type ModuleCatSelection } from "@/lib/qualification-runtime";
+import {
+  qualifyProject,
+  type ModuleCatSelection
+} from "@/lib/qualification-runtime";
 import {
   createWizardFeatureStates,
   createWizardModuleStates,
-  createWizardProviderStates,
+  createWizardProviderStates
 } from "../logic/wizard-capabilities";
 import { WizardContext } from "../logic/wizard-context";
 import type { FormFields, WizardContextType } from "../logic/wizard-types";
@@ -19,7 +22,7 @@ import { WizardContent } from "./WizardContent";
 function jsonResponse(data: unknown): Response {
   return new Response(JSON.stringify(data), {
     status: 200,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json" }
   });
 }
 
@@ -38,12 +41,20 @@ function WizardHarness() {
     domain: "",
     port: "",
     gitRepo: "",
-    hostingProviderId: defaultHostingProviderForDeployTarget("DOCKER"),
+    hostingProviderId: defaultHostingProviderForDeployTarget("DOCKER")
   });
-  const [catSelections, setCatSelections] = useState<Record<string, ModuleCatSelection>>({});
-  const [wizardModules, setWizardModules] = useState(createWizardModuleStates());
-  const [wizardFeatures, setWizardFeatures] = useState(createWizardFeatureStates());
-  const [wizardProviders, setWizardProviders] = useState(createWizardProviderStates());
+  const [catSelections, setCatSelections] = useState<
+    Record<string, ModuleCatSelection>
+  >({});
+  const [wizardModules, setWizardModules] = useState(
+    createWizardModuleStates()
+  );
+  const [wizardFeatures, setWizardFeatures] = useState(
+    createWizardFeatureStates()
+  );
+  const [wizardProviders, setWizardProviders] = useState(
+    createWizardProviderStates()
+  );
 
   const qualification = qualifyProject({
     projectType: "VITRINE",
@@ -59,8 +70,8 @@ function WizardHarness() {
       trafficLevel: "MEDIUM",
       productCount: "NONE",
       dataSensitivity: "STANDARD",
-      scalabilityLevel: "GROWING",
-    },
+      scalabilityLevel: "GROWING"
+    }
   });
 
   const noop = () => undefined;
@@ -68,8 +79,8 @@ function WizardHarness() {
   const value: WizardContextType = {
     step,
     setStep,
-    next: () => setStep((current) => Math.min(current + 1, 4)),
-    prev: () => setStep((current) => Math.max(current - 1, 0)),
+    next: () => setStep(current => Math.min(current + 1, 4)),
+    prev: () => setStep(current => Math.max(current - 1, 0)),
     canGoNext: true,
     nextReasons: [],
     projectType: "VITRINE",
@@ -176,7 +187,7 @@ function WizardHarness() {
     hostingSelectionMode: "SINGLE",
     formAction: (_formData: FormData) => undefined,
     isPending: false,
-    actionError: null,
+    actionError: null
   };
 
   return (
@@ -209,25 +220,44 @@ describe("WizardContent", () => {
     fireEvent.click(screen.getByRole("button", { name: "Suivant" }));
     expect(
       await screen.findByText(
-        "Les projets Vitrine / Blog n'incluent pas de modules optionnels.",
-      ),
+        "Les projets Vitrine / Blog n'incluent pas de modules optionnels."
+      )
     ).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Suivant" }));
     expect(await screen.findByText("Identité du projet")).toBeTruthy();
     expect(screen.getByText("Décision retenue")).toBeTruthy();
 
+    const domainSectionTitle = screen.getByText("Lecture domaine");
+    const domainSection = domainSectionTitle.closest("div.rounded-lg");
+
+    expect(domainSection).toBeTruthy();
+
+    const domainQueries = within(domainSection as HTMLElement);
+
+    expect(domainQueries.getByText("STANDARDIZATION_CANDIDATE")).toBeTruthy();
+    expect(domainQueries.getByText("Profil technique")).toBeTruthy();
+    expect(domainQueries.getByText("WP_BUSINESS_EXTENDED")).toBeTruthy();
+    expect(domainQueries.getByText("Delivery model")).toBeTruthy();
+    expect(domainQueries.getByText("DELIVERED_CUSTOM")).toBeTruthy();
+    expect(domainQueries.getByText("Mutualisation")).toBeTruthy();
+    expect(domainQueries.getByText("Mutualisation recommandée")).toBeTruthy();
+    expect(domainQueries.getByText("MANAGED_STANDARDIZED")).toBeTruthy();
+    expect(domainQueries.getAllByText("SHARED_SOCLE")).toHaveLength(2);
+
     await waitFor(() => {
       expect(
-        fetchMock.mock.calls.some(([input]) => resolveUrl(input) === "/api/clients"),
+        fetchMock.mock.calls.some(
+          ([input]) => resolveUrl(input) === "/api/clients"
+        )
       ).toBe(true);
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Précédent" }));
     expect(
       await screen.findByText(
-        "Les projets Vitrine / Blog n'incluent pas de modules optionnels.",
-      ),
+        "Les projets Vitrine / Blog n'incluent pas de modules optionnels."
+      )
     ).toBeTruthy();
   });
 });
