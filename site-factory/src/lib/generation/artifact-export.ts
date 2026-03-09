@@ -1,3 +1,5 @@
+import { buildQualificationExport } from "../domain/qualification-export";
+import type { QualificationResult } from "../qualification-runtime";
 import type { GenerationArtifactDraft } from "./generators/types";
 
 export interface ExportBundleFileDraft {
@@ -96,6 +98,16 @@ function buildFileIndex(
   };
 }
 
+function buildQualificationReportFile(
+  qualification: QualificationResult,
+): ExportBundleFileDraft {
+  return {
+    path: "qualification.report.json",
+    kind: "json",
+    content: stableStringify(buildQualificationExport(qualification)),
+  };
+}
+
 export function buildExportBundleFromArtifact(
   artifact: GenerationArtifactDraft
 ): ExportBundleDraft {
@@ -117,5 +129,33 @@ export function buildExportBundleFromArtifact(
     },
     files,
     notes: artifact.notes
+  };
+}
+
+export function buildExportBundleFromArtifactAndQualification(args: {
+  artifact: GenerationArtifactDraft;
+  qualification: QualificationResult;
+}): ExportBundleDraft {
+  const { artifact, qualification } = args;
+
+  const files: ExportBundleFileDraft[] = [
+    buildManifestJsonFile(artifact),
+    buildReadmeFile(artifact),
+    buildFileIndex(artifact),
+    buildQualificationReportFile(qualification),
+  ];
+
+  return {
+    exportVersion: "draft-export-v1",
+    artifact: {
+      generatorKey: artifact.generatorKey,
+      projectKind: artifact.projectKind,
+      technicalProfile: artifact.identity.technicalProfile,
+      deliveryModel: artifact.identity.deliveryModel,
+      mutualizationLevel: artifact.identity.mutualizationLevel,
+      deployTarget: artifact.deployTarget,
+    },
+    files,
+    notes: artifact.notes,
   };
 }

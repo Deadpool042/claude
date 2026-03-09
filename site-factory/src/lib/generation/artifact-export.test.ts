@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
-import type { QualificationInput } from "@/lib/qualification-runtime";
+import {
+  qualifyProject,
+  type QualificationInput
+} from "@/lib/qualification-runtime";
 import { buildCanonicalProjectInputDraft } from "@/lib/domain/canonical-input";
 import { runDecisionEngine } from "@/lib/domain/decision-engine";
 import { buildProjectManifestDraft } from "@/lib/domain/project-manifest";
 import { buildGenerationPlanFromManifest } from "./manifest-adapter";
 import { buildGenerationArtifactDraft } from "./generators/router";
-import { buildExportBundleFromArtifact } from "./artifact-export";
+import {
+  buildExportBundleFromArtifact,
+  buildExportBundleFromArtifactAndQualification
+} from "./artifact-export";
 
 describe("buildExportBundleFromArtifact", () => {
   const baseInput: QualificationInput = {
@@ -67,5 +73,44 @@ describe("buildExportBundleFromArtifact", () => {
     expect(bundle.artifact.technicalProfile).toBe("NEXT_MDX_EDITORIAL");
     expect(bundle.artifact.deployTarget).toBe("VERCEL");
     expect(bundle.artifact.deliveryModel).toBeDefined();
+  });
+
+  it("builds an enriched export bundle with qualification report", () => {
+    const input: QualificationInput = {
+      projectType: "VITRINE",
+      techStack: "WORDPRESS",
+      selectedModuleIds: ["seo"],
+      billingMode: "SOLO",
+      deployTarget: "SHARED_HOSTING",
+      wpHeadless: false,
+      catSelections: {}
+    };
+
+    const qualification = qualifyProject(input);
+    const plan = buildGenerationPlanFromManifest(qualification.manifest);
+    const artifact = buildGenerationArtifactDraft(plan);
+
+    const bundle = buildExportBundleFromArtifactAndQualification({
+      artifact,
+      qualification
+    });
+
+    expect(bundle.files.map(file => file.path)).toEqual([
+      "project.manifest.export.json",
+      "README.export.md",
+      "files.index.json",
+      "qualification.report.json"
+    ]);
+
+    const qualificationFile = bundle.files.find(
+      file => file.path === "qualification.report.json"
+    );
+
+    expect(qualificationFile).toBeDefined();
+    expect(qualificationFile?.content).toContain(
+      "draft-qualification-export-v1"
+    );
+    expect(qualificationFile?.content).toContain("WP_BUSINESS_EXTENDED");
+    expect(qualificationFile?.content).toContain("STANDARDIZATION_CANDIDATE");
   });
 });
