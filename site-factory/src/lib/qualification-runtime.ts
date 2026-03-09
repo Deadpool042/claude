@@ -32,7 +32,11 @@ import {
   buildProjectManifestDraft,
   type ProjectManifestDraft
 } from "./domain/project-manifest";
-import { assessStandardization, type StandardizationAssessment } from "./domain/standardization-engine";
+import {
+  assessStandardization,
+  type StandardizationAssessment
+} from "./domain/standardization-engine";
+import { buildStandardizationExplanation, type StandardizationExplanation } from "./domain/standardization-explanation";
 
 export type { DeployTarget, TechStack };
 
@@ -81,6 +85,7 @@ export interface QualificationResult {
   decision: CanonicalDecisionOutput;
   manifest: ProjectManifestDraft;
   standardization: StandardizationAssessment;
+  standardizationExplanation: StandardizationExplanation;
 }
 
 const SPLIT_SOUS_TRAITANT: Record<
@@ -224,6 +229,9 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     canonicalInput,
     decision
   });
+  const standardizationExplanation = buildStandardizationExplanation(
+  standardization,
+);
 
   return {
     initialCategory,
@@ -244,7 +252,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     splits,
     decision,
     manifest,
-    standardization
+    standardization,
+    standardizationExplanation
   };
 }
 
