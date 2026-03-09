@@ -18,14 +18,14 @@ import {
   type MaintenanceCat,
   type ModuleDef,
   type ProjectConstraints,
-  type ProjectType,
+  type ProjectType
 } from "@/lib/referential";
 import { buildCanonicalProjectInputDraft } from "@/lib/domain/canonical-input";
-import { buildCanonicalDecisionOutputFromDraft } from "@/lib/domain/canonical-decision-mapping";
+import { runDecisionEngine } from "@/lib/domain/decision-engine";
 import {
   resolveModuleMonthly,
   resolveModulePrice,
-  resolveModuleRequalification,
+  resolveModuleRequalification
 } from "@/lib/module-pricing";
 import { resolveBaseCategoryRules } from "@/lib/services/qualification/category-rules";
 
@@ -66,14 +66,12 @@ export interface QualificationResult {
     grandTotal: number;
   };
   billingMode: BillingMode;
-  splits:
-    | {
-        baseSplitPrestataire: number;
-        baseSplitAgence: number;
-        modulesSplitPrestataire: number;
-        modulesSplitAgence: number;
-      }
-    | null;
+  splits: {
+    baseSplitPrestataire: number;
+    baseSplitAgence: number;
+    modulesSplitPrestataire: number;
+    modulesSplitAgence: number;
+  } | null;
   decision: CanonicalDecisionOutput;
 }
 
@@ -85,7 +83,7 @@ const SPLIT_SOUS_TRAITANT: Record<
   CAT1: { prestataire: 70, agence: 30 },
   CAT2: { prestataire: 70, agence: 30 },
   CAT3: { prestataire: 70, agence: 30 },
-  CAT4: { prestataire: 60, agence: 40 },
+  CAT4: { prestataire: 60, agence: 40 }
 };
 
 export function qualifyProject(input: QualificationInput): QualificationResult {
@@ -96,7 +94,7 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     input.ciAxes ??
     estimateCIAxes({
       projectType: input.projectType,
-      moduleIds: normalizedIds,
+      moduleIds: normalizedIds
     });
 
   const ci = computeCI(ciAxes);
@@ -105,25 +103,25 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     input.projectType === "APP"
       ? getBackendMultiplier(
           input.constraints?.backendFamily,
-          input.constraints?.backendOpsHeavy,
+          input.constraints?.backendOpsHeavy
         )
       : 1;
 
   const modules = normalizedIds
-    .map((id) => MODULE_CATALOG.find((m) => m.id === id))
+    .map(id => MODULE_CATALOG.find(m => m.id === id))
     .filter((m): m is ModuleDef => m != null);
 
   const categoryRules = resolveBaseCategoryRules({
     projectType: input.projectType,
     techStack: input.techStack,
     wpHeadless: input.wpHeadless,
-    constraints: input.constraints,
+    constraints: input.constraints
   });
 
   const initialCategory = categoryRules.initialCategory;
   let finalCategory = maxCategory(
     categoryRules.finalCategoryBeforeModules,
-    ci.category,
+    ci.category
   );
 
   const requalifyingModules: ModuleDef[] = [];
@@ -145,12 +143,13 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
   const stackProfile = getStackProfileFromLegacy(
     input.techStack,
     input.projectType,
-    input.wpHeadless,
+    input.wpHeadless
   );
 
   const wasRequalified = finalCategory !== initialCategory;
   const maintenance = CATEGORY_MAINTENANCE[finalCategory];
-  const familyBasePrice = FAMILY_BASE_PRICING[stackProfile.family]?.from ?? 1800;
+  const familyBasePrice =
+    FAMILY_BASE_PRICING[stackProfile.family]?.from ?? 1800;
   const base = Math.round(familyBasePrice * stackProfile.complexityFactor);
   const isWpHeadless = input.techStack === "WORDPRESS" && input.wpHeadless;
   const deployCost = getDeployCost(input.deployTarget, isWpHeadless);
@@ -166,7 +165,7 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
       input.techStack,
       input.wpHeadless,
       tierSel,
-      backendMultiplier,
+      backendMultiplier
     );
     modulesTotal += resolved.setup;
     monthlyTotal += resolveModuleMonthly(mod, tierSel);
@@ -187,24 +186,26 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
         input.techStack,
         input.wpHeadless,
         tierSel,
-        backendMultiplier,
+        backendMultiplier
       );
-      modulesSplitPrestataire += resolved.setup * (mod.splitPrestataireSetup / 100);
-      modulesSplitAgence += resolved.setup * ((100 - mod.splitPrestataireSetup) / 100);
+      modulesSplitPrestataire +=
+        resolved.setup * (mod.splitPrestataireSetup / 100);
+      modulesSplitAgence +=
+        resolved.setup * ((100 - mod.splitPrestataireSetup) / 100);
     }
 
     splits = {
       baseSplitPrestataire: baseSplit.prestataire,
       baseSplitAgence: baseSplit.agence,
       modulesSplitPrestataire,
-      modulesSplitAgence,
+      modulesSplitAgence
     };
   }
 
   const canonicalInput = buildCanonicalProjectInputDraft(input);
-  const decision = buildCanonicalDecisionOutputFromDraft({
+  const decision = runDecisionEngine({
     canonicalInput,
-    finalCategory,
+    finalCategory
   });
 
   return {
@@ -221,17 +222,17 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
       modulesTotal,
       deployCost,
       monthlyTotal,
-      grandTotal: base + modulesTotal + deployCost,
+      grandTotal: base + modulesTotal + deployCost
     },
     splits,
-    decision,
+    decision
   };
 }
 
 export function getOfferStackForProject(
   projectType: QualificationInput["projectType"],
   techStack: TechStack,
-  wpHeadless: boolean,
+  wpHeadless: boolean
 ): string {
   if (techStack === "WORDPRESS") {
     if (wpHeadless) {
