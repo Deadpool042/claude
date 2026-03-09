@@ -13,20 +13,15 @@ import {
   type CIResult,
   type CanonicalDecisionOutput,
   type Category,
-  type CommercialProfile,
   type DeployTarget,
-  type DeliveryModel,
-  type ImplementationStrategy,
   type LegacyTechStack as TechStack,
   type MaintenanceCat,
   type ModuleDef,
-  type MutualizationLevel,
   type ProjectConstraints,
   type ProjectType,
-  type SolutionFamily,
-  type TechnicalProfile,
 } from "@/lib/referential";
 import { buildCanonicalProjectInputDraft } from "@/lib/domain/canonical-input";
+import { buildCanonicalDecisionOutputFromDraft } from "@/lib/domain/canonical-decision-mapping";
 import {
   resolveModuleMonthly,
   resolveModulePrice,
@@ -92,185 +87,6 @@ const SPLIT_SOUS_TRAITANT: Record<
   CAT3: { prestataire: 70, agence: 30 },
   CAT4: { prestataire: 60, agence: 40 },
 };
-
-function mapSolutionFamily(
-  canonicalInput: ReturnType<typeof buildCanonicalProjectInputDraft>,
-): SolutionFamily {
-  switch (canonicalInput.businessIntent.needKind) {
-    case "CONTENT":
-      return "CONTENT_PLATFORM";
-    case "BUSINESS_PRESENCE":
-      return "BUSINESS_SITE";
-    case "COMMERCE":
-      return "ECOMMERCE";
-    case "BUSINESS_TOOL":
-      return "BUSINESS_APP";
-    default: {
-      const _never: never = canonicalInput.businessIntent.needKind;
-      return _never;
-    }
-  }
-}
-
-function mapDeliveryModel(
-  canonicalInput: ReturnType<typeof buildCanonicalProjectInputDraft>,
-): DeliveryModel {
-  if (canonicalInput.operatingModel.operatingIntent === "MANAGED_FOR_CLIENT") {
-    return "MANAGED_CUSTOM";
-  }
-
-  return "DELIVERED_CUSTOM";
-}
-
-function mapMutualizationLevel(
-  input: QualificationInput,
-  finalCategory: Category,
-): MutualizationLevel {
-  if (input.billingMode === "SOUS_TRAITANT") {
-    return "SHARED_SOCLE";
-  }
-
-  if (
-    input.techStack === "WORDPRESS" &&
-    !input.wpHeadless &&
-    finalCategory !== "CAT4"
-  ) {
-    return "SHARED_SOCLE";
-  }
-
-  return "DEDICATED";
-}
-
-function mapImplementationStrategy(
-  input: QualificationInput,
-): ImplementationStrategy {
-  if (input.projectType === "APP") {
-    return "CUSTOM_WEB_APP";
-  }
-
-  if (input.techStack === "WORDPRESS" && input.wpHeadless) {
-    return "HEADLESS_CONTENT_SITE";
-  }
-
-  if (input.projectType === "ECOM" && input.techStack === "WORDPRESS") {
-    return "CMS_EXTENDED";
-  }
-
-  if (input.techStack === "WORDPRESS") {
-    return "CMS_CONFIGURED";
-  }
-
-  if (
-    input.techStack === "NEXTJS" ||
-    input.techStack === "ASTRO" ||
-    input.techStack === "NUXT"
-  ) {
-    return "HEADLESS_CONTENT_SITE";
-  }
-
-  return "HYBRID_STACK";
-}
-
-function mapTechnicalProfile(input: QualificationInput): TechnicalProfile {
-  if (input.projectType === "APP") {
-    return "CUSTOM_APP_MANAGED";
-  }
-
-  if (
-    input.projectType === "ECOM" &&
-    input.techStack === "WORDPRESS" &&
-    !input.wpHeadless
-  ) {
-    return "WOOCOMMERCE_STANDARD";
-  }
-
-  if (input.techStack === "WORDPRESS" && input.wpHeadless) {
-    return "HEADLESS_WP";
-  }
-
-  if (input.techStack === "WORDPRESS") {
-    return input.projectType === "VITRINE"
-      ? "WP_BUSINESS_EXTENDED"
-      : "WP_EDITORIAL_STANDARD";
-  }
-
-  if (input.techStack === "NEXTJS") {
-    return "NEXT_MDX_EDITORIAL";
-  }
-
-  return "JAMSTACK_CONTENT_SITE";
-}
-
-function mapCommercialProfile(
-  input: QualificationInput,
-  deliveryModel: DeliveryModel,
-): CommercialProfile {
-  if (deliveryModel === "OPERATED_PRODUCT") {
-    return "OPERATED_SUBSCRIPTION";
-  }
-
-  if (deliveryModel === "MANAGED_STANDARDIZED") {
-    return "STANDARDIZED_MONTHLY_PLAN";
-  }
-
-  if (deliveryModel === "MANAGED_CUSTOM") {
-    return "SETUP_PLUS_MANAGED_RETAINER";
-  }
-
-  return input.billingMode === "SOUS_TRAITANT"
-    ? "SETUP_PLUS_MANAGED_RETAINER"
-    : "ONE_SHOT_DELIVERY";
-}
-
-function buildDecisionOutput(
-  input: QualificationInput,
-  finalCategory: Category,
-): CanonicalDecisionOutput {
-  const canonicalInput = buildCanonicalProjectInputDraft(input);
-  const solutionFamily = mapSolutionFamily(canonicalInput);
-  const deliveryModel = mapDeliveryModel(canonicalInput);
-  const mutualizationLevel = mapMutualizationLevel(input, finalCategory);
-  const implementationStrategy = mapImplementationStrategy(input);
-  const technicalProfile = mapTechnicalProfile(input);
-  const commercialProfile = mapCommercialProfile(input, deliveryModel);
-
-  const notes: string[] = [];
-
-  if (input.techStack === "WORDPRESS" && input.wpHeadless) {
-    notes.push(
-      "Legacy mapping: WordPress headless currently biases the decision toward HEADLESS_CONTENT_SITE.",
-    );
-  }
-
-  if (input.billingMode === "SOUS_TRAITANT") {
-    notes.push(
-      "Legacy mapping: billing mode SOUS_TRAITANT currently biases the decision toward MANAGED_CUSTOM.",
-    );
-  }
-
-  if (input.projectType === "APP") {
-    notes.push(
-      "Legacy mapping: projectType APP currently biases the decision toward CUSTOM_WEB_APP.",
-    );
-  }
-
-  return {
-    solutionFamily,
-    deliveryModel,
-    mutualizationLevel,
-    implementationStrategy,
-    technicalProfile,
-    commercialProfile,
-    notes,
-    legacyMapping: {
-      projectType: input.projectType,
-      finalCategory,
-      techStack: input.techStack,
-      deployTarget: input.deployTarget,
-      wpHeadless: input.wpHeadless,
-    },
-  };
-}
 
 export function qualifyProject(input: QualificationInput): QualificationResult {
   const normalizedIds = normalizeModuleIds(input.selectedModuleIds);
@@ -385,7 +201,11 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     };
   }
 
-  const decision = buildDecisionOutput(input, finalCategory);
+  const canonicalInput = buildCanonicalProjectInputDraft(input);
+  const decision = buildCanonicalDecisionOutputFromDraft({
+    canonicalInput,
+    finalCategory,
+  });
 
   return {
     initialCategory,
