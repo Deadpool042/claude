@@ -28,7 +28,11 @@ import {
   resolveModuleRequalification
 } from "@/lib/module-pricing";
 import { resolveBaseCategoryRules } from "@/lib/services/qualification/category-rules";
-import { buildProjectManifestDraft, type ProjectManifestDraft } from "./domain/project-manifest";
+import {
+  buildProjectManifestDraft,
+  type ProjectManifestDraft
+} from "./domain/project-manifest";
+import { assessStandardization, type StandardizationAssessment } from "./domain/standardization-engine";
 
 export type { DeployTarget, TechStack };
 
@@ -75,7 +79,8 @@ export interface QualificationResult {
     modulesSplitAgence: number;
   } | null;
   decision: CanonicalDecisionOutput;
-  manifest: ProjectManifestDraft
+  manifest: ProjectManifestDraft;
+  standardization: StandardizationAssessment;
 }
 
 const SPLIT_SOUS_TRAITANT: Record<
@@ -211,10 +216,14 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     finalCategory
   });
   const manifest = buildProjectManifestDraft({
-  canonicalInput,
-  decision,
-  finalCategory,
-});
+    canonicalInput,
+    decision,
+    finalCategory
+  });
+  const standardization = assessStandardization({
+    canonicalInput,
+    decision
+  });
 
   return {
     initialCategory,
@@ -234,7 +243,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     },
     splits,
     decision,
-    manifest
+    manifest,
+    standardization
   };
 }
 
