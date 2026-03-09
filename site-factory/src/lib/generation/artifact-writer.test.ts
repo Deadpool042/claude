@@ -22,7 +22,7 @@ describe("writeExportBundleToDirectory", () => {
     catSelections: {}
   };
 
-  it("writes export bundle files to the target directory", async () => {
+  it("writes export bundle files into a standardized subdirectory", async () => {
     const canonicalInput = buildCanonicalProjectInputDraft(baseInput);
     const decision = runDecisionEngine({
       canonicalInput,
@@ -46,14 +46,38 @@ describe("writeExportBundleToDirectory", () => {
       });
 
       expect(result.outputDir).toBe(tempDir);
+      expect(result.bundleRoot).toContain(
+        "wordpress-site__wp-business-extended__delivered-custom"
+      );
       expect(result.writtenFiles).toEqual([
-        "project.manifest.export.json",
-        "README.export.md",
-        "files.index.json"
+        path.join(
+          "wordpress-site__wp-business-extended__delivered-custom",
+          "export.bundle.json"
+        ),
+        path.join(
+          "wordpress-site__wp-business-extended__delivered-custom",
+          "files",
+          "project.manifest.export.json"
+        ),
+        path.join(
+          "wordpress-site__wp-business-extended__delivered-custom",
+          "files",
+          "README.export.md"
+        ),
+        path.join(
+          "wordpress-site__wp-business-extended__delivered-custom",
+          "files",
+          "files.index.json"
+        )
       ]);
 
       const readme = await readFile(
-        path.join(tempDir, "README.export.md"),
+        path.join(
+          tempDir,
+          "wordpress-site__wp-business-extended__delivered-custom",
+          "files",
+          "README.export.md"
+        ),
         "utf8"
       );
 
@@ -87,18 +111,28 @@ describe("writeExportBundleToDirectory", () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "sf-export-"));
 
     try {
-      await writeExportBundleToDirectory({
+      const result = await writeExportBundleToDirectory({
         bundle,
         outputDir: tempDir
       });
 
+      expect(result.bundleRoot).toContain(
+        "next-content-site__next-mdx-editorial__managed-custom"
+      );
+
       const manifestJson = await readFile(
-        path.join(tempDir, "project.manifest.export.json"),
+        path.join(
+          tempDir,
+          "next-content-site__next-mdx-editorial__managed-custom",
+          "files",
+          "project.manifest.export.json"
+        ),
         "utf8"
       );
 
       expect(manifestJson).toContain("NEXT_MDX_EDITORIAL");
       expect(manifestJson).toContain("VERCEL");
+      expect(manifestJson).toContain("MANAGED_CUSTOM");
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }
