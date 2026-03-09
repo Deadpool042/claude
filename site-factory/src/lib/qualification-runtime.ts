@@ -28,6 +28,7 @@ import {
   resolveModuleRequalification
 } from "@/lib/module-pricing";
 import { resolveBaseCategoryRules } from "@/lib/services/qualification/category-rules";
+import { buildProjectManifestDraft, type ProjectManifestDraft } from "./domain/project-manifest";
 
 export type { DeployTarget, TechStack };
 
@@ -57,6 +58,7 @@ export interface QualificationResult {
   modules: ModuleDef[];
   requalifyingModules: ModuleDef[];
   maintenance: MaintenanceCat;
+
   ci?: CIResult | null;
   budget: {
     base: number;
@@ -73,6 +75,7 @@ export interface QualificationResult {
     modulesSplitAgence: number;
   } | null;
   decision: CanonicalDecisionOutput;
+  manifest: ProjectManifestDraft
 }
 
 const SPLIT_SOUS_TRAITANT: Record<
@@ -207,6 +210,11 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     canonicalInput,
     finalCategory
   });
+  const manifest = buildProjectManifestDraft({
+  canonicalInput,
+  decision,
+  finalCategory,
+});
 
   return {
     initialCategory,
@@ -225,7 +233,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
       grandTotal: base + modulesTotal + deployCost
     },
     splits,
-    decision
+    decision,
+    manifest
   };
 }
 
