@@ -4,18 +4,24 @@ import {
   normalizeModuleId,
   normalizeCanonicalModuleIds,
   normalizeModuleIds,
-  getAllowedDeployTargets,
+  getAllowedDeployTargets
 } from "../../lib/referential";
-import { computeStackMultiplier, getMultiplierLabel } from "../../lib/stack-pricing";
+import {
+  computeStackMultiplier,
+  getMultiplierLabel
+} from "../../lib/stack-pricing";
 import {
   resolveModuleMonthly,
   resolveModulePrice,
-  resolveModuleRequalification,
+  resolveModuleRequalification
 } from "../../lib/module-pricing";
-import { qualifyProject, type QualificationInput } from "../../lib/qualification-runtime";
+import {
+  qualifyProject,
+  type QualificationInput
+} from "../../lib/qualification-runtime";
 
 const assistantModule = MODULE_CATALOG.find(
-  (module) => module.id === "module.MARKETING_AUTOMATION",
+  module => module.id === "module.MARKETING_AUTOMATION"
 );
 
 if (!assistantModule) {
@@ -24,7 +30,9 @@ if (!assistantModule) {
 
 describe("normalizeModuleId", () => {
   it("keeps a valid module id", () => {
-    expect(normalizeModuleId("module.B2B_COMMERCE")).toBe("module.B2B_COMMERCE");
+    expect(normalizeModuleId("module.B2B_COMMERCE")).toBe(
+      "module.B2B_COMMERCE"
+    );
   });
 
   it("rejects legacy module ids", () => {
@@ -44,8 +52,8 @@ describe("normalizeModuleIds", () => {
         "module.MARKETING_AUTOMATION",
         "module.B2B_COMMERCE",
         "module.MARKETING_AUTOMATION",
-        "unknown",
-      ]),
+        "unknown"
+      ])
     ).toEqual(["module.MARKETING_AUTOMATION", "module.B2B_COMMERCE"]);
   });
 });
@@ -57,8 +65,8 @@ describe("normalizeCanonicalModuleIds", () => {
         "module.ERP_INTEGRATIONS",
         "module.ERP_INTEGRATIONS",
         "module.LOGISTICS_ORCHESTRATION",
-        "unknown",
-      ]),
+        "unknown"
+      ])
     ).toEqual(["module.ERP_INTEGRATIONS", "module.LOGISTICS_ORCHESTRATION"]);
   });
 });
@@ -80,18 +88,20 @@ describe("resolveModulePrice", () => {
       "VITRINE",
       "WORDPRESS",
       false,
-      { setupCatId: "automation-standard" },
+      { setupCatId: "automation-standard" }
     );
 
     expect(resolved).toEqual({
       setup: 1300,
       setupMax: null,
-      isCustom: false,
+      isCustom: false
     });
   });
 
   it("applies stack multiplier on JS stacks", () => {
-    const moduleWithMultiplier = MODULE_CATALOG.find((mod) => mod.jsMultiplier > 1);
+    const moduleWithMultiplier = MODULE_CATALOG.find(
+      mod => mod.jsMultiplier > 1
+    );
     expect(moduleWithMultiplier).toBeDefined();
 
     const resolved = resolveModulePrice(
@@ -99,18 +109,22 @@ describe("resolveModulePrice", () => {
       "VITRINE",
       "NEXTJS",
       false,
-      undefined,
+      undefined
     );
 
-    expect(resolved.setup).toBe(Math.round(moduleWithMultiplier!.priceSetup * moduleWithMultiplier!.jsMultiplier));
+    expect(resolved.setup).toBe(
+      Math.round(
+        moduleWithMultiplier!.priceSetup * moduleWithMultiplier!.jsMultiplier
+      )
+    );
   });
 });
 
 describe("resolveModuleMonthly", () => {
   it("uses the selected subscription tier", () => {
-    expect(resolveModuleMonthly(assistantModule, { subCatId: "automation-business" })).toBe(
-      79,
-    );
+    expect(
+      resolveModuleMonthly(assistantModule, { subCatId: "automation-business" })
+    ).toBe(79);
   });
 
   it("falls back to the module default", () => {
@@ -121,7 +135,9 @@ describe("resolveModuleMonthly", () => {
 describe("resolveModuleRequalification", () => {
   it("respects the selected setup tier", () => {
     expect(
-      resolveModuleRequalification(assistantModule, { setupCatId: "automation-avance" }),
+      resolveModuleRequalification(assistantModule, {
+        setupCatId: "automation-avance"
+      })
     ).toBe("CAT3");
   });
 
@@ -144,12 +160,15 @@ describe("getAllowedDeployTargets", () => {
   it("restricts WP headless to docker or shared hosting", () => {
     expect(getAllowedDeployTargets("WORDPRESS", true)).toEqual([
       "SHARED_HOSTING",
-      "DOCKER",
+      "DOCKER"
     ]);
   });
 
   it("allows Vercel for JS stacks", () => {
-    expect(getAllowedDeployTargets("NEXTJS", false)).toEqual(["DOCKER", "VERCEL"]);
+    expect(getAllowedDeployTargets("NEXTJS", false)).toEqual([
+      "DOCKER",
+      "VERCEL"
+    ]);
   });
 });
 
@@ -160,13 +179,13 @@ describe("qualifyProject", () => {
     selectedModuleIds: [],
     billingMode: "SOLO",
     deployTarget: "DOCKER",
-    wpHeadless: false,
+    wpHeadless: false
   } satisfies QualificationInput;
 
   it("VITRINE with structuring module escalates from CAT0", () => {
     const result = qualifyProject({
       ...baseInput,
-      selectedModuleIds: ["module.MARKETING_AUTOMATION"],
+      selectedModuleIds: ["module.MARKETING_AUTOMATION"]
     });
 
     expect(result.initialCategory).toBe("CAT0");
@@ -174,16 +193,16 @@ describe("qualifyProject", () => {
     expect(result.modules).toHaveLength(1);
   });
 
-  it("keeps the base tier for non-WP e-commerce", () => {
+  it("keeps the base initial tier but applies CAT3 final tier for non-WP e-commerce", () => {
     const result = qualifyProject({
       ...baseInput,
       projectType: "ECOM",
-      techStack: "NEXTJS",
+      techStack: "NEXTJS"
     });
 
-    expect(result.initialCategory).toBe("CAT3");
+    expect(result.initialCategory).toBe("CAT2");
     expect(result.finalCategory).toBe("CAT3");
-    expect(result.wasRequalified).toBe(false);
+    expect(result.wasRequalified).toBe(true);
   });
 
   it("forces CAT4 for WordPress headless", () => {
@@ -191,7 +210,7 @@ describe("qualifyProject", () => {
       ...baseInput,
       projectType: "VITRINE",
       techStack: "WORDPRESS",
-      wpHeadless: true,
+      wpHeadless: true
     });
 
     expect(result.initialCategory).toBe("CAT0");
@@ -203,7 +222,7 @@ describe("qualifyProject", () => {
   it("requalifies based on traffic constraints", () => {
     const result = qualifyProject({
       ...baseInput,
-      constraints: { trafficLevel: "HIGH" },
+      constraints: { trafficLevel: "HIGH" }
     });
 
     expect(result.finalCategory).toBe("CAT2");
@@ -212,7 +231,7 @@ describe("qualifyProject", () => {
   it("requalifies based on data sensitivity constraints", () => {
     const result = qualifyProject({
       ...baseInput,
-      constraints: { dataSensitivity: "REGULATED" },
+      constraints: { dataSensitivity: "REGULATED" }
     });
 
     expect(result.finalCategory).toBe("CAT3");
@@ -223,14 +242,16 @@ describe("qualifyProject", () => {
       ...baseInput,
       selectedModuleIds: ["module.MARKETING_AUTOMATION"],
       catSelections: {
-        "module.MARKETING_AUTOMATION": { setupCatId: "automation-avance" },
-      },
+        "module.MARKETING_AUTOMATION": {
+          setupCatId: "automation-avance"
+        }
+      }
     });
 
     expect(result.finalCategory).toBe("CAT3");
     expect(result.wasRequalified).toBe(true);
-    expect(result.requalifyingModules.map((mod) => mod.id)).toEqual([
-      "module.MARKETING_AUTOMATION",
+    expect(result.requalifyingModules.map(mod => mod.id)).toEqual([
+      "module.MARKETING_AUTOMATION"
     ]);
   });
 
@@ -240,8 +261,10 @@ describe("qualifyProject", () => {
       billingMode: "SOUS_TRAITANT",
       selectedModuleIds: ["module.MARKETING_AUTOMATION"],
       catSelections: {
-        "module.MARKETING_AUTOMATION": { setupCatId: "automation-standard" },
-      },
+        "module.MARKETING_AUTOMATION": {
+          setupCatId: "automation-standard"
+        }
+      }
     });
 
     expect(result.finalCategory).toBe("CAT2");

@@ -8,24 +8,24 @@ describe("spec-catalog", () => {
         name: "features.json",
         label: "Features fonctionnelles",
         size: 1024,
-        lastModified: "2026-03-06T10:00:00.000Z",
+        lastModified: "2026-03-06T10:00:00.000Z"
       },
       {
         _meta: {
           purpose: "Résumé local",
           shape: {
-            requiredTopLevel: ["version", "features"],
-          },
+            requiredTopLevel: ["version", "features"]
+          }
         },
         version: "1.2.0",
         features: [
           {
             id: "feature.BLOG",
             label: "Blog",
-            domain: "CONTENT",
-          },
-        ],
-      },
+            domain: "CONTENT"
+          }
+        ]
+      }
     );
 
     expect(entry.domain).toBe("Offre fonctionnelle");
@@ -43,42 +43,56 @@ describe("spec-catalog", () => {
       _meta: {
         purpose: "Spec de test interne.",
         shape: {
-          requiredTopLevel: ["version", "entries", "settings"],
-        },
+          requiredTopLevel: ["version", "entries", "settings"]
+        }
       },
       version: "0.9.0",
       entries: [
         {
           id: "entry.one",
           label: "Entry One",
-          enabled: true,
-        },
+          enabled: true
+        }
       ],
       settings: {
         mode: "STRICT",
-        threshold: 2,
+        threshold: 2
       },
       labels: ["a", "b"],
-      flag: true,
+      flag: true
     });
 
     expect(overview.domain).toBe("Referentiel");
     expect(overview.role).toBe("Source de verite metier et technique");
     expect(overview.summary).toBe("Spec de test interne.");
-    expect(overview.requiredTopLevelKeys).toEqual(["version", "entries", "settings"]);
-    expect(overview.governance.map((entry) => entry.label)).toEqual([
+    expect(overview.requiredTopLevelKeys).toEqual([
+      "version",
+      "entries",
+      "settings"
+    ]);
+    expect(overview.governance.map(entry => entry.label)).toEqual([
       "Resume humain",
       "Consommateurs",
       "Cadre de lecture",
-      "Structure detaillee",
+      "Structure detaillee"
     ]);
-    expect(overview.detailSections[0]?.title).toBe("Structure generale");
+    expect(overview.detailSections[0]?.title).toBe("Structure générale");
     expect(overview.sections).toEqual([
       { key: "version", kind: "scalar", count: null, sampleKeys: [] },
-      { key: "entries", kind: "collection", count: 1, sampleKeys: ["id", "label", "enabled"] },
-      { key: "settings", kind: "object", count: 2, sampleKeys: ["mode", "threshold"] },
+      {
+        key: "entries",
+        kind: "collection",
+        count: 1,
+        sampleKeys: ["id", "label", "enabled"]
+      },
+      {
+        key: "settings",
+        kind: "object",
+        count: 2,
+        sampleKeys: ["mode", "threshold"]
+      },
       { key: "labels", kind: "list", count: 2, sampleKeys: [] },
-      { key: "flag", kind: "scalar", count: null, sampleKeys: [] },
+      { key: "flag", kind: "scalar", count: null, sampleKeys: [] }
     ]);
   });
 
@@ -86,28 +100,26 @@ describe("spec-catalog", () => {
     const overview = buildSpecOverview("cms.json", {
       _meta: {
         purpose: "Catalogue CMS",
-        consumedBy: [
-          "site-factory/src/lib/referential/spec/load.ts",
-        ],
+        consumedBy: ["site-factory/src/lib/referential/spec/load.ts"]
       },
       version: "1.0.0",
       cms: [
         {
           id: "cms.WORDPRESS",
-          label: "WordPress",
-        },
-      ],
+          label: "WordPress"
+        }
+      ]
     });
 
     expect(overview.domain).toBe("Architecture");
-    expect(overview.relatedSpecs.map((relation) => relation.spec)).toEqual([
+    expect(overview.relatedSpecs.map(relation => relation.spec)).toEqual([
       "capability-matrix.json",
       "stack-profiles.json",
-      "plugins.json",
+      "plugins.json"
     ]);
     expect(overview.concepts.length).toBeGreaterThan(0);
     expect(overview.consumers).toEqual([
-      "site-factory/src/lib/referential/spec/load.ts",
+      "site-factory/src/lib/referential/spec/load.ts"
     ]);
     expect(overview.detailSections[0]?.title).toBe("Panorama CMS");
   });
