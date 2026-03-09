@@ -26,6 +26,7 @@ import {
   type SolutionFamily,
   type TechnicalProfile,
 } from "@/lib/referential";
+import { buildCanonicalProjectInputDraft } from "@/lib/domain/canonical-input";
 import {
   resolveModuleMonthly,
   resolveModulePrice,
@@ -92,29 +93,29 @@ const SPLIT_SOUS_TRAITANT: Record<
   CAT4: { prestataire: 60, agence: 40 },
 };
 
-function mapSolutionFamily(input: QualificationInput): SolutionFamily {
-  switch (input.projectType) {
-    case "BLOG":
+function mapSolutionFamily(
+  canonicalInput: ReturnType<typeof buildCanonicalProjectInputDraft>,
+): SolutionFamily {
+  switch (canonicalInput.businessIntent.needKind) {
+    case "CONTENT":
       return "CONTENT_PLATFORM";
-    case "VITRINE":
+    case "BUSINESS_PRESENCE":
       return "BUSINESS_SITE";
-    case "ECOM":
+    case "COMMERCE":
       return "ECOMMERCE";
-    case "APP":
+    case "BUSINESS_TOOL":
       return "BUSINESS_APP";
     default: {
-      const _exhaustive: never = input.projectType;
-      return _exhaustive;
+      const _never: never = canonicalInput.businessIntent.needKind;
+      return _never;
     }
   }
 }
 
-function mapDeliveryModel(input: QualificationInput): DeliveryModel {
-  if (input.billingMode === "SOUS_TRAITANT") {
-    return "MANAGED_CUSTOM";
-  }
-
-  if (input.deployTarget === "VERCEL") {
+function mapDeliveryModel(
+  canonicalInput: ReturnType<typeof buildCanonicalProjectInputDraft>,
+): DeliveryModel {
+  if (canonicalInput.operatingModel.operatingIntent === "MANAGED_FOR_CLIENT") {
     return "MANAGED_CUSTOM";
   }
 
@@ -225,8 +226,9 @@ function buildDecisionOutput(
   input: QualificationInput,
   finalCategory: Category,
 ): CanonicalDecisionOutput {
-  const solutionFamily = mapSolutionFamily(input);
-  const deliveryModel = mapDeliveryModel(input);
+  const canonicalInput = buildCanonicalProjectInputDraft(input);
+  const solutionFamily = mapSolutionFamily(canonicalInput);
+  const deliveryModel = mapDeliveryModel(canonicalInput);
   const mutualizationLevel = mapMutualizationLevel(input, finalCategory);
   const implementationStrategy = mapImplementationStrategy(input);
   const technicalProfile = mapTechnicalProfile(input);
