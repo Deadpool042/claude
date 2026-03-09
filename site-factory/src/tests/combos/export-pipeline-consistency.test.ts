@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   qualifyProject,
-  type QualificationInput,
+  type QualificationInput
 } from "@/lib/qualification-runtime";
 import { buildGenerationPlanFromManifest } from "@/lib/generation/manifest-adapter";
 import { buildGenerationArtifactDraft } from "@/lib/generation/generators/router";
@@ -22,7 +22,7 @@ describe("export pipeline consistency", () => {
     billingMode: "SOLO",
     deployTarget: "SHARED_HOSTING",
     wpHeadless: false,
-    catSelections: {},
+    catSelections: {}
   };
 
   function buildBundle(input: QualificationInput) {
@@ -38,12 +38,14 @@ describe("export pipeline consistency", () => {
   it("keeps wordpress export metadata coherent across bundle, layout, package and registry", async () => {
     const { result, plan, artifact, bundle, layout } = buildBundle(baseInput);
     const pkg = buildExportPackageDraft([bundle]);
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), "sf-export-pipeline-"));
+    const tempDir = await mkdtemp(
+      path.join(os.tmpdir(), "sf-export-pipeline-")
+    );
 
     try {
       const packageWrite = await writeExportPackageToDirectory({
         pkg,
-        outputDir: tempDir,
+        outputDir: tempDir
       });
 
       const packageFolderName = path.basename(packageWrite.packageRoot);
@@ -52,11 +54,11 @@ describe("export pipeline consistency", () => {
         outputDir: tempDir,
         packageFolderName,
         pkg,
-        createdAt: "2026-03-09T12:00:00.000Z",
+        createdAt: "2026-03-09T12:00:00.000Z"
       });
 
       expect(result.decision.technicalProfile).toBe(
-        result.manifest.solution.technicalProfile,
+        result.manifest.solution.technicalProfile
       );
       expect(plan.profile).toBe(result.manifest.solution.technicalProfile);
       expect(artifact.identity.technicalProfile).toBe(plan.profile);
@@ -79,15 +81,17 @@ describe("export pipeline consistency", () => {
       ...baseInput,
       projectType: "BLOG",
       techStack: "NEXTJS",
-      deployTarget: "VERCEL",
+      deployTarget: "VERCEL"
     });
     const pkg = buildExportPackageDraft([bundle]);
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), "sf-export-pipeline-"));
+    const tempDir = await mkdtemp(
+      path.join(os.tmpdir(), "sf-export-pipeline-")
+    );
 
     try {
       const packageWrite = await writeExportPackageToDirectory({
         pkg,
-        outputDir: tempDir,
+        outputDir: tempDir
       });
 
       const packageFolderName = path.basename(packageWrite.packageRoot);
@@ -96,7 +100,7 @@ describe("export pipeline consistency", () => {
         outputDir: tempDir,
         packageFolderName,
         pkg,
-        createdAt: "2026-03-09T12:30:00.000Z",
+        createdAt: "2026-03-09T12:30:00.000Z"
       });
 
       expect(result.decision.technicalProfile).toBe("NEXT_MDX_EDITORIAL");
@@ -108,7 +112,7 @@ describe("export pipeline consistency", () => {
 
       const packageJson = await readFile(
         path.join(packageWrite.packageRoot, "export.package.json"),
-        "utf8",
+        "utf8"
       );
 
       expect(packageJson).toContain("NEXT_MDX_EDITORIAL");
@@ -126,13 +130,13 @@ describe("export pipeline consistency", () => {
       projectType: "VITRINE",
       techStack: "WORDPRESS",
       deployTarget: "SHARED_HOSTING",
-      selectedModuleIds: ["seo"],
+      selectedModuleIds: ["seo"]
     });
     const pkg = buildExportPackageDraft([bundle]);
 
     expect(result.standardizationExplanation.status).toBe("OPERATED_CANDIDATE");
     expect(result.standardization.recommendedDeliveryShift).toBe(
-      "OPERATED_PRODUCT",
+      "OPERATED_PRODUCT"
     );
 
     expect(result.decision.deliveryModel).toBe("MANAGED_STANDARDIZED");
