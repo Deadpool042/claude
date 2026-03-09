@@ -36,7 +36,10 @@ import {
   assessStandardization,
   type StandardizationAssessment
 } from "./domain/standardization-engine";
-import { buildStandardizationExplanation, type StandardizationExplanation } from "./domain/standardization-explanation";
+import {
+  buildStandardizationExplanation,
+  type StandardizationExplanation
+} from "./domain/standardization-explanation";
 
 export type { DeployTarget, TechStack };
 
@@ -229,9 +232,8 @@ export function qualifyProject(input: QualificationInput): QualificationResult {
     canonicalInput,
     decision
   });
-  const standardizationExplanation = buildStandardizationExplanation(
-  standardization,
-);
+  const standardizationExplanation =
+    buildStandardizationExplanation(standardization);
 
   return {
     initialCategory,
